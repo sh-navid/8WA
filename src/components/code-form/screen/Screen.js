@@ -1,6 +1,6 @@
 import Flex from "../layouts/Flex";
 import Adder from "../adder/Adder";
-import { ELEMENTS } from "../menu/FormMenu";
+import { ELEMENTS } from "../Menu";
 import PlaceHolder from "../layouts/PlaceHolder";
 import { useState, useEffect, useContext } from "react";
 import PreviewContext from "../../../contexts/previewContext";

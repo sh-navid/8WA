@@ -12,10 +12,6 @@
   display: block;
 }
 
-.CodeForm-ImageButton img {
-  width: 1.7em;
-}
-
 .CodeForm-ImageButton span {
   color: black;
   font-size: 65%;
