@@ -2,21 +2,29 @@ import styled from "styled-components";
 import { colors } from "../../utils/static";
 
 const N_Button = styled.button`
-  padding: 0.75em;
   color: white;
+  border: none;
+  padding: 0.75em;
   border-radius: 0.5em;
   background-color: ${colors.accent};
-  border: none;
+  width:100%;
 `;
 
 export { N_Button };
 
 const N_Text = styled.input`
-  padding: 0.75em;
   color: white;
+  padding: 0.75em;
   border-radius: 0.5em;
   background-color: white;
-  border: .1em solid ${colors.accent};
+  border: 0.1em solid ${colors.accent};
+  width:50%;
 `;
 
 export { N_Text };
+
+const N_Label = styled.label`
+  width:100%;
+`;
+
+export { N_Label };

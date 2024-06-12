@@ -1,5 +1,5 @@
-import { N_Button, N_Text } from "../menu/Components";
 import ImageButton from "./image_button/ImageButton";
+import { N_Button, N_Label, N_Text } from "../menu/Components";
 
 const ELEMENTS = {
   1: {
@@ -9,6 +9,10 @@ const ELEMENTS = {
   2: {
     alt: "Text",
     element: <N_Text value="Text" />,
+  },
+  3: {
+    alt: "Label",
+    element: <N_Label>Label</N_Label>,
   },
 };
 
