@@ -1,0 +1,10 @@
+# Folders
+node_modules
+
+
+# Configs
+ai.config.json
+
+
+# Other Files
+*-lock.json
