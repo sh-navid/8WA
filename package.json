@@ -1,0 +1,64 @@
+{
+  "name": "nabotx",
+  "displayName": "NaBotX",
+  "description": "This VSCode extension helps developers code more efficiently with AI assistance. Currently, it serves as a simple alternative to Copilot or Cursor.",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "categories": [
+    "AI"
+  ],
+  "activationEvents": [],
+  "main": "./src/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "nabotx.helloWorld",
+        "title": "Hello World"
+      },
+      {
+        "command": "nabotx.openPanel",
+        "title": "Open NaBotX"
+      }
+    ],
+    "viewsContainers": {
+      "sidebar": [
+        {
+          "id": "nabotxSidePanel",
+          "title": "NaBotX",
+          "icon": "res/icon.svg"
+        }
+      ],
+      "activitybar": [
+        {
+          "id": "nabotxSidePanel",
+          "title": "NaBotX",
+          "icon": "res/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "nabotxSidePanel": [
+        {
+          "type": "webview",
+          "id": "nabotxSidePanelView",
+          "name": "NaBotX View"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.100.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "20.x",
+    "eslint": "^9.25.1",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.5.2"
+  }
+}
