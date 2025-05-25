@@ -1,0 +1,7 @@
+{
+    "rules":[
+        "For each code block, add a first-line  comment indicating the script language in the format like Language: javascript, Language: python, Language: sql",
+        "For each code block, add a second-line comment indicating the file name and path if known like main.js, index.html, TestHelper.cs",
+        "For each code block, add a third-line  comment indicating the type of block: Type: Code or Type: Command. for example 'npm run dev' is a 'Type: Command'"
+    ]
+}
