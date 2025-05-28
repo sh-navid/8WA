@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NaBotX</title>
+    <link rel="stylesheet" href="${styleUri}" />
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+    <script src="${languageDetectorPath}"></script>
+</head>
+<body>
+    <header>
+        <img width="42rem" src="${logoUri}" alt="NaBotX Logo" />
+        <label>NaBotX</label>
+    </header>
+    <div id="chatMessages" role="log" aria-live="polite" aria-relevant="additions"></div>
+    <div id="fileChips"></div>
+    <div class="input-wrapper">
+        <input type="text" id="userInput" placeholder="Type your message..." autocomplete="off" aria-label="Message input" autofocus />
+        <button id="attachFilesButton" class="icon-btn" title="Attach Files">&#128206;</button>
+        <button id="sendButton" class="icon-btn" title="Send Message">&#10148;</button>
+    </div>
+    <div id="confirmModal" class="modal-overlay" style="display: none">
+        <div class="modal">
+            <h3>Confirm Sending</h3>
+            <div id="confirmContent"></div>
+            <div style="margin-top: 1rem">
+                <button id="confirmYes">Yes</button>
+                <button id="confirmNo">No</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const vscode = acquireVsCodeApi();
+        const attachFilesButton = $("#attachFilesButton");
+        const confirmContent = $("#confirmContent");
+        const chatMessages = $("#chatMessages");
+        const confirmModal = $("#confirmModal");
+        const fileChipsDiv = $("#fileChips");
+        const sendButton = $("#sendButton");
+        const userInput = $("#userInput");
+        let attachedFiles = [];
+
+        function addMessage(text, fromUser = true) {
+            const msgDiv = $("<div>").addClass("message").addClass(fromUser ? "user" : "bot").text(text);
+            chatMessages.append(msgDiv).scrollTop(chatMessages[0].scrollHeight);
+        }
+
+        function addBotMessage(response) {
+            const msgDiv = $("<div>").addClass("message bot");
+            if (response?.choices?.[0]?.message?.content) {
+                const content = marked.parse(response.choices[0].message.content);
+                msgDiv.html(content);
+                chatMessages.append(msgDiv).scrollTop(chatMessages[0].scrollHeight);
+                Prism.highlightAll();
+                msgDiv.find("pre").each(function() {
+                    const pre = $(this);
+                    pre.css("position", "relative").append(`
+                        <div class="code-btns-container">
+                            <button class="icon-btn" title="Append in File">↵</button>
+                            <button class="icon-btn" title="Replace File">&#10226;</button>
+                        </div>
+                    `);
+                    pre.find(".code-btns-container button:eq(0)").click(() => {
+                        const code = pre.find("code").text();
+                        vscode.postMessage({ command: "appendToActiveFile", code });
+                    });
+                    pre.find(".code-btns-container button:eq(1)").click(() => {
+                        const code = pre.find("code").text();
+                        vscode.postMessage({ command: "replaceActiveFile", code });
+                    });
+                });
+            } else {
+                msgDiv.text("No response from bot.");
+                chatMessages.append(msgDiv).scrollTop(chatMessages[0].scrollHeight);
+            }
+        }
+
+        async function sendToLLM(message) {
+            try {
+                const response = await fetch("${path}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer ${token}"
+                    },
+                    body: JSON.stringify({
+                        model: "${model}",
+                        messages: [{ role: "user", content: message }]
+                    })
+                });
+                if (!response.ok) throw new Error(`${response.status} - ${await response.text()}`);
+                return await response.json();
+            } catch (error) {
+                console.error("Error:", error);
+                return { choices: [{ message: { content: "Error communicating with the LLM: " + error.message } }] };
+            }
+        }
+
+        function renderFileChips() {
+            fileChipsDiv.empty();
+            attachedFiles.forEach(file => {
+                fileChipsDiv.append(`<div class="chip">${file.name}</div>`);
+            });
+        }
+
+        attachFilesButton.click(() => vscode.postMessage({ command: "pickFiles" }));
+        
+        window.addEventListener("message", (event) => {
+            if (event.data.command === "attachFiles" && event.data.files?.length) {
+                attachedFiles = attachedFiles.concat(event.data.files);
+                renderFileChips();
+            }
+        });
+
+        // --------------------------------------------------------------------------------
+        // ?
+        // --------------------------------------------------------------------------------
+        sendButton.click(() => {
+            const text = userInput.val().trim();
+            if (!text && attachedFiles.length === 0) return;
+
+            let combinedMessage = text + "\n\n---\nRules: ${rules}";
+            if (attachedFiles.length) {
+                attachedFiles.forEach(file => {
+                    combinedMessage += `\n\n---\nFile: ${file.name}\nContent:\n${file.content}`;
+                });
+                confirmContent.html(`<p>You are about to send the following message:</p><small><pre><code>${combinedMessage}</code></pre></small><p>Do you wish to continue?</p>`);
+                confirmModal.show();
+                $("#confirmYes").off("click").on("click", async () => {
+                    confirmModal.hide();
+                    await proceedToSend(text, combinedMessage);
+                });
+                $("#confirmNo").off("click").on("click", () => confirmModal.hide());
+            } else {
+                proceedToSend(text, combinedMessage);
+            }
+        });
+
+
+        // --------------------------------------------------------------------------------
+        // ?
+        // --------------------------------------------------------------------------------
+        async function proceedToSend(userText, combinedMessage) {
+            addMessage(userText);
+            userInput.val("");
+            sendButton.prop("disabled", true);
+            const response = await sendToLLM(combinedMessage);
+            addBotMessage(response);
+            sendButton.prop("disabled", false).focus();
+        }
+
+
+        // --------------------------------------------------------------------------------
+        // On enter in input text
+        // --------------------------------------------------------------------------------
+        userInput.on("keydown", (e) => {
+            if (e.key === "Enter") {
+                sendButton.click();
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>
