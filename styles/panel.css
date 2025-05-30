@@ -202,13 +202,18 @@ header label {
   right: 0.5em;
 }
 
-.code-btns-container * {
-  background-color: #212121;
-  display: inline-block;
+.code-btns-container button {
+  background-color: transparent;
   border-radius: 1rem;
   text-align: center;
-  color: white;
+  cursor: pointer;
   border: none;
   height: 2rem;
   width: 2rem;
+}
+
+.code-btns-container button img{
+  vertical-align: middle;
+  height: .8rem;
+  width: .8rem;
 }
