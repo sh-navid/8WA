@@ -14,8 +14,18 @@ body {
 }
 
 /* Header */
+.headerContainer {
+  position: fixed;
+  z-index: 999999;
+  right: 0;
+  left: 0;
+}
+
 header {
   border-bottom: 1px solid var(--vscode-editorWidget-border, #ddd);
+  border-bottom-right-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+
   box-shadow: 0 1px 3px var(--vscode-shadow, rgba(0, 0, 0, 0.1));
   background-color: var(--vscode-editorWidget-background);
   align-items: center;
@@ -24,20 +34,19 @@ header {
   gap: 0.75rem;
 }
 header img {
-  max-width: 42px;
   height: auto;
-  width: 42rem;
+  width: 1.8rem;
 }
 header label {
   color: var(--vscode-editor-foreground);
-  font-size: 1.5rem;
+  font-size: 1.15rem;
   font-weight: 700;
 }
 
 /* Chat messages */
 #chatMessages {
-  box-shadow: 0 2px 6px var(--vscode-shadow, rgba(0, 0, 0, 0.1));
-  background-color: var(--vscode-editorWidget-background);
+  /* box-shadow: 0 2px 6px var(--vscode-shadow, rgba(0, 0, 0, 0.1)); */
+  background-color: transparent;
   flex-direction: column;
   border-radius: 8px;
   user-select: text;
@@ -99,8 +108,9 @@ header label {
   box-shadow: 0 4px 12px var(--vscode-shadow, rgba(0, 0, 0, 0.15));
   background: var(--vscode-editorWidget-background);
   transform: translateX(-50%);
-  padding: 0.5rem 1rem;
-  border-radius: 30px;
+  padding: 0.5rem 0.75rem;
+  vertical-align: middle;
+  border-radius: 1rem;
   align-items: center;
   user-select: none;
   max-width: 600px;
@@ -113,23 +123,40 @@ header label {
   left: 50%;
 }
 
-/* Input field styling */
-.input-wrapper input[type="text"] {
+.input-wrapper textarea {
   transition: background-color 0.3s ease, border-color 0.3s ease;
   background-color: var(--vscode-input-background);
   border: 1px solid var(--vscode-input-border);
   color: var(--vscode-input-foreground);
   padding: 0.75rem 1rem;
-  border-radius: 30px;
+  border-radius: 1rem;
   position: relative;
-  font-size: 1rem;
+  min-height: 2.5rem;
+  max-height: 20rem;
+  font-size: 0.8rem;
   outline: none;
   flex-grow: 1;
   z-index: 10;
-}
 
-.input-wrapper input[type="text"]:focus {
-  border-color: var(--vscode-focusBorder);
+  /* WebKit scrollbar styles */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--vscode-input-background);
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--vscode-focusBorder);
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--vscode-selectionBackground);
+  }
+
+  /* Firefox scrollbar styles */
+  scrollbar-width: thin;
+  scrollbar-color: var(--vscode-focusBorder) var(--vscode-input-background);
 }
 
 /* Buttons with no background */
@@ -150,78 +177,10 @@ header label {
   color: var(--vscode-button-hoverForeground, #ccc);
 }
 
-.input-wrapper button.icon-btn:focus {
-  outline: 2px solid var(--vscode-focusBorder);
-  outline-offset: 2px;
-}
-
-/* Modal overlay and container */
-#confirmModal.modal-overlay {
-  background-color: var(--vscode-editor-background, rgba(0, 0, 0, 0.5));
-  display: none; /* controlled via inline style */
-  justify-content: center;
-  align-items: center;
-  user-select: none;
-  position: fixed;
-  z-index: 1100;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  top: 0;
-}
-
-#confirmModal.modal-overlay.active {
-  display: flex;
-}
-
-.modal {
-  box-shadow: 0 4px 12px var(--vscode-shadow, rgba(0, 0, 0, 0.3));
-  background-color: var(--vscode-editorWidget-background, #fff);
-  color: var(--vscode-editor-foreground, #000);
-  padding: 1rem 1.5rem;
-  border-radius: 8px;
-  user-select: text;
-  overflow-y: auto;
-  max-height: 95%;
-  width: 95%;
-}
-
-.modal h3 {
-  color: var(--vscode-editor-foreground);
-  margin-bottom: 0.75rem;
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-top: 0;
-}
-
-#confirmContent {
-  color: var(--vscode-editor-foreground);
-  margin-bottom: 1rem;
-  line-height: 1.4;
-  font-size: 1rem;
-}
-
-.modal > div:last-child {
-  justify-content: flex-end;
-  margin-top: 1rem;
-  display: flex;
-  gap: 0.25rem;
-}
-
-.modal button {
-  color: var(--vscode-button-foreground, #fff);
-  background-color: transparent !important;
-  transition: color 0.3s ease;
-  border: none !important;
-  padding: 0.5rem 1rem;
-  user-select: none;
-  font-weight: 600;
-  cursor: pointer;
-  font-size: 1rem;
-}
-
-.modal button:hover {
-  color: var(--vscode-button-hoverForeground, #ccc);
+.space {
+  /* background-color: red; */
+  display: block;
+  height: 5rem;
 }
 
 /* Responsive tweaks */

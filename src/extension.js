@@ -1,6 +1,3 @@
-// Language: javascript
-// File: extension.js
-// Type: Code
 const vscode = require("vscode");
 const path = require("path");
 const fs = require("fs");
@@ -15,7 +12,9 @@ class NaBotXSidePanelProvider {
       enableScripts: true,
       localResourceRoots: [this._extensionUri],
     };
-    webviewView.webview.onDidReceiveMessage(this._handleMessage.bind(this, webviewView));
+    webviewView.webview.onDidReceiveMessage(
+      this._handleMessage.bind(this, webviewView)
+    );
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
   }
 
@@ -40,9 +39,7 @@ class NaBotXSidePanelProvider {
       canSelectFiles: true,
     });
     if (uris?.length) {
-      const files = await Promise.all(
-        uris.map(this._readFile)
-      );
+      const files = await Promise.all(uris.map(this._readFile));
       webviewView.webview.postMessage({
         command: "attachFiles",
         files: files.filter(Boolean),
@@ -68,7 +65,7 @@ class NaBotXSidePanelProvider {
     if (editor) {
       const document = editor.document,
         pos = document.lineAt(document.lineCount - 1).range.end;
-      await editor.edit(editBuilder => editBuilder.insert(pos, "\n" + code));
+      await editor.edit((editBuilder) => editBuilder.insert(pos, "\n" + code));
     } else {
       vscode.window.showErrorMessage("No active file to append code to.");
     }
@@ -82,35 +79,76 @@ class NaBotXSidePanelProvider {
           document.positionAt(0),
           document.positionAt(document.getText().length)
         );
-      await editor.edit(editBuilder => editBuilder.replace(fullRange, code));
+      await editor.edit((editBuilder) => editBuilder.replace(fullRange, code));
     } else {
       vscode.window.showErrorMessage("No active file to replace content.");
     }
   }
 
   _getHtmlForWebview(webview) {
-    const htmlPath = path.join(this._extensionUri.fsPath, "res", "panel.html"),
-      aiConfigPath = path.join(this._extensionUri.fsPath, "configs", "ai.config.json"),
-      generalConfigPath = path.join(this._extensionUri.fsPath, "configs", "general.config.json"),
-      languageDetectorPath = path.join(this._extensionUri.fsPath, "src", "language-detector.js");
-    let html = read(htmlPath),
-      config = read(aiConfigPath, true),
-      rulesConfig = read(generalConfigPath, true);
-    const logoUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "res", "logo.svg")),
-      styleUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "res", "panel.css"));
-    return html
-      .replace(/\$\{logoUri\}/g, logoUri)
-      .replace(/\$\{styleUri\}/g, styleUri.toString())
+    let html = load(this, "views", "panel.html");
+
+    const tabView = load(this, "views", "tab.html");
+    const confirmModalView = load(this, "views", "confirmModal.html");
+
+    const config = load(this, "configs", "ai.config.json", true);
+    const general = load(this, "configs", "general.config.json", true);
+
+    let scripts = general.scripts
+      .map(
+        (x) =>
+          `<script src="${
+            x.startsWith("~/") ? uri(webview, this, "src", x.slice(2)) : x
+          }"></script>`
+      )
+      .join("");
+    let styles = general.styles
+      .map(
+        (x) =>
+          `<link href="${
+            x.startsWith("~/") ? uri(webview, this, "styles", x.slice(2)) : x
+          }" rel="stylesheet"/>`
+      )
+      .join("");
+
+    html = html
+      .replace(/\$\{tabView\}/g, tabView)
+      .replace(/\$\{confirmModalView\}/g, confirmModalView)
+
       .replace(/\$\{path\}/g, config.path)
       .replace(/\$\{token\}/g, config.token)
       .replace(/\$\{model\}/g, config.model)
-      .replace(/\$\{rules\}/g, rulesConfig.rules)
-      .replace(/\$\{languageDetectorPath\}/g, languageDetectorPath);
+
+      .replace(/\$\{rules\}/g, general.rules)
+      .replace(/\$\{scripts\}/g, scripts)
+      .replace(/\$\{styles\}/g, styles);
+
+    for (const x of general.assets)
+      html = html.replace(
+        new RegExp(`\\$\\{${x.slice(2)}\\}`, "g"),
+        uri(webview, this, "assets", x.slice(2))
+      );
+
+    return html;
   }
 }
 
-const read = (path, json = false) =>
-  json ? JSON.parse(fs.readFileSync(path, "utf8")) : fs.readFileSync(path, "utf8");
+const join = (provider, dir, fileName) => {
+  return path.join(provider._extensionUri.fsPath, dir, fileName);
+};
+
+const load = (provider, dir, fileName, json = false) => {
+  let _path = join(provider, dir, fileName);
+  return json
+    ? JSON.parse(fs.readFileSync(_path, "utf8"))
+    : fs.readFileSync(_path, "utf8");
+};
+
+const uri = (webview, provider, dir, fileName) => {
+  return webview.asWebviewUri(
+    vscode.Uri.joinPath(provider._extensionUri, dir, fileName)
+  );
+};
 
 function activate(context) {
   const provider = new NaBotXSidePanelProvider(context.extensionUri);

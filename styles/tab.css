@@ -1,0 +1,32 @@
+tabs {
+  border-bottom: 1px solid var(--vscode-editorWidget-border, #ddd) !important;
+  background: var(--vscode-editorWidget-background);
+  padding-bottom: 0.4rem !important;
+  padding-top: 0.4rem !important;
+  align-items: center;
+  display: flex;
+  border: none;
+}
+
+tab {
+  border: 1px solid var(--vscode-editorWidget-border);
+  margin-right: 0.3rem;
+  margin-left: 0.3rem;
+  cursor: pointer;
+  padding: 10px;
+
+  border-bottom-right-radius: 1rem;
+  border-top-left-radius: 1rem;
+
+  padding-bottom: 0.1rem !important;
+  padding-right: 0.6rem !important;
+  padding-left: 0.6rem !important;
+  padding-top: 0.1rem !important;
+}
+
+tabs > button {
+  background-color: transparent;
+  cursor: pointer;
+  width: 1.7rem;
+  border: none;
+}
