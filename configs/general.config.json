@@ -24,5 +24,13 @@
     "~/confirmModal.js",
     "~/tab.js"
   ],
-  "assets": ["~/attach.png", "~/logo.svg", "~/plus.png", "~/send.png"]
+  "assets": [
+    "~/btn-replace.png",
+    "~/btn-append.png",
+    "~/btn-copy.png",
+    "~/attach.png",
+    "~/logo.svg",
+    "~/plus.png",
+    "~/send.png"
+  ]
 }

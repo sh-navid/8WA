@@ -29,6 +29,9 @@ class NaBotXSidePanelProvider {
       case "replaceActiveFile":
         await this._replaceActiveFile(message.code);
         break;
+      case "copyCodeBlock":
+        await this._copyCodeBlock(message.code); // Implement this function; this is a VScode extension
+        break;
     }
   }
 
@@ -85,6 +88,10 @@ class NaBotXSidePanelProvider {
     }
   }
 
+  async _copyCodeBlock(code) {
+    await vscode.env.clipboard.writeText(code);
+  }
+
   _getHtmlForWebview(webview) {
     let html = load(this, "views", "panel.html");
 
@@ -112,19 +119,19 @@ class NaBotXSidePanelProvider {
       .join("");
 
     html = html
-      .replace(/\$\{tabView\}/g, tabView)
-      .replace(/\$\{confirmModalView\}/g, confirmModalView)
+      .replaceAll(/\$\{tabView\}/g, tabView)
+      .replaceAll(/\$\{confirmModalView\}/g, confirmModalView)
 
-      .replace(/\$\{path\}/g, config.path)
-      .replace(/\$\{token\}/g, config.token)
-      .replace(/\$\{model\}/g, config.model)
+      .replaceAll(/\$\{path\}/g, config.path)
+      .replaceAll(/\$\{token\}/g, config.token)
+      .replaceAll(/\$\{model\}/g, config.model)
 
-      .replace(/\$\{rules\}/g, general.rules)
-      .replace(/\$\{scripts\}/g, scripts)
-      .replace(/\$\{styles\}/g, styles);
+      .replaceAll(/\$\{rules\}/g, general.rules)
+      .replaceAll(/\$\{scripts\}/g, scripts)
+      .replaceAll(/\$\{styles\}/g, styles);
 
     for (const x of general.assets)
-      html = html.replace(
+      html = html.replaceAll(
         new RegExp(`\\$\\{${x.slice(2)}\\}`, "g"),
         uri(webview, this, "assets", x.slice(2))
       );

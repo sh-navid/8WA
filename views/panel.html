@@ -41,6 +41,7 @@
       </button>
     </div>
     ${confirmModalView}
+
     <script>
       const vscode = acquireVsCodeApi();
       const attachFilesButton = $("#attachFilesButton");
@@ -67,10 +68,14 @@
           Prism.highlightAll();
           msgDiv.find("pre").each(function () {
             const pre = $(this);
+            const btnReplace="${btn-replace.png}"
+            const btnAppend="${btn-append.png}"
+            const btnCopy="${btn-copy.png}"
             pre.css("position", "relative").append(`
                         <div class="code-btns-container">
-                            <button class="icon-btn" title="Append in File">↵</button>
-                            <button class="icon-btn" title="Replace File">&#10226;</button>
+                            <button class="icon-btn" title="Append in File"><img src="${btnAppend}"/></button>
+                            <button class="icon-btn" title="Replace File"><img src="${btnReplace}"/></button>
+                            <button class="icon-btn" title="Copy File"><img src="${btnCopy}"/></button>
                         </div>
                     `);
             pre.find(".code-btns-container button:eq(0)").click(() => {
@@ -80,6 +85,10 @@
             pre.find(".code-btns-container button:eq(1)").click(() => {
               const code = pre.find("code").text();
               vscode.postMessage({ command: "replaceActiveFile", code });
+            });
+            pre.find(".code-btns-container button:eq(2)").click(() => {
+              const code = pre.find("code").text();
+              vscode.postMessage({ command: "copyCodeBlock", code });
             });
           });
         } else {
