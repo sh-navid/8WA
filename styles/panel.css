@@ -177,12 +177,6 @@ header label {
   color: var(--vscode-button-hoverForeground, #ccc);
 }
 
-.space {
-  /* background-color: red; */
-  display: block;
-  height: 5rem;
-}
-
 /* Responsive tweaks */
 @media (max-width: 480px) {
   #fileChips {

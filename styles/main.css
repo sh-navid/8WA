@@ -4,4 +4,8 @@ button:hover{
   border: none;
 }
 
-
+.space {
+  /* background-color: red; */
+  display: block;
+  height: 5rem;
+}

@@ -21,6 +21,7 @@
     "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js",
     "https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js",
     "https://cdn.jsdelivr.net/npm/marked/marked.min.js",
+    "~/confirmModal.js",
     "~/tab.js"
   ],
   "assets": ["~/attach.png", "~/logo.svg", "~/plus.png", "~/send.png"]

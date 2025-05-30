@@ -25,8 +25,8 @@
   border-radius: 8px;
   user-select: text;
   overflow-y: auto;
-  max-height: 95%;
-  width: 95%;
+  max-height: 100%;
+  width: 100%;
 }
 
 .modal h3 {

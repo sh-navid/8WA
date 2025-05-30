@@ -44,9 +44,7 @@
     <script>
       const vscode = acquireVsCodeApi();
       const attachFilesButton = $("#attachFilesButton");
-      const confirmContent = $("#confirmContent");
       const chatMessages = $("#chatMessages");
-      const confirmModal = $("#confirmModal");
       const fileChipsDiv = $("#fileChips");
       const sendButton = $("#sendButton");
       const userInput = $("#userInput");
@@ -150,7 +148,7 @@
           attachedFiles.forEach((file) => {
             combinedMessage += `\n\n---\nFile: ${file.name}\nContent:\n${file.content}`;
           });
-          confirmContent.html(
+          showConfirmModal(
             `<p>You are about to send the following message:</p><small><pre><code>${combinedMessage}</code></pre></small><p>Do you wish to continue?</p>`
           );
           confirmModal.show();
