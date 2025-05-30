@@ -1,4 +1,11 @@
 <tabs>
-    <tab>Default</tab>
-    <button><img src="${plus.png}"/></button>
+  <tab>Default Tab</tab>
+  <img class="addTab" src="${plus.png}" />
 </tabs>
+
+<template class="tabTemplate">
+  <tab>
+    <div contenteditable="false" class="tabTitle">Tab</div>
+    <img class="remTab" src="${plus.png}" />
+  </tab>
+</template>

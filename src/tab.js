@@ -1,18 +1,19 @@
-const tabs = document.querySelector('tabs');  
-const button = tabs.querySelector('button');    
+let tabs;
+let addBtn;
+let tabCount = 1;
 
-// Function to create a new tab  
-function createTab() {          
-    const newTab = document.createElement('tab');          
-    newTab.textContent = 'New Tab';                
-    
-    newTab.onclick = () => {                  
-        // Remove tab when clicked                  
-        tabs.removeChild(newTab);          
-    };              
-    
-    tabs.insertBefore(newTab, button); // Insert the new tab before the button  
-}    
+window.onload = function () {
+  tabs = $("tabs");
+  addBtn = tabs.find(".addTab");
+  addBtn.on("click", createTab);
+};
 
-// Add event listener for the add tab button  
-button.onclick = createTab;  
+function createTab() {
+  const newTabTemplate = $(".tabTemplate").html();
+  const newTab = $(newTabTemplate);
+  newTab.find(".tabTitle").html("Tab " + ++tabCount);
+  newTab.find(".remTab").on("click", () => {
+    newTab.remove();
+  });
+  tabs.append(newTab);
+}

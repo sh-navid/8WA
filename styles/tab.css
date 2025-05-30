@@ -12,6 +12,8 @@ tab {
   border: 1px solid var(--vscode-editorWidget-border);
   margin-right: 0.3rem;
   margin-left: 0.3rem;
+  position: relative;
+  min-width: 3rem;
   cursor: pointer;
   padding: 10px;
 
@@ -24,9 +26,34 @@ tab {
   padding-top: 0.1rem !important;
 }
 
-tabs > button {
-  background-color: transparent;
+tab:not(:first-child) {
+  padding-right: 1.4rem !important;
+}
+
+tabs .addTab {
   cursor: pointer;
-  width: 1.7rem;
+  width: 1.2rem;
   border: none;
+  padding-right: 0.5rem !important;
+}
+
+tabs .addTab:hover {
+  transition: all 300ms;
+  opacity: 0.5;
+}
+
+tabs .remTab {
+  transform: rotate(45deg);
+  position: absolute;
+  cursor: pointer;
+  height: 0.7rem;
+  width: 0.7rem;
+  border: none;
+  right: 0.3rem;
+  top: 0.1rem;
+}
+
+tabs .remTab:hover {
+  transition: all 300ms;
+  opacity: 0.5;
 }
