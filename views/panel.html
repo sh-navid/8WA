@@ -63,6 +63,10 @@
         const msgDiv = $("<div>").addClass("message bot");
         if (response?.choices?.[0]?.message?.content) {
           const content = marked.parse(response.choices[0].message.content);
+         
+          // Important to track conversation in chat
+          msg.push({ role: "assistant", content: content });
+         
           msgDiv.html(content);
           chatMessages.append(msgDiv).scrollTop(chatMessages[0].scrollHeight);
           Prism.highlightAll();
@@ -82,11 +86,12 @@
                   </button>
                   ${
                     isCommandBlock(code)
-                      ?`
+                      ? `
                         <button class="icon-btn" title="Execute Command">
                           <img src="${btnExecute}"/>
                         </button>
-                      `:`
+                      `
+                      : `
                         <button class="icon-btn" title="Append in File">
                           <img src="${btnAppend}"/>
                         </button>
@@ -117,7 +122,16 @@
         return text.includes("Type: Command");
       }
 
+      let msg = [
+        {
+          role: "assistant",
+          content: "Hello; i am your code assistant. how can i help you?",
+        },
+      ];
+
       async function sendToLLM(message) {
+        msg.push({ role: "user", content: message });
+
         try {
           const response = await fetch("${path}", {
             method: "POST",
@@ -127,7 +141,7 @@
             },
             body: JSON.stringify({
               model: "${model}",
-              messages: [{ role: "user", content: message }],
+              messages: msg,
             }),
           });
           if (!response.ok)
@@ -205,6 +219,7 @@
         userInput.val("");
         sendButton.prop("disabled", true);
         const response = await sendToLLM(combinedMessage);
+
         addBotMessage(response);
         sendButton.prop("disabled", false).focus();
       }
