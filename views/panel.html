@@ -52,10 +52,26 @@
       let attachedFiles = [];
 
       function addMessage(text, fromUser = true) {
-        const msgDiv = $("<div>")
-          .addClass("message")
-          .addClass(fromUser ? "user" : "bot")
-          .text(text);
+        const msgDiv = $("<div>").addClass("message").addClass(fromUser ? "user" : "bot");
+
+        if (text.length > 150 && fromUser) {
+          const shortText = text.substring(0, 150);
+          const remainingText = text.substring(150);
+
+          const shortSpan = $("<span>").text(shortText);
+          const moreButton = $("<button>").text("More...").addClass("more-button");
+          const fullSpan = $("<span>").text(remainingText).hide();
+
+          moreButton.click(() => {
+            fullSpan.show();
+            moreButton.hide();
+          });
+
+          msgDiv.append(shortSpan, moreButton, fullSpan);
+        } else {
+          msgDiv.text(text);
+        }
+
         chatMessages.append(msgDiv).scrollTop(chatMessages[0].scrollHeight);
       }
 
