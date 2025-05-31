@@ -11,7 +11,7 @@ window.onload = function () {
 function createTab() {
   const newTabTemplate = $(".tabTemplate").html();
   const newTab = $(newTabTemplate);
-  newTab.find(".tabTitle").html("Tab " + ++tabCount);
+  newTab.find(".tabTitle").html("Chat " + ++tabCount);
   newTab.find(".remTab").on("click", () => {
     newTab.remove();
   });

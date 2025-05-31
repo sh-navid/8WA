@@ -15,10 +15,9 @@ tab {
   position: relative;
   min-width: 3rem;
   cursor: pointer;
-  padding: 10px;
+  padding: .5rem;
 
-  border-bottom-right-radius: 1rem;
-  border-top-left-radius: 1rem;
+  border-radius: .25rem;
 
   padding-bottom: 0.1rem !important;
   padding-right: 0.6rem !important;
