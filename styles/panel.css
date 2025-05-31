@@ -197,23 +197,32 @@ header label {
 }
 
 .code-btns-container {
+  background-color: #212121aa;
   position: absolute;
   top: -0.5rem;
-  left: 0.5em;
-  width: 10rem;
-}
+  right: 0.5em;
+  /* Make buttons stay in one line and handle overflow */
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto; /* Enable horizontal scrolling if needed */
+  scrollbar-width: none; /* Hide scrollbar in Firefox */
+  -ms-overflow-style: none; /* Hide scrollbar in IE and Edge */
 
-.code-btns-container button {
-  background-color: transparent;
-  display: inline-block;
+  padding: .5rem;
+  margin-top: 1rem;
   border-radius: 1rem;
-  cursor: pointer;
-  border: none;
-  height: 2rem;
-  width: 2rem;
+}
+.code-btns-container::-webkit-scrollbar {
+  display: none; /* Hide scrollbar in Chrome, Safari and Opera */
 }
 
-.code-btns-container button img{
-  height: .8rem;
-  width: .8rem;
+.code-btns-container img {
+  height: 0.8rem;
+  width: 0.8rem;
+  margin-left:.5rem;
+  margin-right:.5rem;
+}
+
+.code-btns-container img:hover {
+  opacity:.5;
 }

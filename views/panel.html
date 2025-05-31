@@ -97,34 +97,19 @@
 
             pre.css("position", "relative").append(`
                 <div class="code-btns-container">    
-                  <button class="icon-btn" title="Copy File">
-                    <img src="${btnCopy}"/>
-                  </button>
-                  ${
-                    isCommandBlock(code)
-                      ? `
-                        <button class="icon-btn" title="Execute Command">
-                          <img src="${btnExecute}"/>
-                        </button>
-                      `
-                      : `
-                        <button class="icon-btn" title="Append in File">
-                          <img src="${btnAppend}"/>
-                        </button>
-                        <button class="icon-btn" title="Replace File">
-                          <img src="${btnReplace}"/>
-                        </button>
-                      `
-                  }
+                  <img src="${btnAppend}"   alt="Append in File"  />
+                  <img src="${btnReplace}"  alt="Replace File"    />
+                  <img src="${btnCopy}"     alt="Copy File"       />
+                  <img src="${btnExecute}"  alt="Execute Command" />
                 </div>
             `);
-            pre.find(".code-btns-container button:eq(0)").click(() => {
+            pre.find(".code-btns-container img:eq(0)").click(() => {
               vscode.postMessage({ command: "appendToActiveFile", code });
             });
-            pre.find(".code-btns-container button:eq(1)").click(() => {
+            pre.find(".code-btns-container img:eq(1)").click(() => {
               vscode.postMessage({ command: "replaceActiveFile", code });
             });
-            pre.find(".code-btns-container button:eq(2)").click(() => {
+            pre.find(".code-btns-container img:eq(2)").click(() => {
               vscode.postMessage({ command: "copyCodeBlock", code });
             });
           });
