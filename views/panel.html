@@ -68,26 +68,42 @@
           Prism.highlightAll();
           msgDiv.find("pre").each(function () {
             const pre = $(this);
-            const btnReplace="${btn-replace.png}"
-            const btnAppend="${btn-append.png}"
-            const btnCopy="${btn-copy.png}"
+            const code = pre.find("code").text();
+
+            const btnReplace = "${btn-replace.png}";
+            const btnAppend = "${btn-append.png}";
+            const btnCopy = "${btn-copy.png}";
+            const btnExecute = "${btn-execute.png}";
+
             pre.css("position", "relative").append(`
-                        <div class="code-btns-container">
-                            <button class="icon-btn" title="Append in File"><img src="${btnAppend}"/></button>
-                            <button class="icon-btn" title="Replace File"><img src="${btnReplace}"/></button>
-                            <button class="icon-btn" title="Copy File"><img src="${btnCopy}"/></button>
-                        </div>
-                    `);
+                <div class="code-btns-container">    
+                  <button class="icon-btn" title="Copy File">
+                    <img src="${btnCopy}"/>
+                  </button>
+                  ${
+                    isCommandBlock(code)
+                      ?`
+                        <button class="icon-btn" title="Execute Command">
+                          <img src="${btnExecute}"/>
+                        </button>
+                      `:`
+                        <button class="icon-btn" title="Append in File">
+                          <img src="${btnAppend}"/>
+                        </button>
+                        <button class="icon-btn" title="Replace File">
+                          <img src="${btnReplace}"/>
+                        </button>
+                      `
+                  }
+                </div>
+            `);
             pre.find(".code-btns-container button:eq(0)").click(() => {
-              const code = pre.find("code").text();
               vscode.postMessage({ command: "appendToActiveFile", code });
             });
             pre.find(".code-btns-container button:eq(1)").click(() => {
-              const code = pre.find("code").text();
               vscode.postMessage({ command: "replaceActiveFile", code });
             });
             pre.find(".code-btns-container button:eq(2)").click(() => {
-              const code = pre.find("code").text();
               vscode.postMessage({ command: "copyCodeBlock", code });
             });
           });
@@ -95,6 +111,10 @@
           msgDiv.text("No response from bot.");
           chatMessages.append(msgDiv).scrollTop(chatMessages[0].scrollHeight);
         }
+      }
+
+      function isCommandBlock(text) {
+        return text.includes("Type: Command");
       }
 
       async function sendToLLM(message) {
@@ -161,6 +181,8 @@
             `<p>You are about to send the following message:</p><small><pre><code>${combinedMessage}</code></pre></small><p>Do you wish to continue?</p>`
           );
           confirmModal.show();
+
+          // FIXME: move these to modal scripts
           $("#confirmYes")
             .off("click")
             .on("click", async () => {

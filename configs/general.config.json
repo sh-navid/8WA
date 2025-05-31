@@ -26,6 +26,7 @@
   ],
   "assets": [
     "~/btn-replace.png",
+    "~/btn-execute.png",
     "~/btn-append.png",
     "~/btn-copy.png",
     "~/attach.png",
