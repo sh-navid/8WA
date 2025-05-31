@@ -76,62 +76,78 @@
       }
 
       function addBotMessage(response) {
-        const msgDiv = $("<div>").addClass("message bot");
-        if (response?.choices?.[0]?.message?.content) {
-          const content = marked.parse(response.choices[0].message.content);
-         
-          // Important to track conversation in chat
-          msg.push({ role: "assistant", content: content });
-         
-          msgDiv.html(content);
-          chatMessages.append(msgDiv).scrollTop(chatMessages[0].scrollHeight);
-          Prism.highlightAll();
-          msgDiv.find("pre").each(function () {
-            const pre = $(this);
-            const code = pre.find("code").text();
+  const msgDiv = $("<div>").addClass("message bot");
+  if (response?.choices?.[0]?.message?.content) {
+    let content = response.choices[0].message.content; // Modified line
 
-            const btnReplace = "${btn-replace.png}";
-            const btnAppend = "${btn-append.png}";
-            const btnCopy = "${btn-copy.png}";
-            const btnExecute = "${btn-execute.png}";
+    // Parse the content and extract the language if available
+    let language = "text"; // Default language
+    const languageMatch = content.match(/^\/\/ Language: (\w+)/m);
 
-            pre.css("position", "relative").append(`
-                <div class="code-btns-container">    
-                  <img src="${btnAppend}"   alt="Append in File"  />
-                  <img src="${btnReplace}"  alt="Replace File"    />
-                  <img src="${btnCopy}"     alt="Copy File"       />
-                  <img src="${btnExecute}"  alt="Execute Command" />
-                </div>
-            `);
-            pre.find(".code-btns-container img:eq(0)").click(() => {
-              vscode.postMessage({ command: "appendToActiveFile", code });
-            });
-            pre.find(".code-btns-container img:eq(1)").click(() => {
-              vscode.postMessage({ command: "replaceActiveFile", code });
-            });
-            pre.find(".code-btns-container img:eq(2)").click(() => {
-              vscode.postMessage({ command: "copyCodeBlock", code });
-            });
-          });
-        } else {
-          msgDiv.text("No response from bot.");
-          chatMessages.append(msgDiv).scrollTop(chatMessages[0].scrollHeight);
-        }
-      }
+    if (languageMatch) {
+      language = languageMatch[1].toLowerCase();
+      // Remove the first 3 lines from the content before parsing with marked
+      content = content.replace(/^\/\/ Language: .*\n\/\/ file: .*\n\/\/ Type: .*\n/, "");
+    }
+
+    // Now parse remaining content with marked
+    const markedContent = marked.parse(content);
+
+    // Important to track conversation in chat
+    msgArray.push({ role: "assistant", content: markedContent });
+
+    msgDiv.html(markedContent);
+    chatMessages.append(msgDiv).scrollTop(chatMessages[0].scrollHeight);
+
+    // Find all 'pre' elements and add the appropriate class for syntax highlighting
+    msgDiv.find("pre").each(function () {
+      const pre = $(this);
+      pre.addClass(`language-${language}`); // Added line: apply language class
+      Prism.highlightElement(pre[0]); // Apply prism highlight to this element
+      const code = pre.find("code").text();
+
+      const btnReplace = "${btn-replace.png}";
+      const btnAppend = "${btn-append.png}";
+      const btnCopy = "${btn-copy.png}";
+      const btnExecute = "${btn-execute.png}";
+
+      pre.css("position", "relative").append(`
+          <div class="code-btns-container">    
+            <img src="${btnAppend}"   alt="Append in File"  />
+            <img src="${btnReplace}"  alt="Replace File"    />
+            <img src="${btnCopy}"     alt="Copy File"       />
+            <img src="${btnExecute}"  alt="Execute Command" />
+          </div>
+      `);
+      pre.find(".code-btns-container img:eq(0)").click(() => {
+        vscode.postMessage({ command: "appendToActiveFile", code });
+      });
+      pre.find(".code-btns-container img:eq(1)").click(() => {
+        vscode.postMessage({ command: "replaceActiveFile", code });
+      });
+      pre.find(".code-btns-container img:eq(2)").click(() => {
+        vscode.postMessage({ command: "copyCodeBlock", code });
+      });
+    });
+  } else {
+    msgDiv.text("No response from bot.");
+    chatMessages.append(msgDiv).scrollTop(chatMessages[0].scrollHeight);
+  }
+}
 
       function isCommandBlock(text) {
         return text.includes("Type: Command");
       }
 
-      let msg = [
+      let msgArray = [
         {
           role: "assistant",
-          content: "Hello; i am your code assistant. how can i help you?",
+          content: "${rules}",
         },
       ];
 
       async function sendToLLM(message) {
-        msg.push({ role: "user", content: message });
+        msgArray.push({ role: "user", content: message });
 
         try {
           const response = await fetch("${path}", {
@@ -142,7 +158,7 @@
             },
             body: JSON.stringify({
               model: "${model}",
-              messages: msg,
+              messages: msgArray,
             }),
           });
           if (!response.ok)
