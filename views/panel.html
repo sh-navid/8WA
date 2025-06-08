@@ -42,6 +42,12 @@
       const chatMessages = $("#chatMessages");
       const sendButton = $("#sendButton");
       const userInput = $("#userInput");
+      const msgArray = [
+        {
+          role: "assistant",
+          content: "${rules}",
+        },
+      ];
 
       function addMessage(text, fromUser = true) {
         const msgDiv = $("<div>")
@@ -133,13 +139,6 @@
         }
       }
 
-      let msgArray = [
-        {
-          role: "assistant",
-          content: "${rules}",
-        },
-      ];
-
       function clearChat() {
         msgArray = [
           {
@@ -211,6 +210,19 @@
         if (e.key === "Enter") {
           sendButton.click();
           e.preventDefault();
+        }
+      });
+
+      // Listen for messages from the extension
+      window.addEventListener("message", (event) => {
+        const message = event.data;
+
+        switch (message.command) {
+          case "addTextToChat":
+            // Add the received text to the chat
+            msgArray.push({ role: "user", content: message.text });
+            addMessage(message.text, true); // 'true' indicates it's a user message
+            break;
         }
       });
     </script>
