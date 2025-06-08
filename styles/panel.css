@@ -226,3 +226,9 @@ header label {
 .code-btns-container img:hover {
   opacity:.5;
 }
+
+.more-button{
+  color: goldenrod;
+  background-color: transparent;
+  border: none;
+}
