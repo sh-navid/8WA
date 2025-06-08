@@ -76,42 +76,42 @@
       }
 
       function addBotMessage(response) {
-  const msgDiv = $("<div>").addClass("message bot");
-  if (response?.choices?.[0]?.message?.content) {
-    let content = response.choices[0].message.content; // Modified line
+        const msgDiv = $("<div>").addClass("message bot");
+        if (response?.choices?.[0]?.message?.content) {
+          let content = response.choices[0].message.content; // Modified line
 
-    // Parse the content and extract the language if available
-    let language = "text"; // Default language
-    const languageMatch = content.match(/^\/\/ Language: (\w+)/m);
+          // Parse the content and extract the language if available
+          let language = "text"; // Default language
+          const languageMatch = content.match(/^\/\/ Language: (\w+)/m);
 
-    if (languageMatch) {
-      language = languageMatch[1].toLowerCase();
-      // Remove the first 3 lines from the content before parsing with marked
+          if (languageMatch) {
+            language = languageMatch[1].toLowerCase();
+            // Remove the first 3 lines from the content before parsing with marked
       content = content.replace(/^\/\/ Language: .*\n\/\/ file: .*\n\/\/ Type: .*\n/, "");
-    }
+          }
 
-    // Now parse remaining content with marked
-    const markedContent = marked.parse(content);
+          // Now parse remaining content with marked
+          const markedContent = marked.parse(content);
 
-    // Important to track conversation in chat
-    msgArray.push({ role: "assistant", content: markedContent });
+          // Important to track conversation in chat
+          msgArray.push({ role: "assistant", content: markedContent });
 
-    msgDiv.html(markedContent);
-    chatMessages.append(msgDiv).scrollTop(chatMessages[0].scrollHeight);
+          msgDiv.html(markedContent);
+          chatMessages.append(msgDiv).scrollTop(chatMessages[0].scrollHeight);
 
-    // Find all 'pre' elements and add the appropriate class for syntax highlighting
-    msgDiv.find("pre").each(function () {
-      const pre = $(this);
-      pre.addClass(`language-${language}`); // Added line: apply language class
-      Prism.highlightElement(pre[0]); // Apply prism highlight to this element
-      const code = pre.find("code").text();
+          // Find all 'pre' elements and add the appropriate class for syntax highlighting
+          msgDiv.find("pre").each(function () {
+            const pre = $(this);
+            pre.addClass(`language-${language}`); // Added line: apply language class
+            Prism.highlightElement(pre[0]); // Apply prism highlight to this element
+            const code = pre.find("code").text();
 
-      const btnReplace = "${btn-replace.png}";
-      const btnAppend = "${btn-append.png}";
-      const btnCopy = "${btn-copy.png}";
-      const btnExecute = "${btn-execute.png}";
+            const btnReplace = "${btn-replace.png}";
+            const btnAppend = "${btn-append.png}";
+            const btnCopy = "${btn-copy.png}";
+            const btnExecute = "${btn-execute.png}";
 
-      pre.css("position", "relative").append(`
+            pre.css("position", "relative").append(`
           <div class="code-btns-container">    
             <img src="${btnAppend}"   alt="Append in File"  />
             <img src="${btnReplace}"  alt="Replace File"    />
@@ -119,32 +119,44 @@
             <img src="${btnExecute}"  alt="Execute Command" />
           </div>
       `);
-      pre.find(".code-btns-container img:eq(0)").click(() => {
-        vscode.postMessage({ command: "appendToActiveFile", code });
-      });
-      pre.find(".code-btns-container img:eq(1)").click(() => {
-        vscode.postMessage({ command: "replaceActiveFile", code });
-      });
-      pre.find(".code-btns-container img:eq(2)").click(() => {
-        vscode.postMessage({ command: "copyCodeBlock", code });
-      });
-    });
-  } else {
-    msgDiv.text("No response from bot.");
-    chatMessages.append(msgDiv).scrollTop(chatMessages[0].scrollHeight);
-  }
-}
+            pre.find(".code-btns-container img:eq(0)").click(() => {
+              vscode.postMessage({ command: "appendToActiveFile", code });
+            });
+            pre.find(".code-btns-container img:eq(1)").click(() => {
+              vscode.postMessage({ command: "replaceActiveFile", code });
+            });
+            pre.find(".code-btns-container img:eq(2)").click(() => {
+              vscode.postMessage({ command: "copyCodeBlock", code });
+            });
+          });
+        } else {
+          msgDiv.text("No response from bot.");
+          chatMessages.append(msgDiv).scrollTop(chatMessages[0].scrollHeight);
+        }
+      }
 
       function isCommandBlock(text) {
         return text.includes("Type: Command");
       }
 
       let msgArray = [
-        {
-          role: "assistant",
-          content: "${rules}",
-        },
-      ];
+          {
+            role: "assistant",
+            content: "${rules}",
+          },
+        ];
+        
+      function clearChat() {
+        msgArray = [
+          {
+            role: "assistant",
+            content: "${rules}",
+          },
+        ];
+        chatMessages.html("");
+      }
+
+      // clear(); // Need to call at first
 
       async function sendToLLM(message) {
         msgArray.push({ role: "user", content: message });

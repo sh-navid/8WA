@@ -199,8 +199,8 @@ header label {
 .code-btns-container {
   background-color: #212121aa;
   position: absolute;
-  top: -0.5rem;
   right: 0.5em;
+  top: -0.5rem;
   /* Make buttons stay in one line and handle overflow */
   display: flex;
   flex-wrap: nowrap;
@@ -208,7 +208,7 @@ header label {
   scrollbar-width: none; /* Hide scrollbar in Firefox */
   -ms-overflow-style: none; /* Hide scrollbar in IE and Edge */
 
-  padding: .5rem;
+  padding: 0.5rem;
   margin-top: 1rem;
   border-radius: 1rem;
 }
@@ -217,18 +217,20 @@ header label {
 }
 
 .code-btns-container img {
+  margin-right: 0.5rem;
+  margin-left: 0.5rem;
   height: 0.8rem;
   width: 0.8rem;
-  margin-left:.5rem;
-  margin-right:.5rem;
 }
 
 .code-btns-container img:hover {
-  opacity:.5;
+  opacity: 0.5;
 }
 
-.more-button{
-  color: goldenrod;
+.more-button,
+a {
   background-color: transparent;
+  text-decoration: none;
+  color: goldenrod;
   border: none;
 }
