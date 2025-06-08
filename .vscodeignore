@@ -1,10 +1,19 @@
 # Folders
 node_modules
+.vscode/
 
 
 # Configs
-ai.config.json
+**/ai.config.json
+
+
+# Source of icon files
+**/icons.svg
 
 
 # Other Files
+**/tsconfig.json
+**/tslint.json
 *-lock.json
+*.map
+*.log
