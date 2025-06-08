@@ -24,7 +24,6 @@
       ></div>
       <div class="space"></div>
     </div>
-    <div id="fileChips"></div>
     <div class="input-wrapper">
       <textarea
         id="userInput"
@@ -33,33 +32,36 @@
         aria-label="Message input"
         autofocus
       ></textarea>
-      <button id="attachFilesButton" class="icon-btn" title="Attach Files">
-        <img width="16rem" src="${attach.png}" alt="Attach Files" />
-      </button>
       <button id="sendButton" class="icon-btn" title="Send Message">
         <img width="15rem" src="${send.png}" alt="Send Message" />
       </button>
     </div>
-    ${confirmModalView}
 
     <script>
       const vscode = acquireVsCodeApi();
-      const attachFilesButton = $("#attachFilesButton");
       const chatMessages = $("#chatMessages");
-      const fileChipsDiv = $("#fileChips");
       const sendButton = $("#sendButton");
       const userInput = $("#userInput");
-      let attachedFiles = [];
+      const msgArray = [
+        {
+          role: "assistant",
+          content: "${rules}",
+        },
+      ];
 
       function addMessage(text, fromUser = true) {
-        const msgDiv = $("<div>").addClass("message").addClass(fromUser ? "user" : "bot");
+        const msgDiv = $("<div>")
+          .addClass("message")
+          .addClass(fromUser ? "user" : "bot");
 
         if (text.length > 150 && fromUser) {
           const shortText = text.substring(0, 150);
           const remainingText = text.substring(150);
 
           const shortSpan = $("<span>").text(shortText);
-          const moreButton = $("<button>").text("More...").addClass("more-button");
+          const moreButton = $("<button>")
+            .text("More...")
+            .addClass("more-button");
           const fullSpan = $("<span>").text(remainingText).hide();
 
           moreButton.click(() => {
@@ -87,7 +89,10 @@
           if (languageMatch) {
             language = languageMatch[1].toLowerCase();
             // Remove the first 3 lines from the content before parsing with marked
-      content = content.replace(/^\/\/ Language: .*\n\/\/ file: .*\n\/\/ Type: .*\n/, "");
+            content = content.replace(
+              /^\/\/ Language: .*\n\/\/ file: .*\n\/\/ Type: .*\n/,
+              ""
+            );
           }
 
           // Now parse remaining content with marked
@@ -112,13 +117,12 @@
             const btnExecute = "${btn-execute.png}";
 
             pre.css("position", "relative").append(`
-          <div class="code-btns-container">    
-            <img src="${btnAppend}"   alt="Append in File"  />
-            <img src="${btnReplace}"  alt="Replace File"    />
-            <img src="${btnCopy}"     alt="Copy File"       />
-            <img src="${btnExecute}"  alt="Execute Command" />
-          </div>
-      `);
+              <div class="code-btns-container">
+                <img src="${btnAppend}"   alt="Append in File"  />
+                <img src="${btnReplace}"  alt="Replace File"    />
+                <img src="${btnCopy}"     alt="Copy File"       />
+              </div>
+             `);
             pre.find(".code-btns-container img:eq(0)").click(() => {
               vscode.postMessage({ command: "appendToActiveFile", code });
             });
@@ -135,17 +139,6 @@
         }
       }
 
-      function isCommandBlock(text) {
-        return text.includes("Type: Command");
-      }
-
-      let msgArray = [
-          {
-            role: "assistant",
-            content: "${rules}",
-          },
-        ];
-        
       function clearChat() {
         msgArray = [
           {
@@ -155,8 +148,6 @@
         ];
         chatMessages.html("");
       }
-
-      // clear(); // Need to call at first
 
       async function sendToLLM(message) {
         msgArray.push({ role: "user", content: message });
@@ -190,54 +181,13 @@
         }
       }
 
-      function renderFileChips() {
-        fileChipsDiv.empty();
-        attachedFiles.forEach((file) => {
-          fileChipsDiv.append(`<div class="chip">${file.name}</div>`);
-        });
-      }
-
-      attachFilesButton.click(() =>
-        vscode.postMessage({ command: "pickFiles" })
-      );
-
-      window.addEventListener("message", (event) => {
-        if (event.data.command === "attachFiles" && event.data.files?.length) {
-          attachedFiles = attachedFiles.concat(event.data.files);
-          renderFileChips();
-        }
-      });
-
-      // --------------------------------------------------------------------------------
-      // ?
-      // --------------------------------------------------------------------------------
       sendButton.click(() => {
         const text = userInput.val().trim();
-        if (!text && attachedFiles.length === 0) return;
+        if (!text) return;
 
         let combinedMessage = text + "\n\n---\nRules: ${rules}";
-        if (attachedFiles.length) {
-          attachedFiles.forEach((file) => {
-            combinedMessage += `\n\n---\nFile: ${file.name}\nContent:\n${file.content}`;
-          });
-          showConfirmModal(
-            `<p>You are about to send the following message:</p><small><pre><code>${combinedMessage}</code></pre></small><p>Do you wish to continue?</p>`
-          );
-          confirmModal.show();
 
-          // FIXME: move these to modal scripts
-          $("#confirmYes")
-            .off("click")
-            .on("click", async () => {
-              confirmModal.hide();
-              await proceedToSend(text, combinedMessage);
-            });
-          $("#confirmNo")
-            .off("click")
-            .on("click", () => confirmModal.hide());
-        } else {
-          proceedToSend(text, combinedMessage);
-        }
+        proceedToSend(text, combinedMessage);
       });
 
       // --------------------------------------------------------------------------------
@@ -260,6 +210,19 @@
         if (e.key === "Enter") {
           sendButton.click();
           e.preventDefault();
+        }
+      });
+
+      // Listen for messages from the extension
+      window.addEventListener("message", (event) => {
+        const message = event.data;
+
+        switch (message.command) {
+          case "addTextToChat":
+            // Add the received text to the chat
+            msgArray.push({ role: "user", content: message.text });
+            addMessage(message.text, true); // 'true' indicates it's a user message
+            break;
         }
       });
     </script>

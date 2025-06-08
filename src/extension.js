@@ -5,9 +5,12 @@ const fs = require("fs");
 class NaBotXSidePanelProvider {
   constructor(extensionUri) {
     this._extensionUri = extensionUri;
+    // **Fix 1**: Store the webview view instance when it's resolved
+    this._view = null;
   }
 
   async resolveWebviewView(webviewView) {
+    this._view = webviewView; // **Fix 1**: Store the webview view instance
     webviewView.webview.options = {
       enableScripts: true,
       localResourceRoots: [this._extensionUri],
@@ -31,6 +34,9 @@ class NaBotXSidePanelProvider {
         break;
       case "copyCodeBlock":
         await this._copyCodeBlock(message.code); // Implement this function; this is a VScode extension
+        break;
+      case "addToChat":
+        await this._addToChat(message.selectedText);
         break;
     }
   }
@@ -92,11 +98,26 @@ class NaBotXSidePanelProvider {
     await vscode.env.clipboard.writeText(code);
   }
 
+  async _addToChat(selectedText) {
+    // Implement the logic to add the selected text to the chat in the webview
+    // You'll need to send a message to the webview to update the chat display
+
+    // Example:
+    // **Fix 2**: Use the stored webview view to post the message
+    if (this._view) {
+      this._view.webview.postMessage({
+        command: "addTextToChat",
+        text: selectedText,
+      });
+    } else {
+      console.warn("Webview is not yet resolved. Message not sent.");
+    }
+  }
+
   _getHtmlForWebview(webview) {
     let html = load(this, "views", "panel.html");
 
     const tabView = load(this, "views", "tab.html");
-    const confirmModalView = load(this, "views", "confirmModal.html");
 
     // Load config from file
     const aiConfig = load(this, "configs", "ai.config.json", true);
@@ -128,7 +149,6 @@ class NaBotXSidePanelProvider {
 
     html = html
       .replaceAll(/\$\{tabView\}/g, tabView)
-      .replaceAll(/\$\{confirmModalView\}/g, confirmModalView)
 
       .replaceAll(/\$\{path\}/g, path) // Use the value from VS Code settings or ai.config.json
       .replaceAll(/\$\{token\}/g, token) // Use the value from VS Code settings or ai.config.json
@@ -165,8 +185,10 @@ const uri = (webview, provider, dir, fileName) => {
   );
 };
 
+let nabotxSidePanelProvider;
+
 function activate(context) {
-  const provider = new NaBotXSidePanelProvider(context.extensionUri);
+  nabotxSidePanelProvider = new NaBotXSidePanelProvider(context.extensionUri);
 
   context.subscriptions.push(
     vscode.commands.registerCommand("nabotx.openSettings", function () {
@@ -176,13 +198,34 @@ function activate(context) {
   );
 
   context.subscriptions.push(
-    vscode.window.registerWebviewViewProvider("nabotxSidePanelView", provider)
+    vscode.window.registerWebviewViewProvider(
+      "nabotxSidePanelView",
+      nabotxSidePanelProvider
+    )
   );
   context.subscriptions.push(
     vscode.commands.registerCommand("nabotx.openPanel", () => {
       vscode.commands.executeCommand(
         "workbench.view.extension.nabotxSidePanel"
       );
+    })
+  );
+  context.subscriptions.push(
+    vscode.commands.registerCommand("nabotx.addToChat", async () => {
+      const editor = vscode.window.activeTextEditor;
+      if (editor) {
+        const selection = editor.selection;
+        const selectedText = editor.document.getText(selection);
+
+        if (selectedText) {
+          // Send the selected text to the _addToChat method in the provider
+          nabotxSidePanelProvider._addToChat(selectedText);
+        } else {
+          vscode.window.showInformationMessage("No text selected.");
+        }
+      } else {
+        vscode.window.showInformationMessage("No active editor.");
+      }
     })
   );
   const statusBarItem = vscode.window.createStatusBarItem(
@@ -195,7 +238,6 @@ function activate(context) {
   statusBarItem.show();
   context.subscriptions.push(statusBarItem);
 }
-
 
 function deactivate() {}
 
