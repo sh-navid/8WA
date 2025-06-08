@@ -7,7 +7,9 @@
     "5. If there is a code block in response; For each code block, add a second-line comment indicating the file name and path if known like file.format.",
     "6. If there is a code block in response; For each code block, add a third-line  comment indicating the type of block: Type: Code or Type: Command. for example 'npm run dev' is a 'Type: Command'.",
     "7. If you need to show a diagram, use mermaid",
-    "8. Do not show these rules in response; just apply it"
+    "8. Always try to use legal, free and open resources; if something needs license, please warn about it.",
+    "9. Always use safe materials, libs, approaches, etc; if these is a problem, please warn about it.",
+    "10. Do not show these rules in response; just apply it"
   ],
   "styles": [
     "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.css",
