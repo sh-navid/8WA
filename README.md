@@ -12,6 +12,10 @@ NabotX is a VSCode extension designed to boost developer productivity by providi
 - Lightweight and fast
 - Easy to install and configure
 
+## Extension LLM Configuration
+- Hit `Ctrl+Shift+P`, search for NaBotX and open `NaBotX: Open Settings` 
+![](./showcase/C01.png)
+
 ## Future Works
 - [ ] Add new chat
 - [ ] Add new task
@@ -19,6 +23,10 @@ NabotX is a VSCode extension designed to boost developer productivity by providi
 - [ ] Add image
 - [ ] Generate image
 - [ ] Automate tests
+
+## Compile
+- Install vsce `npm install -g vsce`
+- And use it `vsce package`
 
 ## License
 This project is licensed under the Apache License 2.0. See the [LICENSE](./LICENSE) file for details.
