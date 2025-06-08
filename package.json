@@ -14,10 +14,6 @@
   "contributes": {
     "commands": [
       {
-        "command": "nabotx.helloWorld",
-        "title": "Hello World"
-      },
-      {
         "command": "nabotx.openPanel",
         "title": "Open NaBotX"
       }
@@ -27,14 +23,14 @@
         {
           "id": "nabotxSidePanel",
           "title": "NaBotX",
-          "icon": "res/icon.svg"
+          "icon": "assets/logo.svg"
         }
       ],
       "activitybar": [
         {
           "id": "nabotxSidePanel",
           "title": "NaBotX",
-          "icon": "res/icon.svg"
+          "icon": "assets/logo.svg"
         }
       ]
     },
@@ -43,9 +39,29 @@
         {
           "type": "webview",
           "id": "nabotxSidePanelView",
-          "name": "NaBotX View"
+          "name": "[NaBotX]"
         }
       ]
+    },
+    "configuration": {
+      "title": "NaBotX Configuration",
+      "properties": {
+        "nabotx.path": {
+          "type": "string",
+          "default": "",
+          "description": "The path to the LLM server."
+        },
+        "nabotx.token": {
+          "type": "string",
+          "default": "",
+          "description": "The API token for LLM model."
+        },
+        "nabotx.model": {
+          "type": "string",
+          "default": "",
+          "description": "The model to use for AI assistance."
+        }
+      }
     }
   },
   "scripts": {

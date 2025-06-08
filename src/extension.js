@@ -98,7 +98,15 @@ class NaBotXSidePanelProvider {
     const tabView = load(this, "views", "tab.html");
     const confirmModalView = load(this, "views", "confirmModal.html");
 
-    const config = load(this, "configs", "ai.config.json", true);
+    // Load config from file
+    const aiConfig = load(this, "configs", "ai.config.json", true);
+
+    // Get configuration settings from VS Code, fallback to ai.config.json if not set
+    const configuration = vscode.workspace.getConfiguration("nabotx");
+    const path = configuration.get("path") || aiConfig.path || "";
+    const token = configuration.get("token") || aiConfig.token || "";
+    const model = configuration.get("model") || aiConfig.model || "";
+
     const general = load(this, "configs", "general.config.json", true);
 
     let scripts = general.scripts
@@ -122,9 +130,9 @@ class NaBotXSidePanelProvider {
       .replaceAll(/\$\{tabView\}/g, tabView)
       .replaceAll(/\$\{confirmModalView\}/g, confirmModalView)
 
-      .replaceAll(/\$\{path\}/g, config.path)
-      .replaceAll(/\$\{token\}/g, config.token)
-      .replaceAll(/\$\{model\}/g, config.model)
+      .replaceAll(/\$\{path\}/g, path) // Use the value from VS Code settings or ai.config.json
+      .replaceAll(/\$\{token\}/g, token) // Use the value from VS Code settings or ai.config.json
+      .replaceAll(/\$\{model\}/g, model) // Use the value from VS Code settings or ai.config.json
 
       .replaceAll(/\$\{rules\}/g, general.rules)
       .replaceAll(/\$\{scripts\}/g, scripts)
@@ -163,16 +171,18 @@ function activate(context) {
     vscode.window.registerWebviewViewProvider("nabotxSidePanelView", provider)
   );
   context.subscriptions.push(
-    vscode.commands.registerCommand("nabotx.openPanel", () =>
-      vscode.commands.executeCommand("workbench.view.extension.nabotxSidePanel")
-    )
+    vscode.commands.registerCommand("nabotx.openPanel", () => {
+      vscode.commands.executeCommand(
+        "workbench.view.extension.nabotxSidePanel"
+      );
+    })
   );
   const statusBarItem = vscode.window.createStatusBarItem(
     vscode.StatusBarAlignment.Right,
     100
   );
   statusBarItem.text = "$(rocket) NaBotX";
-  statusBarItem.tooltip = "Open NaBotX";
+  statusBarItem.tooltip = "NaBotX";
   statusBarItem.command = "nabotx.openPanel";
   statusBarItem.show();
   context.subscriptions.push(statusBarItem);
