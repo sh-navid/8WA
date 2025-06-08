@@ -2,7 +2,13 @@
   "name": "nabotx",
   "displayName": "NaBotX",
   "description": "This VSCode extension helps developers code more efficiently with AI assistance. Currently, it serves as a simple alternative to Copilot or Cursor.",
+  "publisher": "sh-navid", 
   "version": "0.0.1",
+   "icon": "assets/logo.png",  
+   "repository": {
+    "type": "git",
+    "url": "https://github.com/sh-navid/NaBotX"
+  },
   "engines": {
     "vscode": "^1.100.0"
   },
@@ -15,22 +21,34 @@
     "commands": [
       {
         "command": "nabotx.openPanel",
-        "title": "Open NaBotX"
+        "title": "NaBotX: Open Panel"
+      },   {
+        "command": "nabotx.openSettings",
+        "title": "NaBotX: Open Settings"
       }
     ],
+    "menus": {
+      "editor/title": [ 
+        {
+          "command": "nabotx.openSettings",
+          "group": "navigation",  
+          "when": "editorFocus"  
+        }
+      ]
+    },
     "viewsContainers": {
       "sidebar": [
         {
           "id": "nabotxSidePanel",
           "title": "NaBotX",
-          "icon": "assets/logo.svg"
+          "icon": "assets/logo.png"
         }
       ],
       "activitybar": [
         {
           "id": "nabotxSidePanel",
           "title": "NaBotX",
-          "icon": "assets/logo.svg"
+          "icon": "assets/logo.png"
         }
       ]
     },

@@ -167,6 +167,14 @@ const uri = (webview, provider, dir, fileName) => {
 
 function activate(context) {
   const provider = new NaBotXSidePanelProvider(context.extensionUri);
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand("nabotx.openSettings", function () {
+      // vscode.window.showInformationMessage("NaBotX: Open Settings executed"); //old
+      vscode.commands.executeCommand('workbench.action.openSettings', 'nabotx')
+    })
+  );
+
   context.subscriptions.push(
     vscode.window.registerWebviewViewProvider("nabotxSidePanelView", provider)
   );
@@ -187,6 +195,7 @@ function activate(context) {
   statusBarItem.show();
   context.subscriptions.push(statusBarItem);
 }
+
 
 function deactivate() {}
 
