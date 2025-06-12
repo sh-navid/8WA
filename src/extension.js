@@ -23,9 +23,6 @@ class NaBotXSidePanelProvider {
 
   async _handleMessage(webviewView, message) {
     switch (message.command) {
-      case "pickFiles":
-        await this._pickFiles(webviewView);
-        break;
       case "appendToActiveFile":
         await this._appendToActiveFile(message.code);
         break;
@@ -38,21 +35,6 @@ class NaBotXSidePanelProvider {
       case "addToChat":
         await this._addToChat(message.selectedText);
         break;
-    }
-  }
-
-  async _pickFiles(webviewView) {
-    const uris = await vscode.window.showOpenDialog({
-      canSelectMany: true,
-      openLabel: "Attach",
-      canSelectFiles: true,
-    });
-    if (uris?.length) {
-      const files = await Promise.all(uris.map(this._readFile));
-      webviewView.webview.postMessage({
-        command: "attachFiles",
-        files: files.filter(Boolean),
-      });
     }
   }
 
