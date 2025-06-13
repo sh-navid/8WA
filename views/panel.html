@@ -94,33 +94,41 @@
 
             highlightCode(codeElement, code);
 
+            const btnOpenCodeFile = "${btn-open-code-file.png}";
             const btnReplace = "${btn-replace.png}";
             const btnAppend = "${btn-append.png}";
             const btnCopy = "${btn-copy.png}";
 
             codeElement.parent().css("position", "relative").append(`
-          <div class="code-btns-container">
-            <img src="${btnAppend}"   alt="Append in File"  />
-            <img src="${btnReplace}"  alt="Replace File"    />
-            <img src="${btnCopy}"     alt="Copy File"       />
-          </div>
-         `);
+              <div class="code-btns-container">
+                  <img src="${btnOpenCodeFile}" alt="Open Code File"  />
+                  <img src="${btnAppend}"       alt="Append in File"  />
+                  <img src="${btnReplace}"      alt="Replace File"    />
+                  <img src="${btnCopy}"         alt="Copy File"       />
+              </div>
+            `);
 
             codeElement
               .parent()
               .find(".code-btns-container img:eq(0)")
               .click(() => {
-                vscode.postMessage({ command: "appendToActiveFile", code });
+                vscode.postMessage({ command: "openCodeFile", code });
               });
             codeElement
               .parent()
               .find(".code-btns-container img:eq(1)")
               .click(() => {
-                vscode.postMessage({ command: "replaceActiveFile", code });
+                vscode.postMessage({ command: "appendToActiveFile", code });
               });
             codeElement
               .parent()
               .find(".code-btns-container img:eq(2)")
+              .click(() => {
+                vscode.postMessage({ command: "replaceActiveFile", code });
+              });
+            codeElement
+              .parent()
+              .find(".code-btns-container img:eq(3)")
               .click(() => {
                 vscode.postMessage({ command: "copyCodeBlock", code });
               });

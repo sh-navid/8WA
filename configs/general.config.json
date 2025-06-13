@@ -34,6 +34,7 @@
     "~/tab.js"
   ],
   "assets": [
+    "~/btn-open-code-file.png",
     "~/btn-replace.png",
     "~/btn-execute.png",
     "~/btn-append.png",
