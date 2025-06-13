@@ -5,12 +5,11 @@ const fs = require("fs");
 class NaBotXSidePanelProvider {
   constructor(extensionUri) {
     this._extensionUri = extensionUri;
-    // **Fix 1**: Store the webview view instance when it's resolved
     this._view = null;
   }
 
   async resolveWebviewView(webviewView) {
-    this._view = webviewView; // **Fix 1**: Store the webview view instance
+    this._view = webviewView;
     webviewView.webview.options = {
       enableScripts: true,
       localResourceRoots: [this._extensionUri],
@@ -30,7 +29,7 @@ class NaBotXSidePanelProvider {
         await this._replaceActiveFile(message.code);
         break;
       case "copyCodeBlock":
-        await this._copyCodeBlock(message.code); // Implement this function; this is a VScode extension
+        await this._copyCodeBlock(message.code);
         break;
       case "addToChat":
         await this._addToChat(message.selectedText);
@@ -87,31 +86,37 @@ class NaBotXSidePanelProvider {
     }
 
     const editor = vscode.window.activeTextEditor;
-    if (!editor) {
-      vscode.window.showInformationMessage("No active editor.");
+    if (!editor && !selectedText) {
+      vscode.window.showInformationMessage("No active editor or selected file.");
       return;
     }
-
-    // Get the file path relative to the workspace
-    if (vscode.workspace.workspaceFolders) {
-      const workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
-      const filePath = editor.document.uri.fsPath;
-      const relativePath = filePath.replace(workspaceFolder + '/', '');
-
-      try {
-        this._view.webview.postMessage({
-          command: "addTextToChat",
-          text: "FilePath: " + relativePath + "\nSelectedFileContent:" + selectedText,
-        });
-      } catch (err) {
-        vscode.window.showErrorMessage(
-          `Error adding text to chat: ${err.message}`
-        );
-        console.error("Error adding text to chat:", err);
+    let relativePath = "";
+    let fileContent = "";
+    if (editor) {
+      // Get the file path relative to the workspace
+      if (vscode.workspace.workspaceFolders) {
+        const workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
+        const filePath = editor.document.uri.fsPath;
+        relativePath = filePath.replace(workspaceFolder + '/', '');
+        fileContent = selectedText || editor.document.getText();
+      } else {
+        vscode.window.showInformationMessage("No workspace folder open.");
+        return;
       }
     } else {
-      vscode.window.showInformationMessage("No workspace folder open.");
-      return;
+      fileContent = selectedText;
+    }
+
+    try {
+      this._view.webview.postMessage({
+        command: "addTextToChat",
+        text: "FilePath: " + relativePath + "\nSelectedFileContent:" + fileContent,
+      });
+    } catch (err) {
+      vscode.window.showErrorMessage(
+        `Error adding text to chat: ${err.message}`
+      );
+      console.error("Error adding text to chat:", err);
     }
   }
 
@@ -193,8 +198,7 @@ function activate(context) {
 
   context.subscriptions.push(
     vscode.commands.registerCommand("nabotx.openSettings", function () {
-      // vscode.window.showInformationMessage("NaBotX: Open Settings executed"); //old
-      vscode.commands.executeCommand('workbench.action.openSettings', 'nabotx')
+      vscode.commands.executeCommand('workbench.action.openSettings', 'nabotx');
     })
   );
 
@@ -211,6 +215,29 @@ function activate(context) {
       );
     })
   );
+
+  // Modified Command: For when a file is clicked in the Explorer
+  context.subscriptions.push(
+    vscode.commands.registerCommand("nabotx.addToChatExplorer", async (resourceUri) => {
+      if (resourceUri) {
+        try {
+          const document = await vscode.workspace.openTextDocument(resourceUri);
+          const fileContent = document.getText();
+
+          // Send the selected text to the _addToChat method in the provider
+          nabotxSidePanelProvider._addToChat(fileContent);
+        } catch (err) {
+          vscode.window.showErrorMessage(
+            `Error adding file to chat: ${err.message}`
+          );
+          console.error("Error adding file to chat:", err);
+        }
+      } else {
+        vscode.window.showInformationMessage("No file selected.");
+      }
+    })
+  );
+
   context.subscriptions.push(
     vscode.commands.registerCommand("nabotx.addToChat", async () => {
       const editor = vscode.window.activeTextEditor;
@@ -233,6 +260,8 @@ function activate(context) {
       }
     })
   );
+
+
   const statusBarItem = vscode.window.createStatusBarItem(
     vscode.StatusBarAlignment.Right,
     100

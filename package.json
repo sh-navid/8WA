@@ -32,6 +32,10 @@
       {
         "command": "nabotx.addToChat",
         "title": "NaBotX: Add to Chat"
+      },
+      {
+        "command": "nabotx.addToChatExplorer",
+        "title": "NaBotX: Add File to Chat"
       }
     ],
     "menus": {
@@ -42,12 +46,19 @@
           "when": "editorFocus"
         }
       ],
-        "editor/context": [
+       "editor/context": [
             {
               "command": "nabotx.addToChat",
               "group": "navigation"
             }
-          ]
+          ],
+      "explorer/context": [
+        {
+          "command": "nabotx.addToChatExplorer",
+          "group": "navigation",
+          "when": "resourceExtname != md"
+        }
+      ]
     },
     "viewsContainers": {
       "sidebar": [
