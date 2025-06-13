@@ -234,3 +234,13 @@ a {
   color: goldenrod;
   border: none;
 }
+
+
+
+/* Style for code blocks */
+pre {
+  background-color: var(--vscode-input-background); /* Use VS Code's input background color for consistency */
+  border-radius: 0.5rem; /* Optional: Add rounded corners */
+  padding: 0.5rem;       /* Add some padding around the code */
+  overflow: auto;        /* Add scrollbars if the code overflows */
+}
