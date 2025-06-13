@@ -1,3 +1,5 @@
+
+/* nabotx/styles/panel.css */
 * {
   box-sizing: border-box;
 }
@@ -25,7 +27,6 @@ header {
   border-bottom: 1px solid var(--vscode-editorWidget-border, #ddd);
   border-bottom-right-radius: 1rem;
   border-bottom-left-radius: 1rem;
-
   box-shadow: 0 1px 3px var(--vscode-shadow, rgba(0, 0, 0, 0.1));
   background-color: var(--vscode-editorWidget-background);
   align-items: center;
@@ -33,10 +34,12 @@ header {
   padding: 1rem;
   gap: 0.75rem;
 }
+
 header img {
   height: auto;
   width: 1.8rem;
 }
+
 header label {
   color: var(--vscode-editor-foreground);
   font-size: 1.15rem;
@@ -45,7 +48,6 @@ header label {
 
 /* Chat messages */
 #chatMessages {
-  /* box-shadow: 0 2px 6px var(--vscode-shadow, rgba(0, 0, 0, 0.1)); */
   background-color: transparent;
   flex-direction: column;
   border-radius: 8px;
@@ -55,52 +57,9 @@ header label {
   flex-grow: 1;
   margin: 1rem;
   gap: 8px;
-
   -webkit-user-select: text;
   -moz-user-select: text;
   -ms-user-select: text;
-}
-
-/* Chips container positioned above input */
-#fileChips {
-  transform: translateX(-50%);
-  user-select: none;
-  max-width: 600px;
-  flex-wrap: wrap;
-  position: fixed;
-  padding: 0 1rem;
-  display: flex;
-  z-index: 2000;
-  bottom: 80px;
-  gap: 0.5rem;
-  left: 50%;
-}
-
-/* Rounded chips */
-.chip {
-  border: 1px solid var(--vscode-button-border, transparent);
-  background-color: var(--vscode-button-background);
-  color: var(--vscode-button-foreground);
-  border-radius: 9999px;
-  display: inline-flex;
-  padding: 0.3rem 1rem;
-  align-items: center;
-  user-select: none;
-  font-size: 0.9rem;
-}
-
-.chip span {
-  margin-right: 0.4rem;
-}
-
-.chip button {
-  color: var(--vscode-button-foreground);
-  font-weight: bold;
-  background: none;
-  cursor: pointer;
-  border: none;
-  padding: 0;
-  margin: 0;
 }
 
 /* Input wrapper fixed bottom */
@@ -137,7 +96,6 @@ header label {
   outline: none;
   flex-grow: 1;
   z-index: 10;
-
   /* WebKit scrollbar styles */
   ::-webkit-scrollbar {
     width: 10px;
@@ -153,7 +111,6 @@ header label {
   ::-webkit-scrollbar-thumb:hover {
     background: var(--vscode-selectionBackground);
   }
-
   /* Firefox scrollbar styles */
   scrollbar-width: thin;
   scrollbar-color: var(--vscode-focusBorder) var(--vscode-input-background);
@@ -179,13 +136,6 @@ header label {
 
 /* Responsive tweaks */
 @media (max-width: 480px) {
-  #fileChips {
-    transform: translateX(-50%);
-    padding: 0 0.5rem;
-    max-width: 95%;
-    bottom: 100px;
-    left: 50%;
-  }
   .input-wrapper {
     padding: 0.5rem 0.75rem;
     width: 95%;
@@ -207,11 +157,11 @@ header label {
   overflow-x: auto; /* Enable horizontal scrolling if needed */
   scrollbar-width: none; /* Hide scrollbar in Firefox */
   -ms-overflow-style: none; /* Hide scrollbar in IE and Edge */
-
   padding: 0.5rem;
   margin-top: 1rem;
   border-radius: 1rem;
 }
+
 .code-btns-container::-webkit-scrollbar {
   display: none; /* Hide scrollbar in Chrome, Safari and Opera */
 }
@@ -227,20 +177,17 @@ header label {
   opacity: 0.5;
 }
 
-.more-button,
-a {
-  background-color: transparent;
-  text-decoration: none;
-  color: goldenrod;
-  border: none;
-}
-
-
-
 /* Style for code blocks */
 pre {
   background-color: var(--vscode-input-background); /* Use VS Code's input background color for consistency */
   border-radius: 0.5rem; /* Optional: Add rounded corners */
-  padding: 0.5rem;       /* Add some padding around the code */
-  overflow: auto;        /* Add scrollbars if the code overflows */
+  padding: 0.5rem; /* Add some padding around the code */
+  overflow: auto; /* Add scrollbars if the code overflows */
+}
+
+.more-button, a {
+  background-color: transparent;
+  text-decoration: none;
+  color: goldenrod;
+  border: none;
 }
