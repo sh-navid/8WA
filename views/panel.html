@@ -94,45 +94,50 @@
               ""
             );
           }
-
           // Now parse remaining content with marked
           const markedContent = marked.parse(content);
-
-          // Important to track conversation in chat
-          msgArray.push({ role: "assistant", content: markedContent });
 
           msgDiv.html(markedContent);
           chatMessages.append(msgDiv).scrollTop(chatMessages[0].scrollHeight);
 
           // Find all 'pre' elements and add the appropriate class for syntax highlighting
-          msgDiv.find("pre").each(function () {
-            const pre = $(this);
-            pre.addClass(`language-${language}`); // Added line: apply language class
-            Prism.highlightElement(pre[0]); // Apply prism highlight to this element
-            const code = pre.find("code").text();
+          msgDiv.find("pre code").each(function () {
+            const codeElement = $(this);
+            const code = codeElement.text();
 
             const btnReplace = "${btn-replace.png}";
             const btnAppend = "${btn-append.png}";
             const btnCopy = "${btn-copy.png}";
-            const btnExecute = "${btn-execute.png}";
 
-            pre.css("position", "relative").append(`
-              <div class="code-btns-container">
-                <img src="${btnAppend}"   alt="Append in File"  />
-                <img src="${btnReplace}"  alt="Replace File"    />
-                <img src="${btnCopy}"     alt="Copy File"       />
-              </div>
-             `);
-            pre.find(".code-btns-container img:eq(0)").click(() => {
-              vscode.postMessage({ command: "appendToActiveFile", code });
-            });
-            pre.find(".code-btns-container img:eq(1)").click(() => {
-              vscode.postMessage({ command: "replaceActiveFile", code });
-            });
-            pre.find(".code-btns-container img:eq(2)").click(() => {
-              vscode.postMessage({ command: "copyCodeBlock", code });
-            });
+            codeElement.parent().css("position", "relative").append(`
+          <div class="code-btns-container">
+            <img src="${btnAppend}"   alt="Append in File"  />
+            <img src="${btnReplace}"  alt="Replace File"    />
+            <img src="${btnCopy}"     alt="Copy File"       />
+          </div>
+         `);
+
+            codeElement
+              .parent()
+              .find(".code-btns-container img:eq(0)")
+              .click(() => {
+                vscode.postMessage({ command: "appendToActiveFile", code });
+              });
+            codeElement
+              .parent()
+              .find(".code-btns-container img:eq(1)")
+              .click(() => {
+                vscode.postMessage({ command: "replaceActiveFile", code });
+              });
+            codeElement
+              .parent()
+              .find(".code-btns-container img:eq(2)")
+              .click(() => {
+                vscode.postMessage({ command: "copyCodeBlock", code });
+              });
           });
+          // Important to track conversation in chat
+          msgArray.push({ role: "assistant", content: markedContent });
         } else {
           msgDiv.text("No response from bot.");
           chatMessages.append(msgDiv).scrollTop(chatMessages[0].scrollHeight);
