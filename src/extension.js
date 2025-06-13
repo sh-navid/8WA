@@ -215,15 +215,19 @@ function activate(context) {
     vscode.commands.registerCommand("nabotx.addToChat", async () => {
       const editor = vscode.window.activeTextEditor;
       if (editor) {
-        const selection = editor.selection;
-        const selectedText = editor.document.getText(selection);
+        let selectedText = editor.selection ? editor.document.getText(editor.selection) : '';
 
-        if (selectedText) {
-          // Send the selected text to the _addToChat method in the provider
-          nabotxSidePanelProvider._addToChat(selectedText);
-        } else {
-          vscode.window.showInformationMessage("No text selected.");
+        // If no text is selected, get the entire document content
+        if (!selectedText) {
+          selectedText = editor.document.getText();
+          if (!selectedText) {
+            vscode.window.showInformationMessage("The active file is empty.");
+            return;
+          }
         }
+
+        // Send the selected text to the _addToChat method in the provider
+        nabotxSidePanelProvider._addToChat(selectedText);
       } else {
         vscode.window.showInformationMessage("No active editor.");
       }
