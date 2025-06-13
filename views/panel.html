@@ -82,18 +82,6 @@
         if (response?.choices?.[0]?.message?.content) {
           let content = response.choices[0].message.content; // Modified line
 
-          // Parse the content and extract the language if available
-          let language = "text"; // Default language
-          const languageMatch = content.match(/^\/\/ Language: (\w+)/m);
-
-          if (languageMatch) {
-            language = languageMatch[1].toLowerCase();
-            // Remove the first 3 lines from the content before parsing with marked
-            content = content.replace(
-              /^\/\/ Language: .*\n\/\/ file: .*\n\/\/ Type: .*\n/,
-              ""
-            );
-          }
           // Now parse remaining content with marked
           const markedContent = marked.parse(content);
 
@@ -104,6 +92,9 @@
           msgDiv.find("pre code").each(function () {
             const codeElement = $(this);
             const code = codeElement.text();
+
+            //  USE "highlightCode" in here !
+            highlightCode(codeElement, code);
 
             const btnReplace = "${btn-replace.png}";
             const btnAppend = "${btn-append.png}";
@@ -142,6 +133,35 @@
           msgDiv.text("No response from bot.");
           chatMessages.append(msgDiv).scrollTop(chatMessages[0].scrollHeight);
         }
+      }
+
+      function highlightCode(codeElement, code) {
+        // const firstLine = code.split("\n")[0];
+        // const regex = /\[.*,(javascript|python|command)]/;
+        // const match = firstLine.match(regex);
+
+        // if (match) {
+        //   const language = match[1]; // Extract the language from the first line
+
+        //   switch (language) {
+        //     case "python":
+        //       codeElement.addClass("language-python");
+        //       break;
+        //     case "javascript":
+        //       codeElement.addClass("language-javascript");
+        //       break;
+        //     case "command":
+        //       codeElement.addClass("language-bash"); // Use bash for command line highlighting
+        //       break;
+        //     default:
+        //       codeElement.addClass("language-text"); // Default to no highlighting
+        //   }
+        // } else {
+        //   codeElement.addClass("language-text"); // If no match, default to plain text
+        //   codeElement.text(code);
+        // }
+
+        Prism.highlightElement(codeElement[0]); // Trigger Prism to highlight the element
       }
 
       function clearChat() {

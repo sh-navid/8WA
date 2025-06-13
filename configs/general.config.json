@@ -14,7 +14,6 @@
     "10. **Ease of Use:** Ensure responses are easily copy-pasteable.  Avoid unnecessary surrounding text or formatting that would hinder direct use of the provided code or commands."
   ],
   "styles": [
-    "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css",
     "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.css",
     "~/panel.css",
     "~/main.css",
@@ -24,23 +23,14 @@
     "https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js",
     "https://cdn.jsdelivr.net/npm/marked/marked.min.js",
     "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js",
-    "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js",
     "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js",
     "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js",
-    "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js",
     "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js",
     "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js",
     "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-kotlin.min.js",
-    "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-swift.min.js",
-    "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-ruby.min.js",
     "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js",
-    "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js",
     "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js",
-    "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-php.min.js",
     "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js",
-    "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-cpp.min.js",
-    "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-go.min.js",
-    "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-c.min.js",
     "~/tab.js"
   ],
   "assets": [
