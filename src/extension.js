@@ -79,38 +79,21 @@ class NaBotXSidePanelProvider {
     await vscode.env.clipboard.writeText(code);
   }
 
-  async _addToChat(selectedText) {
+async _addToChat(selectedText, relativePath = "") {
     if (!this._view) {
       console.warn("Webview is not yet resolved. Message not sent.");
       return;
     }
 
-    const editor = vscode.window.activeTextEditor;
-    if (!editor && !selectedText) {
-      vscode.window.showInformationMessage("No active editor or selected file.");
-      return;
-    }
-    let relativePath = "";
-    let fileContent = "";
-    if (editor) {
-      // Get the file path relative to the workspace
-      if (vscode.workspace.workspaceFolders) {
-        const workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
-        const filePath = editor.document.uri.fsPath;
-        relativePath = filePath.replace(workspaceFolder + '/', '');
-        fileContent = selectedText || editor.document.getText();
-      } else {
-        vscode.window.showInformationMessage("No workspace folder open.");
+    if (!selectedText && !relativePath) {
+        vscode.window.showInformationMessage("No file content or path provided.");
         return;
-      }
-    } else {
-      fileContent = selectedText;
     }
 
     try {
       this._view.webview.postMessage({
         command: "addTextToChat",
-        text: "FilePath: " + relativePath + "\nSelectedFileContent:" + fileContent,
+        text: "FilePath: " + relativePath + "\nSelectedFileContent:" + selectedText,
       });
     } catch (err) {
       vscode.window.showErrorMessage(
@@ -218,25 +201,36 @@ function activate(context) {
 
   // Modified Command: For when a file is clicked in the Explorer
   context.subscriptions.push(
-    vscode.commands.registerCommand("nabotx.addToChatExplorer", async (resourceUri) => {
-      if (resourceUri) {
-        try {
-          const document = await vscode.workspace.openTextDocument(resourceUri);
-          const fileContent = document.getText();
+  vscode.commands.registerCommand("nabotx.addToChatExplorer", async (resourceUri) => {
+    if (resourceUri) {
+      try {
+        const document = await vscode.workspace.openTextDocument(resourceUri);
+        const fileContent = document.getText();
 
-          // Send the selected text to the _addToChat method in the provider
-          nabotxSidePanelProvider._addToChat(fileContent);
-        } catch (err) {
-          vscode.window.showErrorMessage(
-            `Error adding file to chat: ${err.message}`
-          );
-          console.error("Error adding file to chat:", err);
+        // Get the file path relative to the workspace
+        let relativePath = "";
+        if (vscode.workspace.workspaceFolders) {
+          const workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
+          const filePath = resourceUri.fsPath; // Use resourceUri.fsPath
+          relativePath = filePath.replace(workspaceFolder + '/', '');
+        } else {
+          vscode.window.showInformationMessage("No workspace folder open.");
+          return;
         }
-      } else {
-        vscode.window.showInformationMessage("No file selected.");
+
+        // Send the selected text to the _addToChat method in the provider
+        nabotxSidePanelProvider._addToChat(fileContent, relativePath); // Pass relativePath
+      } catch (err) {
+        vscode.window.showErrorMessage(
+          `Error adding file to chat: ${err.message}`
+        );
+        console.error("Error adding file to chat:", err);
       }
-    })
-  );
+    } else {
+      vscode.window.showInformationMessage("No file selected.");
+    }
+  })
+);
 
   context.subscriptions.push(
     vscode.commands.registerCommand("nabotx.addToChat", async () => {
@@ -253,8 +247,19 @@ function activate(context) {
           }
         }
 
+         // Get the file path relative to the workspace
+         let relativePath = "";
+         if (vscode.workspace.workspaceFolders) {
+           const workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
+           const filePath = editor.document.uri.fsPath;
+           relativePath = filePath.replace(workspaceFolder + '/', '');
+         } else {
+           vscode.window.showInformationMessage("No workspace folder open.");
+           return;
+         }
+
         // Send the selected text to the _addToChat method in the provider
-        nabotxSidePanelProvider._addToChat(selectedText);
+        nabotxSidePanelProvider._addToChat(selectedText, relativePath);
       } else {
         vscode.window.showInformationMessage("No active editor.");
       }
