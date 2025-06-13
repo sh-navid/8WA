@@ -1,3 +1,4 @@
+<!-- nabotx/views/panel.html -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -80,20 +81,17 @@
       function addBotMessage(response) {
         const msgDiv = $("<div>").addClass("message bot");
         if (response?.choices?.[0]?.message?.content) {
-          let content = response.choices[0].message.content; // Modified line
+          let content = response.choices[0].message.content;
 
-          // Now parse remaining content with marked
           const markedContent = marked.parse(content);
 
           msgDiv.html(markedContent);
           chatMessages.append(msgDiv).scrollTop(chatMessages[0].scrollHeight);
 
-          // Find all 'pre' elements and add the appropriate class for syntax highlighting
           msgDiv.find("pre code").each(function () {
             const codeElement = $(this);
             const code = codeElement.text();
 
-            //  USE "highlightCode" in here !
             highlightCode(codeElement, code);
 
             const btnReplace = "${btn-replace.png}";
@@ -127,7 +125,6 @@
                 vscode.postMessage({ command: "copyCodeBlock", code });
               });
           });
-          // Important to track conversation in chat
           msgArray.push({ role: "assistant", content: markedContent });
         } else {
           msgDiv.text("No response from bot.");
@@ -136,32 +133,7 @@
       }
 
       function highlightCode(codeElement, code) {
-        // const firstLine = code.split("\n")[0];
-        // const regex = /\[.*,(javascript|python|command)]/;
-        // const match = firstLine.match(regex);
-
-        // if (match) {
-        //   const language = match[1]; // Extract the language from the first line
-
-        //   switch (language) {
-        //     case "python":
-        //       codeElement.addClass("language-python");
-        //       break;
-        //     case "javascript":
-        //       codeElement.addClass("language-javascript");
-        //       break;
-        //     case "command":
-        //       codeElement.addClass("language-bash"); // Use bash for command line highlighting
-        //       break;
-        //     default:
-        //       codeElement.addClass("language-text"); // Default to no highlighting
-        //   }
-        // } else {
-        //   codeElement.addClass("language-text"); // If no match, default to plain text
-        //   codeElement.text(code);
-        // }
-
-        Prism.highlightElement(codeElement[0]); // Trigger Prism to highlight the element
+        Prism.highlightElement(codeElement[0]);
       }
 
       function clearChat() {
@@ -215,9 +187,6 @@
         proceedToSend(text, combinedMessage);
       });
 
-      // --------------------------------------------------------------------------------
-      // ?
-      // --------------------------------------------------------------------------------
       async function proceedToSend(userText, combinedMessage) {
         addMessage(userText);
         userInput.val("");
@@ -228,9 +197,6 @@
         sendButton.prop("disabled", false).focus();
       }
 
-      // --------------------------------------------------------------------------------
-      // On enter in input text
-      // --------------------------------------------------------------------------------
       userInput.on("keydown", (e) => {
         if (e.key === "Enter") {
           sendButton.click();
@@ -238,15 +204,13 @@
         }
       });
 
-      // Listen for messages from the extension
       window.addEventListener("message", (event) => {
         const message = event.data;
 
         switch (message.command) {
           case "addTextToChat":
-            // Add the received text to the chat
             msgArray.push({ role: "user", content: message.text });
-            addMessage(message.text, true); // 'true' indicates it's a user message
+            addMessage(message.text, true);
             break;
         }
       });
