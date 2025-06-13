@@ -81,18 +81,37 @@ class NaBotXSidePanelProvider {
   }
 
   async _addToChat(selectedText) {
-    // Implement the logic to add the selected text to the chat in the webview
-    // You'll need to send a message to the webview to update the chat display
-
-    // Example:
-    // **Fix 2**: Use the stored webview view to post the message
-    if (this._view) {
-      this._view.webview.postMessage({
-        command: "addTextToChat",
-        text: selectedText,
-      });
-    } else {
+    if (!this._view) {
       console.warn("Webview is not yet resolved. Message not sent.");
+      return;
+    }
+
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) {
+      vscode.window.showInformationMessage("No active editor.");
+      return;
+    }
+
+    // Get the file path relative to the workspace
+    if (vscode.workspace.workspaceFolders) {
+      const workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
+      const filePath = editor.document.uri.fsPath;
+      const relativePath = filePath.replace(workspaceFolder + '/', '');
+
+      try {
+        this._view.webview.postMessage({
+          command: "addTextToChat",
+          text: "FilePath: " + relativePath + "\nSelectedFileContent:" + selectedText,
+        });
+      } catch (err) {
+        vscode.window.showErrorMessage(
+          `Error adding text to chat: ${err.message}`
+        );
+        console.error("Error adding text to chat:", err);
+      }
+    } else {
+      vscode.window.showInformationMessage("No workspace folder open.");
+      return;
     }
   }
 
