@@ -67,16 +67,24 @@
           "title": "NaBotX",
           "icon": "assets/logo.png"
         }
-      ],
+      ]
+      ,
       "activitybar": [
         {
-          "id": "nabotxSidePanel",
+          "id": "nabotxActivityBar",
           "title": "NaBotX",
           "icon": "assets/logo.png"
         }
       ]
     },
     "views": {
+      "nabotxActivityBar": [
+        {
+          "type": "webview",
+          "id": "nabotxActivityBarView",
+          "name": "NaBotX"
+        }
+      ],
       "nabotxSidePanel": [
         {
           "type": "webview",
