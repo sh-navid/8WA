@@ -46,12 +46,7 @@
       const chatMessages = $("#chatMessages");
       const sendButton = $("#sendButton");
       const userInput = $("#userInput");
-      let msgArray = [
-        {
-          role: "assistant",
-          content: "${rules}",
-        },
-      ];
+      
 
       function addMessage(text, fromUser = true) {
         const msgDiv = $("<div>")
@@ -147,15 +142,7 @@
         Prism.highlightElement(codeElement[0]);
       }
 
-      function clearChat() {
-        msgArray = [
-          {
-            role: "assistant",
-            content: "${rules}",
-          },
-        ];
-        chatMessages.html("");
-      }
+     
 
       async function sendToLLM(message) {
         msgArray.push({ role: "user", content: message });
