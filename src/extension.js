@@ -190,7 +190,7 @@ class NaBotXSidePanelProvider {
       .replaceAll(/\$\{token\}/g, token) // Use the value from VS Code settings or ai.config.json
       .replaceAll(/\$\{model\}/g, model) // Use the value from VS Code settings or ai.config.json
 
-      .replaceAll(/\$\{rules\}/g, general.rules)
+      .replaceAll(/\$\{rules\}/g, general.rules.assistant)
       .replaceAll(/\$\{scripts\}/g, scripts)
       .replaceAll(/\$\{styles\}/g, styles);
 
