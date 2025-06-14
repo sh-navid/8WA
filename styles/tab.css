@@ -16,9 +16,7 @@ tab {
   min-width: 3rem;
   cursor: pointer;
   padding: .5rem;
-
   border-radius: .25rem;
-
   padding-bottom: 0.1rem !important;
   padding-right: 0.6rem !important;
   padding-left: 0.6rem !important;
@@ -27,6 +25,13 @@ tab {
 
 tab:not(:first-child) {
   /* padding-right: 1.4rem !important; */
+}
+
+/* Active tab styles */
+tab.active {
+  background-color: var(--vscode-input-background); /* Change to desired active background color */
+  color: var(--vscode-editor-foreground);
+  border-bottom: none;
 }
 
 tabs .addTab {
