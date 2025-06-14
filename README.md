@@ -2,11 +2,8 @@
 
 NabotX is a VSCode extension designed to boost developer productivity by providing AI-assisted coding features. It offers a lightweight and privacy-conscious tool, helping you write code faster and with greater accuracy.
 
-- NaBotX Chat Panel
-![NaBotX in action](./showcase/V02.png)
-
-- NaBotX Chat in IDE
-![NaBotX in action](./showcase/V01.png)
+- NaBotX
+![NaBotX Extension](./showcase/V03.png)
 
 - NaBotX in Extensions Panel   
 ![NaBotX extension](./showcase/C02.png)
@@ -24,12 +21,13 @@ NabotX is a VSCode extension designed to boost developer productivity by providi
 ![](./showcase/C01.png)
 
 ## Future Works
-- [ ] Add new chat
 - [ ] Add new task
 - [ ] Show diagrams
 - [ ] Add image
 - [ ] Generate image
 - [ ] Automate tests
+
+- [ ] Functionality to add and remove files and folders
 
 ## Compile
 - Install vsce `npm install -g vsce`
