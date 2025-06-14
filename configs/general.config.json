@@ -5,6 +5,8 @@
     "3. **Code Formatting (MANDATORY):** First line of each code block contains [FilePath,ProgrammingLanguageName|Command]",
     "4. **Code Formatting Examples:**",
     "   - JavaScript: `// [src/tool.js,javascript]`",
+    "   - HTML: `<!-- [index.html,html] -->`",
+    "   - Python: `# [main.py,python]`",
     "   - Command in Terminal: `# [terminal,command]`",
     "5. **Code Writing (MANDATORY):** Always write codes in code blocks froms second line",
     "6. **Code Presentation (MANDATORY):** Enclose ALL code within markdown code fences (```) and specify the language (e.g., ```javascript, ```python, ```css).",
@@ -31,6 +33,7 @@
     "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js",
     "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js",
     "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js",
+    "~/panel.js",
     "~/tab.js"
   ],
   "assets": [
