@@ -1,5 +1,7 @@
 # Introduction to NaBotX
 
+![](./assets/logo3.svg)
+
 NaBotX is a cutting-edge VSCode extension designed to supercharge developer productivity by providing AI-driven coding features. This lightweight and privacy-focused tool empowers you to write code faster and with greater accuracy, while maintaining full control over your data.
 
 ## Overview of NaBotX
@@ -22,6 +24,7 @@ The first time you open NaBotX, you'll be prompted to configure your assistant w
 ![Configuring LLM Settings](./showcase/C03.png)
 
 Alternatively, you can manually configure these settings by pressing `Ctrl+Shift+P`, searching for NaBotX, and opening `NaBotX: Open Settings`.
+
 ![Accessing NaBotX Settings](./showcase/C01.png)
 
 ## Future Roadmap
