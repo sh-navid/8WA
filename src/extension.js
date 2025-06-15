@@ -1,4 +1,3 @@
-/*[nabotx/src/extension.js]*/
 const vscode = require("vscode");
 const path = require("path");
 const fs = require("fs");
@@ -56,7 +55,6 @@ class NaBotXSidePanelProvider {
 
   async _openCodeFile(code) {
     try {
-      // Extract file path from the code block's first line
       const filePathMatch = code.match(/^.*?\[(.*?)\]/);
       if (!filePathMatch || filePathMatch.length < 2) {
         vscode.window.showErrorMessage(
@@ -71,17 +69,14 @@ class NaBotXSidePanelProvider {
         return;
       }
 
-      // Construct the full file URI
       let fileUri;
       if (vscode.workspace.workspaceFolders) {
         const workspaceFolder = vscode.workspace.workspaceFolders[0].uri;
         fileUri = vscode.Uri.joinPath(workspaceFolder, filePath);
       } else {
-        // If no workspace, assume the path is absolute
         fileUri = vscode.Uri.file(filePath);
       }
 
-      // Open the file in VS Code
       try {
         const document = await vscode.workspace.openTextDocument(fileUri);
         await vscode.window.showTextDocument(document);
@@ -155,7 +150,7 @@ class NaBotXSidePanelProvider {
     let html = load(this, "views", "panel.html");
 
     const tabView = load(this, "views", "tab.html");
-
+  
     // Default config values
     const defaultConfig = {
       path: "",
@@ -163,20 +158,11 @@ class NaBotXSidePanelProvider {
       model: "",
     };
 
-    let aiConfig = {};
-    try {
-      // Attempt to load ai.config.json, but handle exceptions
-      aiConfig = load(this, "configs", "ai.config.json", true);
-    } catch (error) {
-      console.warn("ai.config.json not found or invalid. Using default values.");
-      aiConfig = defaultConfig; // Ensure aiConfig is always an object
-    }
-
-    // Get configuration settings from VS Code, fallback to aiConfig, then defaultConfig
+    // Get configuration settings from VS Code
     const configuration = vscode.workspace.getConfiguration("nabotx");
-    const pathValue = configuration.get("path") || aiConfig.path || defaultConfig.path;
-    const tokenValue = configuration.get("token") || aiConfig.token || defaultConfig.token;
-    const modelValue = configuration.get("model") || aiConfig.model || defaultConfig.model;
+    const pathValue = configuration.get("path") || defaultConfig.path;
+    const tokenValue = configuration.get("token") || defaultConfig.token;
+    const modelValue = configuration.get("model") || defaultConfig.model;
 
     const general = load(this, "configs", "general.config.json", true);
 
@@ -200,9 +186,9 @@ class NaBotXSidePanelProvider {
     html = html
       .replaceAll(/\$\{tabView\}/g, tabView)
 
-      .replaceAll(/\$\{path\}/g, pathValue) // Use the value from VS Code settings, aiConfig, or default
-      .replaceAll(/\$\{token\}/g, tokenValue) // Use the value from VS Code settings, aiConfig, or default
-      .replaceAll(/\$\{model\}/g, modelValue) // Use the value from VS Code settings, aiConfig, or default
+      .replaceAll(/\$\{path\}/g, pathValue) // Use the value from VS Code settings or default
+      .replaceAll(/\$\{token\}/g, tokenValue) // Use the value from VS Code settings or default
+      .replaceAll(/\$\{model\}/g, modelValue) // Use the value from VS Code settings or default
 
       .replaceAll(/\$\{rules\}/g, general.rules.assistant)
       .replaceAll(/\$\{scripts\}/g, scripts)
@@ -229,9 +215,7 @@ const load = (provider, dir, fileName, json = false) => {
       ? JSON.parse(fs.readFileSync(_path, "utf8"))
       : fs.readFileSync(_path, "utf8");
   } catch (error) {
-    // Handle file not found or other errors during file reading
     console.error(`Error loading file ${_path}: ${error.message}`);
-    // Return a default value or throw an error depending on your use case
     if (json) {
       return {}; // Return an empty object for JSON files
     } else {
@@ -271,7 +255,6 @@ function activate(context) {
     })
   );
 
-  // Modified Command: For when a file is clicked in the Explorer
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "nabotx.addToChatExplorer",
@@ -283,20 +266,18 @@ function activate(context) {
             );
             const fileContent = document.getText();
 
-            // Get the file path relative to the workspace
             let relativePath = "";
             if (vscode.workspace.workspaceFolders) {
               const workspaceFolder =
                 vscode.workspace.workspaceFolders[0].uri.fsPath;
-              const filePath = resourceUri.fsPath; // Use resourceUri.fsPath
+              const filePath = resourceUri.fsPath;
               relativePath = filePath.replace(workspaceFolder + "/", "");
             } else {
               vscode.window.showInformationMessage("No workspace folder open.");
               return;
             }
 
-            // Send the selected text to the _addToChat method in the provider
-            nabotxSidePanelProvider._addToChat(fileContent, relativePath); // Pass relativePath
+            nabotxSidePanelProvider._addToChat(fileContent, relativePath);
           } catch (err) {
             vscode.window.showErrorMessage(
               `Error adding file to chat: ${err.message}`
@@ -318,7 +299,6 @@ function activate(context) {
           ? editor.document.getText(editor.selection)
           : "";
 
-        // If no text is selected, get the entire document content
         if (!selectedText) {
           selectedText = editor.document.getText();
           if (!selectedText) {
@@ -327,7 +307,6 @@ function activate(context) {
           }
         }
 
-        // Get the file path relative to the workspace
         let relativePath = "";
         if (vscode.workspace.workspaceFolders) {
           const workspaceFolder =
@@ -339,7 +318,6 @@ function activate(context) {
           return;
         }
 
-        // Send the selected text to the _addToChat method in the provider
         nabotxSidePanelProvider._addToChat(selectedText, relativePath);
       } else {
         vscode.window.showInformationMessage("No active editor.");
@@ -379,7 +357,7 @@ function checkConfiguration() {
     if (!path || !token || !model) {
         vscode.window.showWarningMessage(
             "NaBotX: Please configure the extension settings (path, token, model) for the extension to work properly.",
-            "Open Settings"  // Add a button to directly open settings
+            "Open Settings"
         ).then(selection => {
             if (selection === "Open Settings") {
                 vscode.commands.executeCommand("workbench.action.openSettings", "nabotx");
