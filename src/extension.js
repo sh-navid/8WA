@@ -56,7 +56,7 @@ class NaBotXSidePanelProvider {
   async _openCodeFile(code) {
     try {
       // Extract file path from the code block's first line
-      const filePathMatch = code.match(/^.*?\[(.*?),/);
+      const filePathMatch = code.match(/^.*?\[(.*?)\]/);
       if (!filePathMatch || filePathMatch.length < 2) {
         vscode.window.showErrorMessage(
           "File path not found in the code block."
