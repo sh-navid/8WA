@@ -6,7 +6,9 @@ NaBotX is a cutting-edge VSCode extension designed to supercharge developer prod
 
 ## Overview of NaBotX
 ![NaBotX Extension](./showcase/V04.png)
+
 The NaBotX extension is easily accessible from the Extensions Panel, allowing for seamless integration into your development workflow.
+
 ![NaBotX Extension in Extensions Panel](./showcase/C02.png)
 
 ## Key Features
@@ -21,6 +23,7 @@ The NaBotX extension is easily accessible from the Extensions Panel, allowing fo
 ## Configuring Your LLM Settings
 
 The first time you open NaBotX, you'll be prompted to configure your assistant with your LLM settings. 
+
 ![Configuring LLM Settings](./showcase/C03.png)
 
 Alternatively, you can manually configure these settings by pressing `Ctrl+Shift+P`, searching for NaBotX, and opening `NaBotX: Open Settings`.
