@@ -44,10 +44,6 @@
     <script>
       const vscode = acquireVsCodeApi();
 
-      const chatMessages = $("#chatMessages");
-      const sendButton = $("#sendButton");
-      const userInput = $("#userInput");
-
       const btnOpenCodeFile = "${btn-open-code-file.png}";
       const btnReplace = "${btn-replace.png}";
       const btnAppend = "${btn-append.png}";
@@ -56,43 +52,7 @@
       const token = "${token}";
       const model = "${model}";
       const path = "${path}";
-
-      sendButton.click(() => {
-        const text = userInput.val().trim();
-        if (!text) return;
-
-        let combinedMessage = text + "\n\n---\nRules: ${rules}";
-
-        proceedToSend(text, combinedMessage);
-      });
-
-      async function proceedToSend(userText, combinedMessage) {
-        addMessage(userText);
-        userInput.val("");
-        sendButton.prop("disabled", true);
-        const response = await sendToLLM(combinedMessage);
-
-        addBotMessage(response);
-        sendButton.prop("disabled", false).focus();
-      }
-
-      userInput.on("keydown", (e) => {
-        if (e.key === "Enter") {
-          sendButton.click();
-          e.preventDefault();
-        }
-      });
-
-      window.addEventListener("message", (event) => {
-        const message = event.data;
-
-        switch (message.command) {
-          case "addTextToChat":
-            msgArray.push({ role: "user", content: message.text });
-            addMessage(message.text, true);
-            break;
-        }
-      });
+      const rules = "${rules}";
     </script>
   </body>
 </html>

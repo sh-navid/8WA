@@ -12,7 +12,7 @@ function clearChat() {
       content: "${rules}",
     },
   ];
-  chatMessages.html("");
+  $("#chatMessages").html("");
 }
 
 function highlightCode(codeElement, code) {
@@ -42,7 +42,9 @@ function addMessage(text, fromUser = true) {
     msgDiv.text(text);
   }
 
-  chatMessages.append(msgDiv).scrollTop(chatMessages[0].scrollHeight);
+  $("#chatMessages")
+    .append(msgDiv)
+    .scrollTop($("#chatMessages")[0].scrollHeight);
 }
 
 function addBotMessage(response) {
@@ -53,7 +55,9 @@ function addBotMessage(response) {
     const markedContent = marked.parse(content);
 
     msgDiv.html(markedContent);
-    chatMessages.append(msgDiv).scrollTop(chatMessages[0].scrollHeight);
+    $("#chatMessages")
+      .append(msgDiv)
+      .scrollTop($("#chatMessages")[0].scrollHeight);
 
     msgDiv.find("pre code").each(function () {
       const codeElement = $(this);
@@ -98,7 +102,9 @@ function addBotMessage(response) {
     msgArray.push({ role: "assistant", content: markedContent });
   } else {
     msgDiv.text("No response from bot.");
-    chatMessages.append(msgDiv).scrollTop(chatMessages[0].scrollHeight);
+    $("#chatMessages")
+      .append(msgDiv)
+      .scrollTop($("#chatMessages")[0].scrollHeight);
   }
 }
 
@@ -133,3 +139,39 @@ async function sendToLLM(message) {
     };
   }
 }
+
+window.addEventListener("message", (event) => {
+  const message = event.data;
+
+  switch (message.command) {
+    case "addTextToChat":
+      msgArray.push({ role: "user", content: message.text });
+      addMessage(message.text, true);
+      break;
+  }
+});
+
+async function proceedToSend(userText, combinedMessage) {
+  addMessage(userText);
+  $("#userInput").val("");
+  $("#sendButton").prop("disabled", true);
+  const response = await sendToLLM(combinedMessage);
+
+  addBotMessage(response);
+  $("#sendButton").prop("disabled", false).focus();
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  $("#userInput").on("keydown", (e) => {
+    if (e.key === "Enter") {
+      $("#sendButton").click();
+      e.preventDefault();
+    }
+  });
+
+  $("#sendButton").click(() => {
+    const text = $("#userInput").val().trim();
+    if (!text) return;
+    proceedToSend(text, text + `\n\n---\nRules: ${rules}`);
+  });
+});
