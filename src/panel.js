@@ -101,3 +101,35 @@ function addBotMessage(response) {
     chatMessages.append(msgDiv).scrollTop(chatMessages[0].scrollHeight);
   }
 }
+
+async function sendToLLM(message) {
+  msgArray.push({ role: "user", content: message });
+
+  try {
+    const response = await fetch(`${path}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        model: `${model}`,
+        messages: msgArray,
+      }),
+    });
+    if (!response.ok)
+      throw new Error(`${response.status} - ${await response.text()}`);
+    return await response.json();
+  } catch (error) {
+    console.error("Error:", error);
+    return {
+      choices: [
+        {
+          message: {
+            content: "Error communicating with the LLM: " + error.message,
+          },
+        },
+      ],
+    };
+  }
+}
