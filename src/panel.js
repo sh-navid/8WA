@@ -8,8 +8,8 @@ let msgArray = [
 function clearChat() {
   msgArray = [
     {
-      role: "assistant",
-      content: "${rules}",
+      role: "system",
+      content: `Rules: ${rules}`,
     },
   ];
   $("#chatMessages").html("");
@@ -162,6 +162,8 @@ async function proceedToSend(userText, combinedMessage) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+  clearChat();
+
   $("#userInput").on("keydown", (e) => {
     if (e.key === "Enter") {
       $("#sendButton").click();
@@ -172,6 +174,6 @@ document.addEventListener("DOMContentLoaded", function () {
   $("#sendButton").click(() => {
     const text = $("#userInput").val().trim();
     if (!text) return;
-    proceedToSend(text, text + `\n\n---\nRules: ${rules}`);
+    proceedToSend(text, text);
   });
 });
