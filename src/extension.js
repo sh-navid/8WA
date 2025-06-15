@@ -1,3 +1,4 @@
+/*[nabotx/src/extension.js]*/
 const vscode = require("vscode");
 const path = require("path");
 const fs = require("fs");
@@ -155,14 +156,27 @@ class NaBotXSidePanelProvider {
 
     const tabView = load(this, "views", "tab.html");
 
-    // Load config from file
-    const aiConfig = load(this, "configs", "ai.config.json", true);
+    // Default config values
+    const defaultConfig = {
+      path: "",
+      token: "",
+      model: "",
+    };
 
-    // Get configuration settings from VS Code, fallback to ai.config.json if not set
+    let aiConfig = {};
+    try {
+      // Attempt to load ai.config.json, but handle exceptions
+      aiConfig = load(this, "configs", "ai.config.json", true);
+    } catch (error) {
+      console.warn("ai.config.json not found or invalid. Using default values.");
+      aiConfig = defaultConfig; // Ensure aiConfig is always an object
+    }
+
+    // Get configuration settings from VS Code, fallback to aiConfig, then defaultConfig
     const configuration = vscode.workspace.getConfiguration("nabotx");
-    const path = configuration.get("path") || aiConfig.path || "";
-    const token = configuration.get("token") || aiConfig.token || "";
-    const model = configuration.get("model") || aiConfig.model || "";
+    const pathValue = configuration.get("path") || aiConfig.path || defaultConfig.path;
+    const tokenValue = configuration.get("token") || aiConfig.token || defaultConfig.token;
+    const modelValue = configuration.get("model") || aiConfig.model || defaultConfig.model;
 
     const general = load(this, "configs", "general.config.json", true);
 
@@ -186,9 +200,9 @@ class NaBotXSidePanelProvider {
     html = html
       .replaceAll(/\$\{tabView\}/g, tabView)
 
-      .replaceAll(/\$\{path\}/g, path) // Use the value from VS Code settings or ai.config.json
-      .replaceAll(/\$\{token\}/g, token) // Use the value from VS Code settings or ai.config.json
-      .replaceAll(/\$\{model\}/g, model) // Use the value from VS Code settings or ai.config.json
+      .replaceAll(/\$\{path\}/g, pathValue) // Use the value from VS Code settings, aiConfig, or default
+      .replaceAll(/\$\{token\}/g, tokenValue) // Use the value from VS Code settings, aiConfig, or default
+      .replaceAll(/\$\{model\}/g, modelValue) // Use the value from VS Code settings, aiConfig, or default
 
       .replaceAll(/\$\{rules\}/g, general.rules.assistant)
       .replaceAll(/\$\{scripts\}/g, scripts)
@@ -210,9 +224,20 @@ const join = (provider, dir, fileName) => {
 
 const load = (provider, dir, fileName, json = false) => {
   let _path = join(provider, dir, fileName);
-  return json
-    ? JSON.parse(fs.readFileSync(_path, "utf8"))
-    : fs.readFileSync(_path, "utf8");
+  try {
+    return json
+      ? JSON.parse(fs.readFileSync(_path, "utf8"))
+      : fs.readFileSync(_path, "utf8");
+  } catch (error) {
+    // Handle file not found or other errors during file reading
+    console.error(`Error loading file ${_path}: ${error.message}`);
+    // Return a default value or throw an error depending on your use case
+    if (json) {
+      return {}; // Return an empty object for JSON files
+    } else {
+      return ""; // Return an empty string for other files
+    }
+  }
 };
 
 const uri = (webview, provider, dir, fileName) => {
@@ -331,8 +356,36 @@ function activate(context) {
   statusBarItem.command = "nabotx.openPanel";
   statusBarItem.show();
   context.subscriptions.push(statusBarItem);
+
+   // Check for configuration values on activation
+   checkConfiguration();
+
+   // Listen for configuration changes
+   vscode.workspace.onDidChangeConfiguration(event => {
+       if (event.affectsConfiguration('nabotx.path') || event.affectsConfiguration('nabotx.token') || event.affectsConfiguration('nabotx.model')) {
+           checkConfiguration();
+       }
+   });
 }
 
 function deactivate() {}
+
+function checkConfiguration() {
+    const configuration = vscode.workspace.getConfiguration("nabotx");
+    const path = configuration.get("path") || "";
+    const token = configuration.get("token") || "";
+    const model = configuration.get("model") || "";
+
+    if (!path || !token || !model) {
+        vscode.window.showWarningMessage(
+            "NaBotX: Please configure the extension settings (path, token, model) for the extension to work properly.",
+            "Open Settings"  // Add a button to directly open settings
+        ).then(selection => {
+            if (selection === "Open Settings") {
+                vscode.commands.executeCommand("workbench.action.openSettings", "nabotx");
+            }
+        });
+    }
+}
 
 module.exports = { activate, deactivate };
