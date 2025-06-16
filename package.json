@@ -60,14 +60,14 @@
       "sidebar": [
         {
           "id": "nabotxSidePanel",
-          "title": "~NaBotX~",
+          "title": "NaBotX",
           "icon": "assets/logo.png"
         }
       ],
       "activitybar": [
         {
           "id": "nabotxActivityBar",
-          "title": "|NaBotX|",
+          "title": "NaBotX",
           "icon": "assets/logo.png"
         }
       ]
@@ -77,14 +77,16 @@
         {
           "type": "webview",
           "id": "nabotxActivityBarView",
-          "name": "$NaBotX$"
+          "name": "NaBotX",
+          "icon": "assets/logo.png"
         }
       ],
       "nabotxSidePanel": [
         {
           "type": "webview",
           "id": "nabotxSidePanelView",
-          "name": "[NaBotX]"
+          "name": "NaBotX",
+          "icon": "assets/logo.png"
         }
       ]
     },

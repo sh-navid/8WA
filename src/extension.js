@@ -247,6 +247,14 @@ function activate(context) {
       nabotxSidePanelProvider
     )
   );
+  
+  context.subscriptions.push(
+    vscode.window.registerWebviewViewProvider(
+      "nabotxActivityBarView",
+      nabotxSidePanelProvider
+    )
+  );
+
   context.subscriptions.push(
     vscode.commands.registerCommand("nabotx.openPanel", () => {
       vscode.commands.executeCommand(
