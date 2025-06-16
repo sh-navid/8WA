@@ -22,10 +22,6 @@
   "contributes": {
     "commands": [
       {
-        "command": "nabotx.openPanel",
-        "title": "NaBotX: Open Panel"
-      },
-      {
         "command": "nabotx.openSettings",
         "title": "NaBotX: Open Settings"
       },
@@ -64,11 +60,10 @@
       "sidebar": [
         {
           "id": "nabotxSidePanel",
-          "title": "NaBotX",
+          "title": "~NaBotX~",
           "icon": "assets/logo.png"
         }
-      ]
-      ,
+      ],
       "activitybar": [
         {
           "id": "nabotxActivityBar",
@@ -82,7 +77,7 @@
         {
           "type": "webview",
           "id": "nabotxActivityBarView",
-          "name": "NaBotX"
+          "name": "$NaBotX$"
         }
       ],
       "nabotxSidePanel": [
