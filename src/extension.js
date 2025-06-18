@@ -92,7 +92,17 @@ class NaBotXSidePanelProvider {
     }
   }
 
+  _removeCommentStructure(code) {
+    // Regex to match various comment styles followed by [[path]]
+    const regex =
+      /(\s*(?:\/\*[\s\S]*?\*\/|\/\/.*|#.*|--.*|'''(.*?)'''|"(.*?)"|\'(.*?)\')*)?\s*\[\[(.*?)\]\]/;
+
+    return code.replace(regex, "").trim();
+  }
+
   async _appendToActiveFile(code) {
+    code = this._removeCommentStructure(code);
+
     const editor = vscode.window.activeTextEditor;
     if (editor) {
       const document = editor.document,
@@ -104,6 +114,8 @@ class NaBotXSidePanelProvider {
   }
 
   async _replaceActiveFile(code) {
+    code = this._removeCommentStructure(code);
+
     const editor = vscode.window.activeTextEditor;
     if (editor) {
       const document = editor.document,
@@ -118,6 +130,8 @@ class NaBotXSidePanelProvider {
   }
 
   async _copyCodeBlock(code) {
+    code = this._removeCommentStructure(code);
+
     await vscode.env.clipboard.writeText(code);
   }
 
