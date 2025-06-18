@@ -3,7 +3,7 @@
   "displayName": "NaBotX",
   "description": "This VSCode extension helps developers code more efficiently with AI assistance. Currently, it serves as a simple alternative to Copilot or Cursor.",
   "publisher": "sh-navid",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "icon": "assets/logo.png",
   "repository": {
     "type": "git",
@@ -31,13 +31,7 @@
       },
       {
         "command": "nabotx.addToChatExplorer",
-        "title": "NabotX: Add file to chat",
-        "when": "resourceExtname != md"
-      },
-      {
-        "command": "nabotx.addToChatExplorer",
-        "title": "NabotX: Add directory to chat",
-        "when": "explorerResourceTreeItemType == 'folder'"
+        "title": "NabotX: Add File/Folder to chat"
       }
     ],
     "menus": {
@@ -57,13 +51,7 @@
       "explorer/context": [
         {
           "command": "nabotx.addToChatExplorer",
-          "group": "navigation",
-          "when": "resourceExtname != md"
-        },
-        {
-          "command": "nabotx.addToChatExplorer",
-          "group": "navigation",
-          "when": "explorerResourceTreeItemType == 'folder'"
+          "group": "navigation"
         }
       ]
     },
