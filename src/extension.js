@@ -55,7 +55,7 @@ class NaBotXSidePanelProvider {
 
   async _openCodeFile(code) {
     try {
-      const filePathMatch = code.match(/^.*?\[(.*?)\]/);
+      const filePathMatch = code.match(/^.*?\[\[(.*?)\]\]/);
       if (!filePathMatch || filePathMatch.length < 2) {
         vscode.window.showErrorMessage(
           "File path not found in the code block."
@@ -135,8 +135,11 @@ class NaBotXSidePanelProvider {
     try {
       this._view.webview.postMessage({
         command: "addTextToChat",
+        path: relativePath,
         text:
-          "FilePath: " + relativePath + "\nSelectedFileContent:" + selectedText,
+          commentPath(relativePath, "[[" + relativePath + "]]") +
+          "\n" +
+          selectedText,
       });
     } catch (err) {
       vscode.window.showErrorMessage(
@@ -150,7 +153,7 @@ class NaBotXSidePanelProvider {
     let html = load(this, "views", "panel.html");
 
     const tabView = load(this, "views", "tab.html");
-  
+
     // Default config values
     const defaultConfig = {
       path: "",
@@ -204,6 +207,36 @@ class NaBotXSidePanelProvider {
   }
 }
 
+const commentPath = (path, data) => {
+  const extension = path.split(".").pop();
+  const commentStyles = {
+    js: `/* {path} */`,
+    jsx: `/* {path} */`,
+    ts: `/* {path} */`, // for TypeScript files
+    py: `# {path}`,
+    java: `// {path}`,
+    c: `// {path}`,
+    cpp: `// {path}`,
+    css: `/* {path} */`,
+    html: `<!-- {path} -->`,
+    php: `// {path}`,
+    rb: `# {path}`,
+    go: `// {path}`,
+    kt: `// {path}`,
+    sql: `-- {path}`,
+    sh: `# {path}`,
+    r: `# {path}`,
+    vb: `' {path}`,
+    cs: `// {path}`, // C# language
+    ml: `(* {path} *)`,
+    yaml: `# {path}`,
+    json: `/* {path} */`, // JSON doesn't support comments, but this is a placeholder
+  };
+
+  const commentStyle = commentStyles[extension] || "/* {path} */";
+  return commentStyle.replace(/{path}/g, data);
+};
+
 const join = (provider, dir, fileName) => {
   return path.join(provider._extensionUri.fsPath, dir, fileName);
 };
@@ -247,7 +280,7 @@ function activate(context) {
       nabotxSidePanelProvider
     )
   );
-  
+
   context.subscriptions.push(
     vscode.window.registerWebviewViewProvider(
       "nabotxActivityBarView",
@@ -343,35 +376,44 @@ function activate(context) {
   statusBarItem.show();
   context.subscriptions.push(statusBarItem);
 
-   // Check for configuration values on activation
-   checkConfiguration();
+  // Check for configuration values on activation
+  checkConfiguration();
 
-   // Listen for configuration changes
-   vscode.workspace.onDidChangeConfiguration(event => {
-       if (event.affectsConfiguration('nabotx.path') || event.affectsConfiguration('nabotx.token') || event.affectsConfiguration('nabotx.model')) {
-           checkConfiguration();
-       }
-   });
+  // Listen for configuration changes
+  vscode.workspace.onDidChangeConfiguration((event) => {
+    if (
+      event.affectsConfiguration("nabotx.path") ||
+      event.affectsConfiguration("nabotx.token") ||
+      event.affectsConfiguration("nabotx.model")
+    ) {
+      checkConfiguration();
+    }
+  });
 }
 
 function deactivate() {}
 
 function checkConfiguration() {
-    const configuration = vscode.workspace.getConfiguration("nabotx");
-    const path = configuration.get("path") || "";
-    const token = configuration.get("token") || "";
-    const model = configuration.get("model") || "";
+  const configuration = vscode.workspace.getConfiguration("nabotx");
+  const path = configuration.get("path") || "";
+  const token = configuration.get("token") || "";
+  const model = configuration.get("model") || "";
 
-    if (!path || !token || !model) {
-        vscode.window.showWarningMessage(
-            "NaBotX: Please configure the extension settings (path, token, model) for the extension to work properly.",
-            "Open Settings"
-        ).then(selection => {
-            if (selection === "Open Settings") {
-                vscode.commands.executeCommand("workbench.action.openSettings", "nabotx");
-            }
-        });
-    }
+  if (!path || !token || !model) {
+    vscode.window
+      .showWarningMessage(
+        "NaBotX: Please configure the extension settings (path, token, model) for the extension to work properly.",
+        "Open Settings"
+      )
+      .then((selection) => {
+        if (selection === "Open Settings") {
+          vscode.commands.executeCommand(
+            "workbench.action.openSettings",
+            "nabotx"
+          );
+        }
+      });
+  }
 }
 
 module.exports = { activate, deactivate };
