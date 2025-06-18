@@ -310,41 +310,34 @@ function activate(context) {
     })
   );
 
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "nabotx.addToChatExplorer",
-      async (resourceUri) => {
+context.subscriptions.push(
+    vscode.commands.registerCommand("nabotx.addToChatExplorer", async (resourceUri) => {
         if (resourceUri) {
-          try {
-            const document = await vscode.workspace.openTextDocument(
-              resourceUri
-            );
-            const fileContent = document.getText();
+            let isDirectory = false;
 
-            let relativePath = "";
-            if (vscode.workspace.workspaceFolders) {
-              const workspaceFolder =
-                vscode.workspace.workspaceFolders[0].uri.fsPath;
-              const filePath = resourceUri.fsPath;
-              relativePath = filePath.replace(workspaceFolder + "/", "");
-            } else {
-              vscode.window.showInformationMessage("No workspace folder open.");
-              return;
+            try {
+                const stats = fs.statSync(resourceUri.fsPath);
+                isDirectory = stats.isDirectory();
+            } catch (err) {
+                vscode.window.showErrorMessage(`Error accessing resource: ${err.message}`);
+                return;
             }
 
-            nabotxSidePanelProvider._addToChat(fileContent, relativePath);
-          } catch (err) {
-            vscode.window.showErrorMessage(
-              `Error adding file to chat: ${err.message}`
-            );
-            console.error("Error adding file to chat:", err);
-          }
+            if (isDirectory) {
+                // Handle directory case
+                await addDirectoryContentsToChat(nabotxSidePanelProvider, resourceUri.fsPath);
+            } else {
+                // Handle file case as before
+                const document = await vscode.workspace.openTextDocument(resourceUri);
+                const fileContent = document.getText();
+                let relativePath = getRelativePath(resourceUri);
+                nabotxSidePanelProvider._addToChat(fileContent, relativePath);
+            }
         } else {
-          vscode.window.showInformationMessage("No file selected.");
+            vscode.window.showInformationMessage("No file or folder selected.");
         }
-      }
-    )
-  );
+    })
+);
 
   context.subscriptions.push(
     vscode.commands.registerCommand("nabotx.addToChat", async () => {
@@ -428,6 +421,39 @@ function checkConfiguration() {
         }
       });
   }
+}
+
+async function addDirectoryContentsToChat(provider, folderPath) {
+    const folderFiles = fs.readdirSync(folderPath);
+    for (const file of folderFiles) {
+        const filePath = path.join(folderPath, file);
+        const stats = fs.statSync(filePath);
+        
+        if (stats.isDirectory()) {
+            // Recursively add contents if it is a directory
+            await addDirectoryContentsToChat(provider, filePath);
+        } else {
+            // If it is a file, read and add to chat
+            try {
+                const document = await vscode.workspace.openTextDocument(filePath);
+                const fileContent = document.getText();
+                let relativePath = getRelativePath(vscode.Uri.file(filePath));
+                provider._addToChat(fileContent, relativePath);
+            } catch (err) {
+                console.error(`Error reading file ${filePath}: ${err.message}`);
+            }
+        }
+    }
+}
+
+function getRelativePath(resourceUri) {
+  let relativePath = '';
+  if (vscode.workspace.workspaceFolders) {
+    const workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
+    const filePath = resourceUri.fsPath;
+    relativePath = filePath.replace(workspaceFolder + "/", "");
+  }
+  return relativePath;
 }
 
 module.exports = { activate, deactivate };

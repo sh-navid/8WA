@@ -3,7 +3,7 @@
   "displayName": "NaBotX",
   "description": "This VSCode extension helps developers code more efficiently with AI assistance. Currently, it serves as a simple alternative to Copilot or Cursor.",
   "publisher": "sh-navid",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "icon": "assets/logo.png",
   "repository": {
     "type": "git",
@@ -31,7 +31,13 @@
       },
       {
         "command": "nabotx.addToChatExplorer",
-        "title": "NaBotX: Add File to Chat"
+        "title": "NabotX: Add file to chat",
+        "when": "resourceExtname != md"
+      },
+      {
+        "command": "nabotx.addToChatExplorer",
+        "title": "NabotX: Add directory to chat",
+        "when": "explorerResourceTreeItemType == 'folder'"
       }
     ],
     "menus": {
@@ -42,17 +48,22 @@
           "when": "editorFocus"
         }
       ],
-       "editor/context": [
-            {
-              "command": "nabotx.addToChat",
-              "group": "navigation"
-            }
-          ],
+      "editor/context": [
+        {
+          "command": "nabotx.addToChat",
+          "group": "navigation"
+        }
+      ],
       "explorer/context": [
         {
           "command": "nabotx.addToChatExplorer",
           "group": "navigation",
           "when": "resourceExtname != md"
+        },
+        {
+          "command": "nabotx.addToChatExplorer",
+          "group": "navigation",
+          "when": "explorerResourceTreeItemType == 'folder'"
         }
       ]
     },
@@ -117,11 +128,12 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.100.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
-    "eslint": "^9.25.1",
+    "@types/vscode": "^1.100.0",
     "@vscode/test-cli": "^0.0.10",
-    "@vscode/test-electron": "^2.5.2"
+    "@vscode/test-electron": "^2.5.2",
+    "eslint": "^9.25.1",
+    "vscode-test": "^1.6.1"
   }
 }
