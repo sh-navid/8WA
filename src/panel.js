@@ -132,7 +132,10 @@ async function sendToLLM(message) {
       choices: [
         {
           message: {
-            content: "Error communicating with the LLM: " + error.message,
+            content:
+              "Error communicating with the LLM: " +
+              error.message +
+              ` <a href="#" onclick="proceedToSend('Retry...','Please review chats and respond again')">Retry...</a>`,
           },
         },
       ],
