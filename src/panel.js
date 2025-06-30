@@ -1,3 +1,4 @@
+/**/
 let msgArray = [
   {
     role: "assistant",
@@ -66,13 +67,13 @@ function addBotMessage(response) {
       highlightCode(codeElement, code);
 
       codeElement.parent().css("position", "relative").append(`
-              <div class="code-btns-container">
-                  <img src="${btnOpenCodeFile}" alt="Open Code File"  />
-                  <img src="${btnAppend}"       alt="Append in File"  />
-                  <img src="${btnReplace}"      alt="Replace File"    />
-                  <img src="${btnCopy}"         alt="Copy File"       />
-              </div>
-            `);
+        <div class="code-btns-container">
+          <img src="${btnOpenCodeFile}" alt="Open Code File"  />
+          <img src="${btnAppend}"       alt="Append in File"  />
+          <img src="${btnReplace}"      alt="Replace File"    />
+          <img src="${btnCopy}"         alt="Copy File"       />
+        </div>
+      `);
 
       codeElement
         .parent()
@@ -164,6 +165,7 @@ async function proceedToSend(userText, combinedMessage) {
   $("#sendButton").prop("disabled", false).focus();
 }
 
+/**/
 document.addEventListener("DOMContentLoaded", function () {
   clearChat();
 
@@ -175,8 +177,14 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   $("#sendButton").click(() => {
-    const text = $("#userInput").val().trim();
+    let text = $("#userInput").val().trim();
     if (!text) return;
+
+    if (text === "/time") {
+      const now = new Date().toLocaleTimeString();
+      text = `Current time: ${now}`;
+    }
+
     proceedToSend(text, text);
   });
 });
