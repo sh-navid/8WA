@@ -183,6 +183,9 @@ document.addEventListener("DOMContentLoaded", function () {
     if (text === "/time") {
       const now = new Date().toLocaleTimeString();
       text = `Current time: ${now}`;
+    } else if (text === "/date") {
+      const today = new Date().toLocaleDateString();
+      text = `Current date: ${today}`;
     }
 
     proceedToSend(text, text);
