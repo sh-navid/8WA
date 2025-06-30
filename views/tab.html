@@ -1,17 +1,8 @@
 <tabs>
-  <!-- <span>Team: </span>
-  <tab style="border: 1px solid hotpink; " active>NaBot</tab>
-  <tab style="border: 1px solid royalblue; ">Fesen</tab>
-  <span style="width: 2rem;"></span>
-  <tab>Tasks</tab>
-  <tab>Tests</tab>
-  <tab>Assets</tab> -->
   <tab>Default Assistant</tab>
-  <tab>
-    <span style="font-size: 0.65rem; color: goldenrod">
-      <b style="color: white">Model:</b> ${model}
-    </span>
-  </tab>
+  <select name="modelSelect">
+    <option value="${model}">${model}</option>
+  </select>
 </tabs>
 
 <template class="tabTemplate">
