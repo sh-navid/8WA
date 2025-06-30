@@ -53,44 +53,53 @@ class NaBotXSidePanelProvider {
     }
   }
 
-  async _openCodeFile(code) {
-    try {
-      const filePathMatch = code.match(/^.*?\[\[(.*?)\]\]/);
-      if (!filePathMatch || filePathMatch.length < 2) {
-        vscode.window.showErrorMessage(
-          "File path not found in the code block."
-        );
-        return;
-      }
-
-      const filePath = filePathMatch[1].trim();
-      if (!filePath) {
-        vscode.window.showErrorMessage("File path is empty.");
-        return;
-      }
-
-      let fileUri;
-      if (vscode.workspace.workspaceFolders) {
-        const workspaceFolder = vscode.workspace.workspaceFolders[0].uri;
-        fileUri = vscode.Uri.joinPath(workspaceFolder, filePath);
-      } else {
-        fileUri = vscode.Uri.file(filePath);
-      }
-
-      try {
-        const document = await vscode.workspace.openTextDocument(fileUri);
-        await vscode.window.showTextDocument(document);
-      } catch (error) {
-        vscode.window.showErrorMessage(
-          `Error opening file: ${error.message || error}`
-        );
-      }
-    } catch (err) {
+/**/
+async _openCodeFile(code) {
+  try {
+    // Extract the file path from the code block
+    const filePathMatch = code.match(/^.*?\[\[(.*?)\]\]/);
+    if (!filePathMatch || filePathMatch.length < 2) {
       vscode.window.showErrorMessage(
-        `Error extracting file path: ${err.message}`
+        "File path not found in the code block."
       );
+      return;
     }
+
+    const filePath = filePathMatch[1].trim();
+    if (!filePath) {
+      vscode.window.showErrorMessage("File path is empty.");
+      return;
+    }
+
+    // Determine the URI for the file
+    let fileUri;
+    if (vscode.workspace.workspaceFolders) {
+      const workspaceFolder = vscode.workspace.workspaceFolders[0].uri;
+      fileUri = vscode.Uri.joinPath(workspaceFolder, filePath);
+    } else {
+      fileUri = vscode.Uri.file(filePath);
+    }
+
+    // Check if the file exists; if not, create its directories and the file
+    try {
+      await vscode.workspace.fs.stat(fileUri);
+    } catch (statErr) {
+      // File does not exist, so create parent directories
+      const dirPath = path.dirname(fileUri.fsPath);
+      fs.mkdirSync(dirPath, { recursive: true });
+      // Create an empty file
+      await vscode.workspace.fs.writeFile(fileUri, new Uint8Array());
+    }
+
+    // Open the file in the editor
+    const document = await vscode.workspace.openTextDocument(fileUri);
+    await vscode.window.showTextDocument(document);
+  } catch (error) {
+    vscode.window.showErrorMessage(
+      `Error opening or creating file: ${error.message || error}`
+    );
   }
+}
 
   _removeCommentStructure(code) {
     // Regex to match various comment styles followed by [[path]]
