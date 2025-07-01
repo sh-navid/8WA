@@ -1,4 +1,3 @@
-/* */
 const vscode = require('vscode');
 const path = require('path');
 const fs = require('fs');
@@ -11,6 +10,7 @@ const {
   getRelativePath,
   readDirectoryRecursively
 } = require('./utils/fileUtils');
+const { removeCommentStructure } = require('./utils/codeUtils');
 
 class NaBotXSidePanelProvider {
   constructor(extensionUri) {
@@ -63,13 +63,8 @@ class NaBotXSidePanelProvider {
     }
   }
 
-  _removeCommentStructure(code) {
-    const regex = /(\s*(?:\/\*[\s\S]*?\*\/|\/\/.*|#.*|--.*|'''(.*?)'''|"(.*?)"|'(.*?)')*)?\s*\[\[(.*?)\]\]/;
-    return code.replace(regex, '').trim();
-  }
-
   async _appendToActiveFile(code) {
-    code = this._removeCommentStructure(code);
+    code = removeCommentStructure(code);
     const editor = vscode.window.activeTextEditor;
     if (editor) {
       const doc = editor.document;
@@ -81,7 +76,7 @@ class NaBotXSidePanelProvider {
   }
 
   async _replaceActiveFile(code) {
-    code = this._removeCommentStructure(code);
+    code = removeCommentStructure(code);
     const editor = vscode.window.activeTextEditor;
     if (editor) {
       const doc = editor.document;
@@ -96,7 +91,7 @@ class NaBotXSidePanelProvider {
   }
 
   async _copyCodeBlock(code) {
-    code = this._removeCommentStructure(code);
+    code = removeCommentStructure(code);
     await vscode.env.clipboard.writeText(code);
   }
 
