@@ -1,6 +1,8 @@
+/* */
 const vscode = require("vscode");
 const path = require("path");
 const fs = require("fs");
+const { commentPath } = require("./utils/pathUtils");
 
 class NaBotXSidePanelProvider {
   constructor(extensionUri) {
@@ -53,70 +55,62 @@ class NaBotXSidePanelProvider {
     }
   }
 
-/**/
-async _openCodeFile(code) {
-  try {
-    // Extract the file path from the code block
-    const filePathMatch = code.match(/^.*?\[\[(.*?)\]\]/);
-    if (!filePathMatch || filePathMatch.length < 2) {
-      vscode.window.showErrorMessage(
-        "File path not found in the code block."
-      );
-      return;
-    }
-
-    const filePath = filePathMatch[1].trim();
-    if (!filePath) {
-      vscode.window.showErrorMessage("File path is empty.");
-      return;
-    }
-
-    // Determine the URI for the file
-    let fileUri;
-    if (vscode.workspace.workspaceFolders) {
-      const workspaceFolder = vscode.workspace.workspaceFolders[0].uri;
-      fileUri = vscode.Uri.joinPath(workspaceFolder, filePath);
-    } else {
-      fileUri = vscode.Uri.file(filePath);
-    }
-
-    // Check if the file exists; if not, create its directories and the file
+  async _openCodeFile(code) {
     try {
-      await vscode.workspace.fs.stat(fileUri);
-    } catch (statErr) {
-      // File does not exist, so create parent directories
-      const dirPath = path.dirname(fileUri.fsPath);
-      fs.mkdirSync(dirPath, { recursive: true });
-      // Create an empty file
-      await vscode.workspace.fs.writeFile(fileUri, new Uint8Array());
-    }
+      const filePathMatch = code.match(/^.*?\[\[(.*?)\]\]/);
+      if (!filePathMatch || filePathMatch.length < 2) {
+        vscode.window.showErrorMessage(
+          "File path not found in the code block."
+        );
+        return;
+      }
 
-    // Open the file in the editor
-    const document = await vscode.workspace.openTextDocument(fileUri);
-    await vscode.window.showTextDocument(document);
-  } catch (error) {
-    vscode.window.showErrorMessage(
-      `Error opening or creating file: ${error.message || error}`
-    );
+      const filePath = filePathMatch[1].trim();
+      if (!filePath) {
+        vscode.window.showErrorMessage("File path is empty.");
+        return;
+      }
+
+      let fileUri;
+      if (vscode.workspace.workspaceFolders) {
+        const workspaceFolder = vscode.workspace.workspaceFolders[0].uri;
+        fileUri = vscode.Uri.joinPath(workspaceFolder, filePath);
+      } else {
+        fileUri = vscode.Uri.file(filePath);
+      }
+
+      try {
+        await vscode.workspace.fs.stat(fileUri);
+      } catch (statErr) {
+        const dirPath = path.dirname(fileUri.fsPath);
+        fs.mkdirSync(dirPath, { recursive: true });
+        await vscode.workspace.fs.writeFile(fileUri, new Uint8Array());
+      }
+
+      const document = await vscode.workspace.openTextDocument(fileUri);
+      await vscode.window.showTextDocument(document);
+    } catch (error) {
+      vscode.window.showErrorMessage(
+        `Error opening or creating file: ${error.message || error}`
+      );
+    }
   }
-}
 
   _removeCommentStructure(code) {
-    // Regex to match various comment styles followed by [[path]]
     const regex =
       /(\s*(?:\/\*[\s\S]*?\*\/|\/\/.*|#.*|--.*|'''(.*?)'''|"(.*?)"|\'(.*?)\')*)?\s*\[\[(.*?)\]\]/;
-
     return code.replace(regex, "").trim();
   }
 
   async _appendToActiveFile(code) {
     code = this._removeCommentStructure(code);
-
     const editor = vscode.window.activeTextEditor;
     if (editor) {
-      const document = editor.document,
-        pos = document.lineAt(document.lineCount - 1).range.end;
-      await editor.edit((editBuilder) => editBuilder.insert(pos, "\n" + code));
+      const document = editor.document;
+      const pos = document.lineAt(document.lineCount - 1).range.end;
+      await editor.edit((editBuilder) =>
+        editBuilder.insert(pos, "\n" + code)
+      );
     } else {
       vscode.window.showErrorMessage("No active file to append code to.");
     }
@@ -124,14 +118,13 @@ async _openCodeFile(code) {
 
   async _replaceActiveFile(code) {
     code = this._removeCommentStructure(code);
-
     const editor = vscode.window.activeTextEditor;
     if (editor) {
-      const document = editor.document,
-        fullRange = new vscode.Range(
-          document.positionAt(0),
-          document.positionAt(document.getText().length)
-        );
+      const document = editor.document;
+      const fullRange = new vscode.Range(
+        document.positionAt(0),
+        document.positionAt(document.getText().length)
+      );
       await editor.edit((editBuilder) => editBuilder.replace(fullRange, code));
     } else {
       vscode.window.showErrorMessage("No active file to replace content.");
@@ -140,7 +133,6 @@ async _openCodeFile(code) {
 
   async _copyCodeBlock(code) {
     code = this._removeCommentStructure(code);
-
     await vscode.env.clipboard.writeText(code);
   }
 
@@ -174,17 +166,9 @@ async _openCodeFile(code) {
 
   _getHtmlForWebview(webview) {
     let html = load(this, "views", "panel.html");
-
     const tabView = load(this, "views", "tab.html");
 
-    // Default config values
-    const defaultConfig = {
-      path: "",
-      token: "",
-      model: "",
-    };
-
-    // Get configuration settings from VS Code
+    const defaultConfig = { path: "", token: "", model: "" };
     const configuration = vscode.workspace.getConfiguration("nabotx");
     const pathValue = configuration.get("path") || defaultConfig.path;
     const tokenValue = configuration.get("token") || defaultConfig.token;
@@ -211,72 +195,37 @@ async _openCodeFile(code) {
 
     html = html
       .replaceAll(/\$\{tabView\}/g, tabView)
-
-      .replaceAll(/\$\{path\}/g, pathValue) // Use the value from VS Code settings or default
-      .replaceAll(/\$\{token\}/g, tokenValue) // Use the value from VS Code settings or default
-      .replaceAll(/\$\{model\}/g, modelValue) // Use the value from VS Code settings or default
-
+      .replaceAll(/\$\{path\}/g, pathValue)
+      .replaceAll(/\$\{token\}/g, tokenValue)
+      .replaceAll(/\$\{model\}/g, modelValue)
       .replaceAll(/\$\{rules\}/g, general.rules.assistant)
       .replaceAll(/\$\{scripts\}/g, scripts)
       .replaceAll(/\$\{styles\}/g, styles);
 
-    for (const x of general.assets)
+    for (const asset of general.assets) {
       html = html.replaceAll(
-        new RegExp(`\\$\\{${x.slice(2)}\\}`, "g"),
-        uri(webview, this, "assets", x.slice(2))
+        new RegExp(`\\$\\{${asset.slice(2)}\\}`, "g"),
+        uri(webview, this, "assets", asset.slice(2))
       );
+    }
 
     return html;
   }
 }
-
-const commentPath = (path, data) => {
-  const extension = path.split(".").pop();
-  const commentStyles = {
-    js: `/* {path} */`,
-    jsx: `/* {path} */`,
-    ts: `/* {path} */`, // for TypeScript files
-    py: `# {path}`,
-    java: `// {path}`,
-    c: `// {path}`,
-    cpp: `// {path}`,
-    css: `/* {path} */`,
-    html: `<!-- {path} -->`,
-    php: `// {path}`,
-    rb: `# {path}`,
-    go: `// {path}`,
-    kt: `// {path}`,
-    sql: `-- {path}`,
-    sh: `# {path}`,
-    r: `# {path}`,
-    vb: `' {path}`,
-    cs: `// {path}`, // C# language
-    ml: `(* {path} *)`,
-    yaml: `# {path}`,
-    json: `/* {path} */`, // JSON doesn't support comments, but this is a placeholder
-  };
-
-  const commentStyle = commentStyles[extension] || "/* {path} */";
-  return commentStyle.replace(/{path}/g, data);
-};
 
 const join = (provider, dir, fileName) => {
   return path.join(provider._extensionUri.fsPath, dir, fileName);
 };
 
 const load = (provider, dir, fileName, json = false) => {
-  let _path = join(provider, dir, fileName);
+  const _path = join(provider, dir, fileName);
   try {
     return json
       ? JSON.parse(fs.readFileSync(_path, "utf8"))
       : fs.readFileSync(_path, "utf8");
   } catch (error) {
     console.error(`Error loading file ${_path}: ${error.message}`);
-    if (json) {
-      return {}; // Return an empty object for JSON files
-    } else {
-      return ""; // Return an empty string for other files
-    }
+    return json ? {} : "";
   }
 };
 
@@ -289,11 +238,16 @@ const uri = (webview, provider, dir, fileName) => {
 let nabotxSidePanelProvider;
 
 function activate(context) {
-  nabotxSidePanelProvider = new NaBotXSidePanelProvider(context.extensionUri);
+  nabotxSidePanelProvider = new NaBotXSidePanelProvider(
+    context.extensionUri
+  );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("nabotx.openSettings", function () {
-      vscode.commands.executeCommand("workbench.action.openSettings", "nabotx");
+    vscode.commands.registerCommand("nabotx.openSettings", () => {
+      vscode.commands.executeCommand(
+        "workbench.action.openSettings",
+        "nabotx"
+      );
     })
   );
 
@@ -325,10 +279,8 @@ function activate(context) {
       async (resourceUri) => {
         if (resourceUri) {
           let isDirectory = false;
-
           try {
-            const stats = fs.statSync(resourceUri.fsPath);
-            isDirectory = stats.isDirectory();
+            isDirectory = fs.statSync(resourceUri.fsPath).isDirectory();
           } catch (err) {
             vscode.window.showErrorMessage(
               `Error accessing resource: ${err.message}`
@@ -337,22 +289,25 @@ function activate(context) {
           }
 
           if (isDirectory) {
-            // Handle directory case
             await addDirectoryContentsToChat(
               nabotxSidePanelProvider,
               resourceUri.fsPath
             );
           } else {
-            // Handle file case as before
             const document = await vscode.workspace.openTextDocument(
               resourceUri
             );
             const fileContent = document.getText();
-            let relativePath = getRelativePath(resourceUri);
-            nabotxSidePanelProvider._addToChat(fileContent, relativePath);
+            const relativePath = getRelativePath(resourceUri);
+            nabotxSidePanelProvider._addToChat(
+              fileContent,
+              relativePath
+            );
           }
         } else {
-          vscode.window.showInformationMessage("No file or folder selected.");
+          vscode.window.showInformationMessage(
+            "No file or folder selected."
+          );
         }
       }
     )
@@ -361,34 +316,34 @@ function activate(context) {
   context.subscriptions.push(
     vscode.commands.registerCommand("nabotx.addToChat", async () => {
       const editor = vscode.window.activeTextEditor;
-      if (editor) {
-        let selectedText = editor.selection
-          ? editor.document.getText(editor.selection)
-          : "";
+      if (!editor) {
+        vscode.window.showInformationMessage("No active editor.");
+        return;
+      }
 
+      let selectedText = editor.selection
+        ? editor.document.getText(editor.selection)
+        : "";
+      if (!selectedText) {
+        selectedText = editor.document.getText();
         if (!selectedText) {
-          selectedText = editor.document.getText();
-          if (!selectedText) {
-            vscode.window.showInformationMessage("The active file is empty.");
-            return;
-          }
-        }
-
-        let relativePath = "";
-        if (vscode.workspace.workspaceFolders) {
-          const workspaceFolder =
-            vscode.workspace.workspaceFolders[0].uri.fsPath;
-          const filePath = editor.document.uri.fsPath;
-          relativePath = filePath.replace(workspaceFolder + "/", "");
-        } else {
-          vscode.window.showInformationMessage("No workspace folder open.");
+          vscode.window.showInformationMessage("The active file is empty.");
           return;
         }
-
-        nabotxSidePanelProvider._addToChat(selectedText, relativePath);
-      } else {
-        vscode.window.showInformationMessage("No active editor.");
       }
+
+      let relativePath = "";
+      if (vscode.workspace.workspaceFolders) {
+        const workspaceFolder =
+          vscode.workspace.workspaceFolders[0].uri.fsPath;
+        const filePath = editor.document.uri.fsPath;
+        relativePath = filePath.replace(workspaceFolder + "/", "");
+      } else {
+        vscode.window.showInformationMessage("No workspace folder open.");
+        return;
+      }
+
+      nabotxSidePanelProvider._addToChat(selectedText, relativePath);
     })
   );
 
@@ -402,10 +357,8 @@ function activate(context) {
   statusBarItem.show();
   context.subscriptions.push(statusBarItem);
 
-  // Check for configuration values on activation
   checkConfiguration();
 
-  // Listen for configuration changes
   vscode.workspace.onDidChangeConfiguration((event) => {
     if (
       event.affectsConfiguration("nabotx.path") ||
@@ -421,11 +374,11 @@ function deactivate() {}
 
 function checkConfiguration() {
   const configuration = vscode.workspace.getConfiguration("nabotx");
-  const path = configuration.get("path") || "";
+  const pathVal = configuration.get("path") || "";
   const token = configuration.get("token") || "";
   const model = configuration.get("model") || "";
 
-  if (!path || !token || !model) {
+  if (!pathVal || !token || !model) {
     vscode.window
       .showWarningMessage(
         "NaBotX: Please configure the extension settings (path, token, model) for the extension to work properly.",
@@ -449,17 +402,17 @@ async function addDirectoryContentsToChat(provider, folderPath) {
     const stats = fs.statSync(filePath);
 
     if (stats.isDirectory()) {
-      // Recursively add contents if it is a directory
       await addDirectoryContentsToChat(provider, filePath);
     } else {
-      // If it is a file, read and add to chat
       try {
         const document = await vscode.workspace.openTextDocument(filePath);
         const fileContent = document.getText();
-        let relativePath = getRelativePath(vscode.Uri.file(filePath));
+        const relativePath = getRelativePath(vscode.Uri.file(filePath));
         provider._addToChat(fileContent, relativePath);
       } catch (err) {
-        console.error(`Error reading file ${filePath}: ${err.message}`);
+        console.error(
+          `Error reading file ${filePath}: ${err.message}`
+        );
       }
     }
   }
@@ -468,9 +421,12 @@ async function addDirectoryContentsToChat(provider, folderPath) {
 function getRelativePath(resourceUri) {
   let relativePath = "";
   if (vscode.workspace.workspaceFolders) {
-    const workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
-    const filePath = resourceUri.fsPath;
-    relativePath = filePath.replace(workspaceFolder + "/", "");
+    const workspaceFolder =
+      vscode.workspace.workspaceFolders[0].uri.fsPath;
+    relativePath = resourceUri.fsPath.replace(
+      workspaceFolder + "/",
+      ""
+    );
   }
   return relativePath;
 }
