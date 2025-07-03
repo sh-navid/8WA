@@ -7,8 +7,7 @@ const {
   getFileUriFromWorkspace,
   ensureFileExists,
   openFile,
-  getRelativePath,
-  readDirectoryRecursively
+  getRelativePath
 } = require('./utils/fileUtils');
 const { removeCommentStructure } = require('./utils/codeUtils');
 
@@ -125,70 +124,62 @@ class NaBotXSidePanelProvider {
     }
 
     const workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
-    const ignoredPaths = ['.git', 'node_modules','obj','bin']; // Add default ignored paths
+    const ignoredPaths = ['.git', 'node_modules', 'obj', 'bin'];
 
-    // Function to find all .gitignore files and their contents
-    async function findGitignoreContents(folderPath) {
-      const gitignorePatterns = [];
-      const gitignoreFiles = await findGitignoreFiles(folderPath);
-
-      for (const gitignoreFile of gitignoreFiles) {
-        const fileContent = await readFile(vscode.Uri.file(gitignoreFile));
-        const patterns = fileContent.content
-          .split('\n')
-          .map(line => line.trim())
-          .filter(line => line && !line.startsWith('#'))
-          .map(line => path.join(path.dirname(gitignoreFile), line)); // Adjust paths relative to the .gitignore file
-        gitignorePatterns.push(...patterns);
-      }
-
-      return gitignorePatterns;
-    }
-
-    // Function to recursively find all .gitignore files
-    async function findGitignoreFiles(folderPath) {
-      const gitignoreFiles = [];
-      const files = await readDirectoryRecursively(folderPath);
-
-      for (const file of files) {
-        if (path.basename(file) === '.gitignore') {
-          gitignoreFiles.push(file);
-        }
-      }
-
-      return gitignoreFiles;
-    }
-
-    async function readDirectoryContents(folderPath, indent = '', ignoredPaths = []) {
+    // Returns a promise with the formatted structure.
+    async function buildDirectoryStructure(folderPath, ignoredPaths, prefix = '', isRoot = true) {
       let structure = '';
+      let entries;
       try {
-        const files = await readDirectoryRecursively(folderPath);
-
-        for (const filePath of files) {
-          const fileName = path.basename(filePath);
-          const relativePath = path.relative(folderPath, filePath);
-
-          // Check if the file or folder should be ignored
-          const isIgnored = ignoredPaths.some(ignoredPath => {
-            const absoluteIgnoredPath = path.resolve(workspaceFolder, ignoredPath);
-            const absoluteFilePath = path.resolve(filePath);
-            return absoluteFilePath === absoluteIgnoredPath || absoluteFilePath.startsWith(absoluteIgnoredPath + path.sep);
-          });
-
-          if (!isIgnored) {
-            structure += `${indent}└─ ${fileName}\n`;
-          }
-        }
+        entries = await fs.promises.readdir(folderPath, { withFileTypes: true });
       } catch (error) {
         return `Error reading directory: ${error}`;
+      }
+      // Sort: directories first, then files, each alphabetically
+      entries.sort((a, b) => {
+        if (a.isDirectory() === b.isDirectory()) {
+          return a.name.localeCompare(b.name);
+        }
+        return a.isDirectory() ? -1 : 1;
+      });
+
+      for (let i = 0; i < entries.length; i++) {
+        const entry = entries[i];
+        const filePath = path.join(folderPath, entry.name);
+
+        // Ignore specified paths
+        const normRelativePath = path.relative(workspaceFolder, filePath).split(path.sep).join('/').toLowerCase();
+        const shouldIgnore = ignoredPaths.some(ignored => {
+          const normIgnored = ignored.replace(/\\/g, '/').replace(/\/+$/, '').toLowerCase();
+          return (
+            normRelativePath === normIgnored ||
+            normRelativePath.startsWith(normIgnored + '/')
+          );
+        });
+
+        if (shouldIgnore) {
+          continue;
+        }
+
+        // ├─ for all except last, └─ for last
+        // For nested, use |   or space
+        const isLast = i === entries.length - 1;
+        const pointer = isRoot
+          ? (isLast ? '└─ ' : '├─ ')
+          : (isLast ? '└─ ' : '├─ ');
+
+        structure += prefix + pointer + entry.name + '\n';
+
+        if (entry.isDirectory()) {
+          const nextPrefix = prefix + (isLast ? '    ' : '|   ');
+          structure += await buildDirectoryStructure(filePath, ignoredPaths, nextPrefix, false);
+        }
       }
       return structure;
     }
 
     try {
-      const gitIgnore = await findGitignoreContents(workspaceFolder);
-      ignoredPaths.push(...gitIgnore);
-      let projectStructure = `Project Structure:\n${await readDirectoryContents(workspaceFolder, '', ignoredPaths)}`;
+      let projectStructure = `Project Structure:\n${await buildDirectoryStructure(workspaceFolder, ignoredPaths)}`;
       webviewView.webview.postMessage({ command: 'receiveProjectStructure', structure: projectStructure });
     } catch (error) {
       vscode.window.showErrorMessage(`Failed to build project structure: ${error.message}`);
@@ -287,7 +278,9 @@ function activate(context) {
         return vscode.window.showErrorMessage(`Error accessing resource: ${err.message}`);
       }
       if (stats.isDirectory()) {
-        await addDirectoryContentsToChat(nabotxSidePanelProvider, resourceUri.fsPath);
+        const workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
+        const ignoredPaths = ['.git', 'node_modules', 'obj', 'bin'];
+        await addDirectoryContentsToChat(nabotxSidePanelProvider, resourceUri.fsPath, ignoredPaths);
       } else {
         const doc = await vscode.workspace.openTextDocument(resourceUri);
         const fileContent = doc.getText();
@@ -372,9 +365,39 @@ function checkConfiguration() {
   }
 }
 
-async function addDirectoryContentsToChat(provider, folderPath) {
-  const files = readDirectoryRecursively(folderPath);
-  for (const filePath of files) {
+async function addDirectoryContentsToChat(provider, folderPath, ignoredPaths) {
+  const workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
+
+  function isPathIgnored(filePath, ignoredPaths) {
+    const normRelativePath = path.relative(workspaceFolder, filePath).split(path.sep).join('/').toLowerCase();
+    return ignoredPaths.some(ignored => {
+      const normIgnored = ignored.replace(/\\/g, '/').replace(/\/+$/, '').toLowerCase();
+      return (
+        normRelativePath === normIgnored ||
+        normRelativePath.startsWith(normIgnored + '/')
+      );
+    });
+  }
+
+  async function* walk(dir, ignoredPaths) {
+    try {
+      const entries = await fs.promises.readdir(dir, { withFileTypes: true });
+      for (const entry of entries) {
+        const filePath = path.join(dir, entry.name);
+        if (isPathIgnored(filePath, ignoredPaths)) {
+          continue;
+        }
+        if (entry.isDirectory()) {
+          yield* walk(filePath, ignoredPaths);
+        } else {
+          yield filePath;
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  for await (const filePath of walk(folderPath, ignoredPaths)) {
     try {
       const fileUri = vscode.Uri.file(filePath);
       const { content } = await readFile(fileUri);

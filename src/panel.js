@@ -236,18 +236,25 @@ window.addEventListener("message", (event) => {
       break;
     case "receiveProjectStructure":
       const structure = message.structure;
-      addMessage(structure, false, (type = "structure"));
+      proceedToSend(structure, structure, (send = false), (type = "structure"));
       break;
   }
 });
 
-async function proceedToSend(userText, combinedMessage) {
-  addMessage(userText);
+async function proceedToSend(
+  userText,
+  combinedMessage,
+  send = true,
+  type = null
+) {
+  addMessage(userText, (fromUser = true), type);
   $("#userInput").val("");
   $("#sendButton").prop("disabled", true);
-  const response = await sendToLLM(combinedMessage);
+  if (send) {
+    const response = await sendToLLM(combinedMessage);
 
-  addBotMessage(response);
+    addBotMessage(response);
+  }
   $("#sendButton").prop("disabled", false).focus();
 }
 
