@@ -1,204 +1,195 @@
-/* nabotx/styles/panel.css */
+/* General Styles */
 * {
   box-sizing: border-box;
 }
 
 body {
   background-color: var(--vscode-editor-background);
-  justify-content: flex-start;
-  flex-direction: column;
-  user-select: none;
+  color: var(--vscode-editor-foreground);
   display: flex;
+  flex-direction: column;
   height: 100vh;
-  padding: 0;
   margin: 0;
+  padding: 0;
+  user-select: none;
 }
 
-/* Header */
+/* Header Styles */
 .headerContainer {
   position: fixed;
-  z-index: 999999;
-  right: 0;
+  top: 0;
   left: 0;
+  right: 0;
+  z-index: 9999;
 }
 
 header {
-  border-bottom: 1px solid var(--vscode-editorWidget-border, #ddd);
-  border-bottom-right-radius: 1rem;
-  border-bottom-left-radius: 1rem;
-  box-shadow: 0 1px 3px var(--vscode-shadow, rgba(0, 0, 0, 0.1));
   background-color: var(--vscode-editorWidget-background);
-  align-items: center;
+  border-bottom: 1px solid var(--vscode-editorWidget-border, #ddd);
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  box-shadow: 0 1px 3px var(--vscode-shadow, rgba(0, 0, 0, 0.1));
   display: flex;
+  align-items: center;
   padding: 1rem;
   gap: 0.75rem;
 }
 
 header img {
-  height: auto;
   width: 7rem;
+  height: auto;
 }
 
 header label {
-  color: var(--vscode-editor-foreground);
   font-size: 1.15rem;
   font-weight: 700;
 }
 
-/* Chat messages */
+/* Chat Messages Area */
 #chatMessages {
   background-color: transparent;
-  flex-direction: column;
-  border-radius: 8px;
-  user-select: text;
   display: flex;
-  padding: 1rem;
+  flex-direction: column;
   flex-grow: 1;
+  padding: 1rem;
   margin: 1rem;
-  gap: 8px;
-  -webkit-user-select: text;
-  -moz-user-select: text;
-  -ms-user-select: text;
+  border-radius: 0.5rem;
+  gap: 0.5rem;
+  user-select: text;
 }
 
-/* Input wrapper fixed bottom */
+/* Input Area Styles */
 .input-wrapper {
-  box-shadow: 0 4px 12px var(--vscode-shadow, rgba(0, 0, 0, 0.15));
   background: var(--vscode-editorWidget-background);
-  transform: translateX(-50%);
-  padding: 0.5rem 0.75rem;
-  vertical-align: middle;
-  border-radius: 1rem;
-  align-items: center;
-  user-select: none;
-  max-width: 600px;
+  box-shadow: 0 4px 12px var(--vscode-shadow, rgba(0, 0, 0, 0.15));
   position: fixed;
-  z-index: 1000;
-  display: flex;
-  bottom: 20px;
-  gap: 0.5rem;
-  width: 90%;
+  bottom: 1.25rem;
   left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  width: 90%;
+  max-width: 600px;
+  padding: 0.5rem 0.75rem;
+  border-radius: 1rem;
+  gap: 0.5rem;
+  z-index: 1000;
 }
 
 .input-wrapper textarea {
-  transition: background-color 0.3s ease, border-color 0.3s ease;
   background-color: var(--vscode-input-background);
   border: 1px solid var(--vscode-input-border);
   color: var(--vscode-input-foreground);
+  font-size: 0.8rem;
   padding: 0.75rem 1rem;
   border-radius: 1rem;
-  position: relative;
   min-height: 2.5rem;
   max-height: 20rem;
-  font-size: 0.8rem;
-  outline: none;
   flex-grow: 1;
-  z-index: 10;
-  /* WebKit scrollbar styles */
-  ::-webkit-scrollbar {
-    width: 10px;
-  }
-  ::-webkit-scrollbar-track {
-    background: var(--vscode-input-background);
-    border-radius: 10px;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: var(--vscode-focusBorder);
-    border-radius: 10px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: var(--vscode-selectionBackground);
-  }
-  /* Firefox scrollbar styles */
+  outline: none;
+  resize: vertical;
   scrollbar-width: thin;
-  scrollbar-color: var(--vscode-focusBorder) var(--vscode-input-background);
+  scrollbar-color: var(--vscode-focusBorder)
+    var(--vscode-input-background);
 }
 
-/* Buttons with no background */
+.input-wrapper textarea::-webkit-scrollbar {
+  width: 0.625rem;
+}
+
+.input-wrapper textarea::-webkit-scrollbar-track {
+  background: var(--vscode-input-background);
+  border-radius: 1rem;
+}
+
+.input-wrapper textarea::-webkit-scrollbar-thumb {
+  background: var(--vscode-focusBorder);
+  border-radius: 1rem;
+}
+
+.input-wrapper textarea::-webkit-scrollbar-thumb:hover {
+  background: var(--vscode-selectionBackground);
+}
+
+/* Icon Button Styles */
 .input-wrapper button.icon-btn {
-  color: var(--vscode-button-foreground, #fff);
   background-color: transparent !important;
-  transition: color 0.3s ease;
   border: none !important;
-  white-space: nowrap;
-  user-select: none;
+  color: var(--vscode-button-foreground);
   font-size: 1.2rem;
   font-weight: 600;
   padding: 0.5rem;
   cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.3s ease;
 }
 
 .input-wrapper button.icon-btn:hover {
-  color: var(--vscode-button-hoverForeground, #ccc);
+  color: var(--vscode-button-hoverForeground);
 }
 
-/* Responsive tweaks */
+/* Responsive Adjustments */
 @media (max-width: 480px) {
   .input-wrapper {
-    padding: 0.5rem 0.75rem;
     width: 95%;
+    padding: 0.5rem 0.75rem;
   }
+
   .input-wrapper button.icon-btn {
     font-size: 1rem;
     padding: 0.4rem;
   }
 }
 
+/* Code Buttons Container */
 .code-btns-container {
-  background-color: #212121aa;
+  background-color: var(--vscode-editor-background);
   position: absolute;
-  right: 0.5em;
   top: -0.5rem;
-  /* Make buttons stay in one line and handle overflow */
+  right: 0.5rem;
   display: flex;
   flex-wrap: nowrap;
-  overflow-x: auto; /* Enable horizontal scrolling if needed */
-  scrollbar-width: none; /* Hide scrollbar in Firefox */
-  -ms-overflow-style: none; /* Hide scrollbar in IE and Edge */
+  overflow-x: auto;
   padding: 0.5rem;
   margin-top: 1rem;
   border-radius: 1rem;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .code-btns-container::-webkit-scrollbar {
-  display: none; /* Hide scrollbar in Chrome, Safari and Opera */
+  display: none;
 }
 
 .code-btns-container img {
-  margin-right: 0.5rem;
-  margin-left: 0.5rem;
-  height: 0.8rem;
   width: 0.8rem;
+  height: 0.8rem;
+  margin: 0.5rem;
 }
 
 .code-btns-container img:hover {
   opacity: 0.5;
 }
 
-/* Style for code blocks */
+/* Code Block Styles */
 pre,
 .msg-container {
-  background-color: var(
-    --vscode-input-background
-  ); /* Use VS Code's input background color for consistency */
-  border-radius: 0.5rem; /* Optional: Add rounded corners */
-  padding: 0.5rem; /* Add some padding around the code */
-  overflow: auto; /* Add scrollbars if the code overflows */
+  background-color: var(--vscode-textBlockQuote-background);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  overflow: auto;
 }
 
+/* Link and Button Styles */
 .more-button,
 a {
   background-color: transparent;
-  text-decoration: none;
-  color: goldenrod;
   border: none;
+  color: goldenrod;
+  text-decoration: none;
 }
 
+/* Short Text Style */
 .short-text {
-  color: #919191;
-}
-
-.msg-container {
- background-color: #272727;
+  color: var(--vscode-disabledForeground);
 }

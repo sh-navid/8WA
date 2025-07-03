@@ -1,11 +1,10 @@
-button:hover{
-  transition: all 300ms !important;
-  opacity: .5 !important;
+button:hover {
+  transition: opacity 300ms !important;
+  opacity: 0.5 !important;
   border: none;
 }
 
 .space {
-  /* background-color: red; */
   display: block;
   height: 5rem;
 }

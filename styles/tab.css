@@ -2,7 +2,7 @@ tabs {
   display: flex;
   align-items: center;
   padding: 0.4rem 0;
-  background: var(--vscode-editorWidget-background);
+  background-color: var(--vscode-editorWidget-background);
   border-bottom: 1px solid var(--vscode-editorWidget-border, #ddd);
 }
 
@@ -14,7 +14,7 @@ tab {
   cursor: pointer;
   border: 1px solid var(--vscode-editorWidget-border);
   border-radius: 0.25rem;
-  height: 1.79rem !important;
+  height: 1.79rem; /* Removed !important, consider specificity */
   line-height: 1.6rem;
 }
 
@@ -24,17 +24,16 @@ tab.active {
   border-bottom: none;
 }
 
-tabs .addTab {
+.addTab,
+.remTab {
   cursor: pointer;
-  width: 1.2rem;
-  border: none;
-  padding-right: 0.5rem;
+  transition: opacity 300ms;
 }
 
-tabs .addTab:hover,
-tabs .remTab:hover {
-  opacity: 0.5;
-  transition: opacity 300ms;
+tabs .addTab {
+  border: none;
+  padding-right: 0.5rem;
+  width: 1.2rem;
 }
 
 tabs .remTab {
@@ -43,8 +42,12 @@ tabs .remTab {
   right: 0.3rem;
   width: 0.7rem;
   height: 0.7rem;
-  cursor: pointer;
   transform: rotate(45deg);
+}
+
+tabs .addTab:hover,
+tabs .remTab:hover {
+  opacity: 0.5;
 }
 
 /* Styled combo box */
