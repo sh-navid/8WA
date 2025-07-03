@@ -262,7 +262,8 @@ document.addEventListener("DOMContentLoaded", function () {
       const today = new Date().toLocaleDateString();
       text = `Current date: ${today}`;
     } else if (text === "/structure") {
-      text = `The /structure feature is not implemented yet`;
+      // FIXME: Replace with actual project structure retrieval logic
+      text = `project-name/\n ├─ README.md\n └─ src/\n     ├─ main.py\n     └─ helpers.py`; // this is just an example
     } else if (text === "/task") {
       text = `The /task feature is not implemented yet`;
     } else if (text === "/color") {
