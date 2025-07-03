@@ -1,5 +1,3 @@
-/* */
-/**/
 let msgArray = [
   {
     role: "assistant",
@@ -90,6 +88,53 @@ function addBotMessage(response) {
           <img src="${btnCopy}"         alt="Copy File"       />
         </div>
       `);
+
+      const preElement = codeElement.parent();
+      preElement.css({
+        position: "relative",
+        "max-height": "200px",
+        overflow: "hidden",
+      });
+
+      const moreButton = $("<button>")
+        .text("More...")
+        .addClass("more-button");
+      const lessButton = $("<button>")
+        .text("Less")
+        .addClass("more-button")
+        .hide();
+
+		// Modified CSS for buttons
+      const buttonContainer = $("<div>")
+        .addClass("code-buttons-container") // added to class name to not confuse the other .code-btns-container
+        .css({
+          "text-align": "center", // Center the buttons horizontally
+          "margin-top": "5px",
+          "margin-bottom": "0px",
+          "position": "absolute",
+          "bottom": "0",
+          "left": "50%",
+          "transform": "translateX(-50%)",
+          "width": "100%"
+        })
+        .append(moreButton)
+        .append(lessButton);
+
+      preElement.append(buttonContainer);
+
+      moreButton.click(() => {
+        preElement.animate({ "max-height": preElement[0].scrollHeight }, "fast"); // Set max-height to scrollHeight
+        moreButton.hide();
+        lessButton.show();
+		buttonContainer.css({"position": "relative", "transform": "translateX(0%)", "left": "0%"})
+      });
+
+      lessButton.click(() => {
+        preElement.animate({ "max-height": "200px" }, "fast");
+        lessButton.hide();
+        moreButton.show();
+		buttonContainer.css({"position": "absolute", "bottom": "0", "left": "50%", "transform": "translateX(-50%)"})
+      });
 
       codeElement
         .parent()
