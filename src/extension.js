@@ -45,6 +45,9 @@ class NaBotXSidePanelProvider {
       case 'addToChat':
         await this._addToChat(message.selectedText);
         break;
+      case 'buildProjectStructure':
+        await this._buildProjectStructure(webviewView);
+        break;
     }
   }
 
@@ -112,6 +115,83 @@ class NaBotXSidePanelProvider {
     } catch (err) {
       vscode.window.showErrorMessage(`Error adding text to chat: ${err.message}`);
       console.error('Error adding text to chat:', err);
+    }
+  }
+
+  async _buildProjectStructure(webviewView) {
+    if (!vscode.workspace.workspaceFolders) {
+      webviewView.webview.postMessage({ command: 'receiveProjectStructure', structure: 'No workspace folder open.' });
+      return;
+    }
+
+    const workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
+    const ignoredPaths = ['.git', 'node_modules','obj','bin']; // Add default ignored paths
+
+    // Function to find all .gitignore files and their contents
+    async function findGitignoreContents(folderPath) {
+      const gitignorePatterns = [];
+      const gitignoreFiles = await findGitignoreFiles(folderPath);
+
+      for (const gitignoreFile of gitignoreFiles) {
+        const fileContent = await readFile(vscode.Uri.file(gitignoreFile));
+        const patterns = fileContent.content
+          .split('\n')
+          .map(line => line.trim())
+          .filter(line => line && !line.startsWith('#'))
+          .map(line => path.join(path.dirname(gitignoreFile), line)); // Adjust paths relative to the .gitignore file
+        gitignorePatterns.push(...patterns);
+      }
+
+      return gitignorePatterns;
+    }
+
+    // Function to recursively find all .gitignore files
+    async function findGitignoreFiles(folderPath) {
+      const gitignoreFiles = [];
+      const files = await readDirectoryRecursively(folderPath);
+
+      for (const file of files) {
+        if (path.basename(file) === '.gitignore') {
+          gitignoreFiles.push(file);
+        }
+      }
+
+      return gitignoreFiles;
+    }
+
+    async function readDirectoryContents(folderPath, indent = '', ignoredPaths = []) {
+      let structure = '';
+      try {
+        const files = await readDirectoryRecursively(folderPath);
+
+        for (const filePath of files) {
+          const fileName = path.basename(filePath);
+          const relativePath = path.relative(folderPath, filePath);
+
+          // Check if the file or folder should be ignored
+          const isIgnored = ignoredPaths.some(ignoredPath => {
+            const absoluteIgnoredPath = path.resolve(workspaceFolder, ignoredPath);
+            const absoluteFilePath = path.resolve(filePath);
+            return absoluteFilePath === absoluteIgnoredPath || absoluteFilePath.startsWith(absoluteIgnoredPath + path.sep);
+          });
+
+          if (!isIgnored) {
+            structure += `${indent}└─ ${fileName}\n`;
+          }
+        }
+      } catch (error) {
+        return `Error reading directory: ${error}`;
+      }
+      return structure;
+    }
+
+    try {
+      const gitIgnore = await findGitignoreContents(workspaceFolder);
+      ignoredPaths.push(...gitIgnore);
+      let projectStructure = `Project Structure:\n${await readDirectoryContents(workspaceFolder, '', ignoredPaths)}`;
+      webviewView.webview.postMessage({ command: 'receiveProjectStructure', structure: projectStructure });
+    } catch (error) {
+      vscode.window.showErrorMessage(`Failed to build project structure: ${error.message}`);
     }
   }
 
@@ -238,6 +318,16 @@ function activate(context) {
       const workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
       const relPath = editor.document.uri.fsPath.replace(workspaceFolder + '/', '');
       nabotxSidePanelProvider._addToChat(selectedText, relPath);
+    })
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('nabotx.buildProjectStructure', async () => {
+      if (nabotxSidePanelProvider._view) {
+        await nabotxSidePanelProvider._buildProjectStructure(nabotxSidePanelProvider._view);
+      } else {
+        vscode.window.showErrorMessage('NaBotX panel is not active.');
+      }
     })
   );
 

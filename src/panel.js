@@ -227,6 +227,10 @@ window.addEventListener("message", (event) => {
       msgArray.push({ role: "user", content: message.text });
       addMessage(message.text, true);
       break;
+    case "receiveProjectStructure":
+      const structure = message.structure;
+      addMessage(structure, false);
+      break;
   }
 });
 
@@ -240,7 +244,6 @@ async function proceedToSend(userText, combinedMessage) {
   $("#sendButton").prop("disabled", false).focus();
 }
 
-/**/
 document.addEventListener("DOMContentLoaded", function () {
   clearChat();
 
@@ -262,8 +265,8 @@ document.addEventListener("DOMContentLoaded", function () {
       const today = new Date().toLocaleDateString();
       text = `Current date: ${today}`;
     } else if (text === "/structure") {
-      // FIXME: Replace with actual project structure retrieval logic
-      text = `project-name/\n ├─ README.md\n └─ src/\n     ├─ main.py\n     └─ helpers.py`; // this is just an example
+      vscode.postMessage({ command: "buildProjectStructure" });
+      return;
     } else if (text === "/task") {
       text = `The /task feature is not implemented yet`;
     } else if (text === "/color") {
