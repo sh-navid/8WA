@@ -22,6 +22,7 @@ function highlightCode(codeElement, code) {
 
 function addMessage(text, fromUser = true) {
   const msgDiv = $("<div>")
+    .addClass("msg-container")
     .addClass("message")
     .addClass(fromUser ? "user" : "bot");
 
@@ -29,16 +30,30 @@ function addMessage(text, fromUser = true) {
     const shortText = text.substring(0, 150);
     const remainingText = text.substring(150);
 
-    const shortSpan = $("<span>").text(shortText);
+    const shortSpan = $("<span>").addClass("short-text").text(shortText);
     const moreButton = $("<button>").text("More...").addClass("more-button");
-    const fullSpan = $("<span>").text(remainingText).hide();
+    const lessButton = $("<button>")
+      .text("Less...")
+      .addClass("more-button")
+      .hide();
+    const fullSpan = $("<span>")
+      .addClass("remaining-text")
+      .text(remainingText)
+      .hide();
 
     moreButton.click(() => {
       fullSpan.show();
       moreButton.hide();
+      lessButton.show();
     });
 
-    msgDiv.append(shortSpan, moreButton, fullSpan);
+    lessButton.click(() => {
+      fullSpan.hide();
+      moreButton.show();
+      lessButton.hide();
+    });
+
+    msgDiv.append(shortSpan, moreButton, fullSpan,lessButton);
   } else {
     msgDiv.text(text);
   }

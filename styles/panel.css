@@ -177,7 +177,8 @@ header label {
 }
 
 /* Style for code blocks */
-pre {
+pre,
+.msg-container {
   background-color: var(
     --vscode-input-background
   ); /* Use VS Code's input background color for consistency */
@@ -192,4 +193,12 @@ a {
   text-decoration: none;
   color: goldenrod;
   border: none;
+}
+
+.short-text {
+  color: #919191;
+}
+
+.msg-container {
+ background-color: #272727;
 }
