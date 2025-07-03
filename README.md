@@ -5,7 +5,7 @@
 NaBotX is a cutting-edge VSCode extension designed to supercharge developer productivity by providing AI-driven coding features. This lightweight and privacy-focused tool empowers you to write code faster and with greater accuracy, while maintaining full control over your data.
 
 ## Overview of NaBotX
-![NaBotX Extension](./showcase/V04.png)
+![NaBotX Extension](./showcase/V05.png)
 
 The NaBotX extension is easily accessible from the Extensions Panel, allowing for seamless integration into your development workflow.
 
