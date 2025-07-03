@@ -46,5 +46,7 @@ To compile NaBotX, follow these steps:
 1. Install `vsce` using npm by running `npm install -g vsce`.
 2. Package NaBotX using `vsce package`.
 
+Or simply use our [CompileScript](./compile.py)
+
 ## Licensing
 NaBotX is licensed under the Apache License 2.0. For more information, please refer to the [LICENSE](./LICENSE) file.
