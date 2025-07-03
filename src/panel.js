@@ -236,6 +236,7 @@ window.addEventListener("message", (event) => {
       break;
     case "receiveProjectStructure":
       const structure = message.structure;
+      msgArray.push({ role: "user", content: structure });
       proceedToSend(structure, structure, (send = false), (type = "structure"));
       break;
   }
