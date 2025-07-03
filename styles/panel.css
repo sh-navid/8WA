@@ -187,6 +187,7 @@ a {
   border: none;
   color: goldenrod;
   text-decoration: none;
+  user-select: none;
 }
 
 /* Short Text Style */
