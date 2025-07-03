@@ -8,3 +8,5 @@ ai.config.json
 
 # Other Files
 *-lock.json
+
+*.vsix
