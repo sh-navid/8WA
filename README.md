@@ -1,52 +1,67 @@
-# Introduction to NaBotX
+# NaBotX: Your AI-Powered VSCode Assistant
 
-![](./assets/logo3.png)
+![NaBotX Logo](./assets/logo3.png)
 
-NaBotX is a cutting-edge VSCode extension designed to supercharge developer productivity by providing AI-driven coding features. This lightweight and privacy-focused tool empowers you to write code faster and with greater accuracy, while maintaining full control over your data.
+NaBotX is a VSCode extension designed to boost developer productivity with AI-driven coding assistance. This lightweight and privacy-focused tool helps you write code faster and more accurately, while ensuring you retain complete control over your data.
 
-## Overview of NaBotX
+## NaBotX Overview
 ![NaBotX Extension](./showcase/V05.png)
 
-The NaBotX extension is easily accessible from the Extensions Panel, allowing for seamless integration into your development workflow.
+NaBotX integrates seamlessly into your workflow via the VSCode Extensions Panel.
 
 ![NaBotX Extension in Extensions Panel](./showcase/C02.png)
 
 ## Key Features
 
-* **AI-Powered Code Completion**: Receive intelligent suggestions and completions to streamline your coding process.
-* **Customizable LLM Integration**: Connect to your own local or web-hosted LLM instance, ensuring your code is processed securely and efficiently.
-* **Data Control**: Maintain full control over where your code is processed, with no external server interactions unless you choose to do so.
-* **Multi-Language Support**: NaBotX supports a wide range of programming languages, catering to diverse development needs.
-* **Lightweight and Fast**: Experience rapid performance without compromising on features or functionality.
-* **Easy Installation and Configuration**: Get started with NaBotX quickly and effortlessly, thanks to its user-friendly setup process.
+*   **Intelligent Code Completion:** Get smart suggestions and code completions, making coding smoother and faster.
+*   **Customizable LLM Integration:** Connect to your preferred LLM, whether it's running locally or hosted online, ensuring secure and efficient code processing.
+*   **Full Data Control:** Your code stays where you want it. NaBotX doesn't interact with external servers unless *you* configure it to.
+*   **Broad Language Support:** Supports a wide variety of programming languages.
+*   **Lightweight & Performant:** Experience fast performance.
 
-## Configuring Your LLM Settings
+## Configuring Your LLM
 
-The first time you open NaBotX, you'll be prompted to configure your assistant with your LLM settings. 
+The first time you launch NaBotX, you'll be prompted to configure your LLM settings.
 
 ![Configuring LLM Settings](./showcase/C03.png)
 
-Alternatively, you can manually configure these settings by pressing `Ctrl+Shift+P`, searching for NaBotX, and opening `NaBotX: Open Settings`.
+You can also manually configure these settings by pressing `Ctrl+Shift+P`, typing "NaBotX" and selecting "NaBotX: Open Settings."
 
 ![Accessing NaBotX Settings](./showcase/C01.png)
 
-## Future Roadmap
-Planned features and improvements include:
+## Usage Instructions
 
-* Adding new tasks and functionalities
-* Displaying diagrams and visualizations
-* Supporting image addition and generation
-* Automating tests for enhanced reliability
-* Developing an AI-powered team collaboration feature
-* Benchmarking LLMs to determine the most effective assistant
+NaBotX offers multiple ways to interact:
 
-## Compiling NaBotX
-To compile NaBotX, follow these steps:
+*   **Direct Prompting:** Send your prompt directly to the NaBotX chat window.
+*   **Contextual Chat ("Add 2 Chat"):**
+    *   Right-click on a file or folder in the Explorer and select "Add File/Folder to chat".
+    *   Select text within a file, right-click, and choose "Add to chat".
+    *   Then, send your prompt.
+*   **Predefined Commands:** Use the following commands within the chat:
+    *   `/structure`: Sends your project structure to the chat.  Useful for giving the LLM context.
+    *   `/date`: Sends the current date to the chat.
+    *   `/time`: Sends the current time to the chat.
 
-1. Install `vsce` using npm by running `npm install -g vsce`.
-2. Package NaBotX using `vsce package`.
+## Roadmap
 
-Or simply use our [CompileScript](./compile.py)
+Future development plans include:
+
+*   Adding new tasks and functionalities to streamline common development workflows.
+*   Displaying diagrams and visualizations within the chat.
+*   Supporting image addition and generation capabilities.
+*   Automating tests to improve code reliability.
+*   Developing AI-powered features for team collaboration.
+*   Benchmarking different LLMs to identify the most effective assistant for various tasks.
+
+## Compilation Instructions
+
+To compile NaBotX from source:
+
+1.  Install `vsce` (Visual Studio Code Extensions) globally using npm: `npm install -g vsce`
+2.  Package the extension using the command: `vsce package`
+
+Alternatively, you can use the provided [CompileScript](./compile.py).
 
 ## Licensing
-NaBotX is licensed under the Apache License 2.0. For more information, please refer to the [LICENSE](./LICENSE) file.
+NaBotX is released under the Apache License 2.0. See the [LICENSE](./LICENSE) file for complete license information.
