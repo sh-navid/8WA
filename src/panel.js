@@ -1,3 +1,4 @@
+/* */
 /**/
 let msgArray = [
   {
@@ -31,9 +32,9 @@ function addMessage(text, fromUser = true) {
     const remainingText = text.substring(150);
 
     const shortSpan = $("<span>").addClass("short-text").text(shortText);
-    const moreButton = $("<button>").text("More...").addClass("more-button");
-    const lessButton = $("<button>")
-      .text("Less...")
+    const expandButton = $("<button>").text("Expand").addClass("more-button");
+    const collapseButton = $("<button>")
+      .text("Collapse")
       .addClass("more-button")
       .hide();
     const fullSpan = $("<span>")
@@ -41,19 +42,19 @@ function addMessage(text, fromUser = true) {
       .text(remainingText)
       .hide();
 
-    moreButton.click(() => {
-      fullSpan.show();
-      moreButton.hide();
-      lessButton.show();
+    expandButton.click(() => {
+      fullSpan.slideDown("fast");
+      expandButton.hide();
+      collapseButton.show();
     });
 
-    lessButton.click(() => {
-      fullSpan.hide();
-      moreButton.show();
-      lessButton.hide();
+    collapseButton.click(() => {
+      fullSpan.slideUp("fast");
+      expandButton.show();
+      collapseButton.hide();
     });
 
-    msgDiv.append(shortSpan, moreButton, fullSpan,lessButton);
+    msgDiv.append(shortSpan, expandButton, fullSpan, collapseButton);
   } else {
     msgDiv.text(text);
   }
