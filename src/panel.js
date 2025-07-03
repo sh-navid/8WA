@@ -100,11 +100,11 @@ function addBotMessage(response) {
         .text("More...")
         .addClass("more-button");
       const lessButton = $("<button>")
-        .text("Less")
+        .text("Less...")
         .addClass("more-button")
         .hide();
 
-		// Modified CSS for buttons
+      // Modified CSS for buttons
       const buttonContainer = $("<div>")
         .addClass("code-buttons-container") // added to class name to not confuse the other .code-btns-container
         .css({
@@ -112,28 +112,41 @@ function addBotMessage(response) {
           "margin-top": "5px",
           "margin-bottom": "0px",
           "position": "absolute",
-          "bottom": "0",
+          "top": "0", // Position at the top
           "left": "50%",
           "transform": "translateX(-50%)",
-          "width": "100%"
+          "width": "100%",
+          "z-index": 1, // Ensure buttons are above the content
         })
         .append(moreButton)
         .append(lessButton);
 
       preElement.append(buttonContainer);
 
+      function setButtonPosition(isExpanded) {
+        buttonContainer.css({
+          position: "absolute",
+          top: "0",
+          left: "50%",
+          transform: "translateX(-50%)",
+          "z-index": 1, // Ensure buttons are above the content
+        });
+      }
+
       moreButton.click(() => {
         preElement.animate({ "max-height": preElement[0].scrollHeight }, "fast"); // Set max-height to scrollHeight
         moreButton.hide();
         lessButton.show();
-		buttonContainer.css({"position": "relative", "transform": "translateX(0%)", "left": "0%"})
+        // Modified CSS: set position to relative and adjust transform to none and left to 0
+        setButtonPosition(true);
       });
 
       lessButton.click(() => {
         preElement.animate({ "max-height": "200px" }, "fast");
         lessButton.hide();
         moreButton.show();
-		buttonContainer.css({"position": "absolute", "bottom": "0", "left": "50%", "transform": "translateX(-50%)"})
+        // Modified CSS: set position to absolute, bottom to 0, left to 50%, and use transform
+        setButtonPosition(false);
       });
 
       codeElement
