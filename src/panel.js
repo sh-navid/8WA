@@ -19,15 +19,22 @@ function highlightCode(codeElement, code) {
   Prism.highlightElement(codeElement[0]);
 }
 
-function addMessage(text, fromUser = true) {
-  const msgDiv = $("<div>")
+function addMessage(text, fromUser = true, type = null) {
+  let msgDiv = $("<div>")
     .addClass("msg-container")
     .addClass("message")
     .addClass(fromUser ? "user" : "bot");
 
-  if (text.length > 150 && fromUser) {
-    const shortText = text.substring(0, 150);
-    const remainingText = text.substring(150);
+  if (type && type === "structure") {
+    msgDiv = $("<pre>")
+      .addClass("msg-container")
+      .addClass("message")
+      .addClass(fromUser ? "user" : "bot");
+  }
+
+  if (text.length > 100 && fromUser) {
+    const shortText = text.substring(0, 100);
+    const remainingText = text.substring(100);
 
     const shortSpan = $("<span>").addClass("short-text").text(shortText);
     const expandButton = $("<button>").text("Expand").addClass("more-button");
@@ -229,7 +236,7 @@ window.addEventListener("message", (event) => {
       break;
     case "receiveProjectStructure":
       const structure = message.structure;
-      addMessage(structure, false);
+      addMessage(structure, false, (type = "structure"));
       break;
   }
 });
