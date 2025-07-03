@@ -96,9 +96,7 @@ function addBotMessage(response) {
         overflow: "hidden",
       });
 
-      const moreButton = $("<button>")
-        .text("More...")
-        .addClass("more-button");
+      const moreButton = $("<button>").text("More...").addClass("more-button");
       const lessButton = $("<button>")
         .text("Less...")
         .addClass("more-button")
@@ -111,11 +109,11 @@ function addBotMessage(response) {
           "text-align": "center", // Center the buttons horizontally
           "margin-top": "5px",
           "margin-bottom": "0px",
-          "position": "absolute",
-          "top": "0", // Position at the top
-          "left": "50%",
-          "transform": "translateX(-50%)",
-          "width": "100%",
+          position: "absolute",
+          top: "0", // Position at the top
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "100%",
           "z-index": 1, // Ensure buttons are above the content
         })
         .append(moreButton)
@@ -134,7 +132,10 @@ function addBotMessage(response) {
       }
 
       moreButton.click(() => {
-        preElement.animate({ "max-height": preElement[0].scrollHeight }, "fast"); // Set max-height to scrollHeight
+        preElement.animate(
+          { "max-height": preElement[0].scrollHeight },
+          "fast"
+        ); // Set max-height to scrollHeight
         moreButton.hide();
         lessButton.show();
         // Modified CSS: set position to relative and adjust transform to none and left to 0
@@ -260,6 +261,14 @@ document.addEventListener("DOMContentLoaded", function () {
     } else if (text === "/date") {
       const today = new Date().toLocaleDateString();
       text = `Current date: ${today}`;
+    } else if (text === "/structure") {
+      text = `The /structure feature is not implemented yet`;
+    } else if (text === "/task") {
+      text = `The /task feature is not implemented yet`;
+    } else if (text === "/color") {
+      text = `The /color feature is not implemented yet`;
+    } else if (text === "/calendar") {
+      text = `the /calendar feature is not implemented yet`;
     }
 
     proceedToSend(text, text);
