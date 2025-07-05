@@ -109,7 +109,7 @@ class NaBotXSidePanelProvider {
     }
 
     const workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
-    const ignoredPaths = [".git", "node_modules", "obj", "bin"];
+    const ignoredPaths = [".git", "node_modules", "obj", "bin",".gradle","gradle","build"];
 
     // Returns a promise with the formatted structure.
     async function buildDirectoryStructure(
