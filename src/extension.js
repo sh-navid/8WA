@@ -413,10 +413,17 @@ async function activate(context) {
     try {
       await fs.promises.access(n8xJsonPath, fs.constants.F_OK);
       console.log("n8x.json already exists.");
+      // If n8x.json exists, check if it contains "tasks", if not, add it with an empty array
+      const n8xJsonContent = JSON.parse(await fs.promises.readFile(n8xJsonPath, 'utf8'));
+      if (!n8xJsonContent.hasOwnProperty("tasks")) {
+        n8xJsonContent.tasks = [];
+        await fs.promises.writeFile(n8xJsonPath, JSON.stringify(n8xJsonContent, null, 2));
+        console.log('Added "tasks" to n8x.json.');
+      }
     } catch (e) {
       // File doesn't exist, create it
       const defaultN8xConfig = {
-        // You can add default configurations here
+        tasks: []
       };
       try {
         await fs.promises.writeFile(
