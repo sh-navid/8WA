@@ -10,3 +10,5 @@ ai.config.json
 *-lock.json
 
 *.vsix
+*.clone.*
+n8x.json
