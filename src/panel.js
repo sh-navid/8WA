@@ -5,6 +5,69 @@ let msgArray = [
   },
 ];
 
+let commandPanelVisible = false;
+
+const commands = [
+  { name: "/time", description: "Show the current time" },
+  { name: "/date", description: "Show the current date" },
+  { name: "/structure", description: "Build project structure" },
+  { name: "/task", description: "The /task feature is not implemented yet" },
+  { name: "/color", description: "The /color feature is not implemented yet" },
+  {
+    name: "/calendar",
+    description: "The /calendar feature is not implemented yet",
+  },
+];
+
+function showCommandPanel() {
+  if (!commandPanelVisible) {
+    const commandPanel = $("<div>")
+      .attr("id", "commandPanel")
+      .addClass("command-panel") // Add a class for styling
+      .css({
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        backgroundColor: "white",
+        padding: "10px",
+        border: "1px solid #ccc",
+        zIndex: 1000,
+        display: "flex",
+        flexDirection: "column",
+      });
+
+    commands.forEach((command) => {
+      const commandButton = $("<button>")
+        .text(command.name + " - " + command.description)
+        .addClass("command-button") // Add a class for styling
+        .css({
+          margin: "5px",
+          padding: "5px 10px",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
+        })
+        .click(() => {
+          $("#userInput").val(command.name);
+          hideCommandPanel();
+          $("#sendButton").click();
+        });
+      commandPanel.append(commandButton);
+    });
+
+    $("body").append(commandPanel);
+    commandPanelVisible = true;
+  }
+}
+
+function hideCommandPanel() {
+  if (commandPanelVisible) {
+    $("#commandPanel").remove();
+    commandPanelVisible = false;
+  }
+}
+
 function clearChat() {
   msgArray = [
     {
@@ -263,9 +326,18 @@ document.addEventListener("DOMContentLoaded", function () {
   clearChat();
 
   $("#userInput").on("keydown", (e) => {
-    if (e.key === "Enter") {
+    if (e.key === "/") {
+      showCommandPanel();
+    } else if (e.key === "Enter") {
       $("#sendButton").click();
       e.preventDefault();
+      hideCommandPanel();
+    } else {
+      // Consider only hiding if the command panel is triggered by '/'
+      // and not by some other means.
+      if (!$("#userInput").val().startsWith("/")) {
+        hideCommandPanel();
+      }
     }
   });
 
@@ -273,21 +345,25 @@ document.addEventListener("DOMContentLoaded", function () {
     let text = $("#userInput").val().trim();
     if (!text) return;
 
-    if (text === "/time") {
-      const now = new Date().toLocaleTimeString();
-      text = `Current time: ${now}`;
-    } else if (text === "/date") {
-      const today = new Date().toLocaleDateString();
-      text = `Current date: ${today}`;
-    } else if (text === "/structure") {
-      vscode.postMessage({ command: "buildProjectStructure" });
-      return;
-    } else if (text === "/task") {
-      text = `The /task feature is not implemented yet`;
-    } else if (text === "/color") {
-      text = `The /color feature is not implemented yet`;
-    } else if (text === "/calendar") {
-      text = `the /calendar feature is not implemented yet`;
+    switch (text) {
+      case "/time":
+        text = `Current time: ${new Date().toLocaleTimeString()}`;
+        break;
+      case "/date":
+        text = `Current date: ${new Date().toLocaleDateString()}`;
+        break;
+      case "/structure":
+        vscode.postMessage({ command: "buildProjectStructure" });
+        return;
+      case "/task":
+        text = `The /task feature is not implemented yet`;
+        break;
+      case "/color":
+        text = `The /color feature is not implemented yet`;
+        break;
+      case "/calendar":
+        text = `the /calendar feature is not implemented yet`;
+        break;
     }
 
     proceedToSend(text, text);
