@@ -271,7 +271,7 @@ const uri = (webview, provider, dir, fileName) =>
 
 let nabotxSidePanelProvider;
 
-function activate(context) {
+async function activate(context) {
   nabotxSidePanelProvider = new NaBotXSidePanelProvider(context.extensionUri);
 
   context.subscriptions.push(
@@ -404,6 +404,35 @@ function activate(context) {
       checkConfiguration();
     }
   });
+
+  // Check if n8x.json exists in the workspace root, and create it if it doesn't
+  if (vscode.workspace.workspaceFolders) {
+    const workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
+    const n8xJsonPath = path.join(workspaceFolder, "n8x.json");
+
+    try {
+      await fs.promises.access(n8xJsonPath, fs.constants.F_OK);
+      console.log("n8x.json already exists.");
+    } catch (e) {
+      // File doesn't exist, create it
+      const defaultN8xConfig = {
+        // You can add default configurations here
+      };
+      try {
+        await fs.promises.writeFile(
+          n8xJsonPath,
+          JSON.stringify(defaultN8xConfig, null, 2)
+        );
+        console.log("n8x.json created.");
+      } catch (err) {
+        vscode.window.showErrorMessage(
+          `Failed to create n8x.json: ${err.message}`
+        );
+      }
+    }
+  } else {
+    console.warn("No workspace folder open.");
+  }
 }
 
 function deactivate() {}
