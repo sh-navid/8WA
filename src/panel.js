@@ -6,6 +6,7 @@ let msgArray = [
 ];
 
 let commandPanelVisible = false;
+let filteredCommands = []; // Store filtered commands
 
 const commands = [
   { name: "/time", description: "Show the current time" },
@@ -19,45 +20,61 @@ const commands = [
   },
 ];
 
-function showCommandPanel() {
+function showCommandPanel(filter = "") {
+  filteredCommands = commands.filter((command) =>
+    command.name.startsWith(filter)
+  );
+
   if (!commandPanelVisible) {
     const commandPanel = $("<div>")
       .attr("id", "commandPanel")
       .addClass("command-panel") // Add a class for styling
       .css({
         position: "absolute",
-        top: "50%",
+        top: "auto",
+        bottom: "6rem", // Position above the input
         left: "50%",
-        transform: "translate(-50%, -50%)",
-        backgroundColor: "white",
-        padding: "10px",
-        border: "1px solid #ccc",
+        transform: "translateX(-50%)",
         zIndex: 1000,
         display: "flex",
         flexDirection: "column",
       });
 
-    commands.forEach((command) => {
-      const commandButton = $("<button>")
-        .text(command.name + " - " + command.description)
-        .addClass("command-button") // Add a class for styling
-        .css({
-          margin: "5px",
-          padding: "5px 10px",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-        })
-        .click(() => {
-          $("#userInput").val(command.name);
-          hideCommandPanel();
-          $("#sendButton").click();
-        });
-      commandPanel.append(commandButton);
-    });
+    updateCommandPanel(commandPanel);
 
     $("body").append(commandPanel);
     commandPanelVisible = true;
+  } else {
+    const commandPanel = $("#commandPanel");
+    updateCommandPanel(commandPanel);
+  }
+}
+
+function updateCommandPanel(commandPanel) {
+  commandPanel.empty(); // Clear existing buttons before re-populating
+
+  filteredCommands.forEach((command) => {
+    const commandButton = $("<button>")
+      .text(command.name + " - " + command.description)
+      .addClass("command-button") // Add a class for styling
+      .click(() => {
+        $("#userInput").val(command.name);
+        hideCommandPanel();
+        $("#sendButton").click();
+      });
+    commandPanel.append(commandButton);
+  });
+
+  if (filteredCommands.length === 0) {
+    commandPanel.append(
+      $("<div>")
+        .text("No matching commands")
+        .css({
+          padding: "5px",
+          "text-align": "center",
+          color: "var(--vscode-disabledForeground)",
+        })
+    );
   }
 }
 
@@ -327,15 +344,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
   $("#userInput").on("keydown", (e) => {
     if (e.key === "/") {
-      showCommandPanel();
+      showCommandPanel("/");
+      e.preventDefault(); // Prevent '/' from being entered initially
     } else if (e.key === "Enter") {
       $("#sendButton").click();
       e.preventDefault();
       hideCommandPanel();
+    } else if (e.key === "Escape") {
+      hideCommandPanel();
     } else {
-      // Consider only hiding if the command panel is triggered by '/'
-      // and not by some other means.
-      if (!$("#userInput").val().startsWith("/")) {
+      // Filter commands based on input after '/'
+      if ($("#userInput").val().startsWith("/")) {
+        const filterText = $("#userInput").val();
+        showCommandPanel(filterText);
+      } else {
         hideCommandPanel();
       }
     }
@@ -348,24 +370,30 @@ document.addEventListener("DOMContentLoaded", function () {
     switch (text) {
       case "/time":
         text = `Current time: ${new Date().toLocaleTimeString()}`;
-        break;
+        return;
       case "/date":
         text = `Current date: ${new Date().toLocaleDateString()}`;
-        break;
+        return;
       case "/structure":
         vscode.postMessage({ command: "buildProjectStructure" });
         return;
       case "/task":
         text = `The /task feature is not implemented yet`;
-        break;
+        return;
       case "/color":
         text = `The /color feature is not implemented yet`;
-        break;
+        return;
       case "/calendar":
         text = `the /calendar feature is not implemented yet`;
-        break;
+        return;
     }
 
     proceedToSend(text, text);
+  });
+
+  $(document).on("keydown", function (e) {
+    if (e.key === "Escape") {
+      hideCommandPanel();
+    }
   });
 });
