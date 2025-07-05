@@ -1,4 +1,3 @@
-/* */
 const vscode = require("vscode");
 const path = require("path");
 const fs = require("fs");
@@ -541,6 +540,36 @@ async function activate(context) {
                 vscode.window.showErrorMessage(
                     `Failed to create n8x.json: ${err.message}`
                 );
+            }
+        }
+    } else {
+        console.warn("No workspace folder open.");
+    }
+
+    // .gitignore handling
+    if (vscode.workspace.workspaceFolders) {
+        const workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
+        const gitignorePath = path.join(workspaceFolder, ".gitignore");
+        const n8xIgnoreEntry = "*.n8x.*";
+
+        try {
+            await fs.promises.access(gitignorePath, fs.constants.F_OK);
+            // .gitignore exists, check for *.n8x.*
+            const gitignoreContent = (await fs.promises.readFile(gitignorePath, 'utf8')).trim();
+            if (!gitignoreContent.split('\n').map(line => line.trim()).includes(n8xIgnoreEntry)) {
+                // Append *.n8x.* to .gitignore
+                await fs.promises.appendFile(gitignorePath, `\n${n8xIgnoreEntry}\n`);
+                console.log("Added *.n8x.* to .gitignore");
+            } else {
+                console.log("*.n8x.* already in .gitignore");
+            }
+        } catch (e) {
+            // .gitignore doesn't exist, create it and add *.n8x.*
+            try {
+                await fs.promises.writeFile(gitignorePath, `${n8xIgnoreEntry}\n`);
+                console.log(".gitignore created with *.n8x.*");
+            } catch (err) {
+                vscode.window.showErrorMessage(`Failed to create .gitignore: ${err.message}`);
             }
         }
     } else {

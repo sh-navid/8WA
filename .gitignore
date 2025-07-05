@@ -10,5 +10,6 @@ ai.config.json
 *-lock.json
 
 *.vsix
-*.n8x.*
+
 n8x.json
+*.n8x.*
