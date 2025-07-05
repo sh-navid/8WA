@@ -171,6 +171,7 @@ function addBotMessage(response) {
           <img src="${btnAppend}"       alt="Append in File"  />
           <img src="${btnReplace}"      alt="Replace File"    />
           <img src="${btnCopy}"         alt="Copy File"       />
+          <img src="${btnDiff}"         alt="Diff File"       />
         </div>
       `);
 
@@ -258,6 +259,12 @@ function addBotMessage(response) {
         .find(".code-btns-container img:eq(3)")
         .click(() => {
           vscode.postMessage({ command: "copyCodeBlock", code });
+        });
+      codeElement
+        .parent()
+        .find(".code-btns-container img:eq(4)")
+        .click(() => {
+          vscode.postMessage({ command: "diffCodeBlock", code });
         });
     });
     msgArray.push({ role: "assistant", content: markedContent });

@@ -50,6 +50,9 @@ class NaBotXSidePanelProvider {
       case "buildProjectStructure":
         await this._buildProjectStructure(webviewView);
         break;
+      case "diffCodeBlock":
+          await this._diffCodeBlock(message.code);
+          break;
     }
   }
 
@@ -200,6 +203,41 @@ class NaBotXSidePanelProvider {
         `Failed to build project structure: ${error.message}`
       );
     }
+  }
+
+  async _diffCodeBlock(code) {
+      code = removeCommentStructure(code);
+      if (!vscode.window.activeTextEditor) {
+          vscode.window.showErrorMessage("No active text editor found.");
+          return;
+      }
+
+      const activeEditor = vscode.window.activeTextEditor;
+      const document = activeEditor.document;
+
+      const currentText = document.getText();
+
+      // Create a temporary file with the current content of the active editor
+      const tempFilePath = path.join(vscode.workspace.rootPath || os.tmpdir(), 'tempFile.txt');
+      await fs.promises.writeFile(tempFilePath, currentText);
+
+      // Open the diff view
+      const tempFileUri = vscode.Uri.file(tempFilePath);
+      const codeContentUri = vscode.Uri.parse(`data:text/plain;charset=utf-8,${encodeURIComponent(code)}`);
+
+      try {
+          await vscode.commands.executeCommand(
+              'vscode.diff',
+              tempFileUri,
+              codeContentUri,
+              'Diff NaBotX Code'
+          );
+      } catch (error) {
+          vscode.window.showErrorMessage(`Failed to show diff view: ${error.message}`);
+      } finally {
+          // Clean up the temporary file after the diff view is opened
+          fs.promises.unlink(tempFilePath);
+      }
   }
 
   _getHtmlForWebview(webview) {
@@ -383,6 +421,30 @@ async function activate(context) {
       }
     )
   );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand(
+            "nabotx.diffCodeBlock",
+            async () => {
+                const editor = vscode.window.activeTextEditor;
+                if (!editor) {
+                    return vscode.window.showInformationMessage("No active editor.");
+                }
+                let selectedText = editor.selection
+                    ? editor.document.getText(editor.selection)
+                    : "";
+                if (!selectedText) {
+                    selectedText = editor.document.getText();
+                    if (!selectedText) {
+                        return vscode.window.showInformationMessage(
+                            "The active file is empty."
+                        );
+                    }
+                }
+                nabotxSidePanelProvider._diffCodeBlock(selectedText);
+            }
+        )
+    );
 
   const statusBarItem = vscode.window.createStatusBarItem(
     vscode.StatusBarAlignment.Right,
