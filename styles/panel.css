@@ -226,3 +226,14 @@ a {
 .command-button:hover {
   background-color: var(--vscode-button-hoverBackground); /* VSCode hover color */
 }
+
+button:hover {
+  transition: opacity 300ms !important;
+  opacity: 0.5 !important;
+  border: none;
+}
+
+.space {
+  display: block;
+  height: 5rem;
+}

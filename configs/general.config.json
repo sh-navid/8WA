@@ -20,7 +20,6 @@
   "styles": [
     "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.css",
     "~/panel.css",
-    "~/main.css",
     "~/tab.css"
   ],
   "scripts": [
