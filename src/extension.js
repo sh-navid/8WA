@@ -75,7 +75,7 @@ class NaBotXSidePanelProvider {
         const fileName = path.basename(originalFilePath, fileExtension);
         const cloneFilePath = path.join(
             path.dirname(originalFilePath),
-            `${fileName}.clone${fileExtension}`
+            `${fileName}.n8x${fileExtension}`
         );
 
         try {
@@ -255,7 +255,7 @@ class NaBotXSidePanelProvider {
         const fileName = path.basename(originalFilePath, fileExtension);
         const cloneFilePath = path.join(
             path.dirname(originalFilePath),
-            `${fileName}.clone${fileExtension}`
+            `${fileName}.n8x${fileExtension}`
         );
 
 
