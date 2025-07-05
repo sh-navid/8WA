@@ -67,13 +67,11 @@ function updateCommandPanel(commandPanel) {
 
   if (filteredCommands.length === 0) {
     commandPanel.append(
-      $("<div>")
-        .text("No matching commands")
-        .css({
-          padding: "5px",
-          "text-align": "center",
-          color: "var(--vscode-disabledForeground)",
-        })
+      $("<div>").text("No matching commands").css({
+        padding: "5px",
+        "text-align": "center",
+        color: "var(--vscode-disabledForeground)",
+      })
     );
   }
 }
@@ -370,25 +368,30 @@ document.addEventListener("DOMContentLoaded", function () {
     switch (text) {
       case "/time":
         text = `Current time: ${new Date().toLocaleTimeString()}`;
+        proceedToSend(text, text, (send = false));
         return;
       case "/date":
         text = `Current date: ${new Date().toLocaleDateString()}`;
+        proceedToSend(text, text, (send = false));
         return;
       case "/structure":
         vscode.postMessage({ command: "buildProjectStructure" });
         return;
       case "/task":
         text = `The /task feature is not implemented yet`;
+        proceedToSend(text, text, (send = false));
         return;
       case "/color":
         text = `The /color feature is not implemented yet`;
+        proceedToSend(text, text, (send = false));
         return;
       case "/calendar":
         text = `the /calendar feature is not implemented yet`;
+        proceedToSend(text, text, (send = false));
         return;
     }
 
-    proceedToSend(text, text);
+    proceedToSend(text, text, (send = true));
   });
 
   $(document).on("keydown", function (e) {
