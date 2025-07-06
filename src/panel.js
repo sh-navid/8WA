@@ -168,11 +168,11 @@ function addBotMessage(response) {
       codeElement.parent().css("position", "relative").append(`
         <div class="code-btns-container">
           <img src="${btnOpenCodeFile}" alt="Open Code File"  />
-          <img src="${btnAppend}"       alt="Append in File"  />
-          <img src="${btnReplace}"      alt="Replace File"    />
-          <img src="${btnCopy}"         alt="Copy File"       />
-          <img src="${btnDiff}"         alt="Diff File"       />
-          <img src="${btnUndo}"         alt="Undo File"       />
+          <img class="replace-btn" src="${btnReplace}" alt="Replace File" />
+          <img class="append-btn" src="${btnAppend}" alt="Append in File" />
+          <img class="copy-btn" src="${btnCopy}" alt="Copy File"  />
+          <img class="diff-btn" src="${btnDiff}" alt="Diff File" style="display: none;" />
+          <img class="undo-btn" src="${btnUndo}" alt="Undo File" style="display: none;" />
         </div>
       `);
 
@@ -237,42 +237,55 @@ function addBotMessage(response) {
         setButtonPosition(false);
       });
 
+      const replaceBtn = codeElement
+        .parent()
+        .find(".code-btns-container .replace-btn");
+      const appendBtn = codeElement
+        .parent()
+        .find(".code-btns-container .append-btn");
+      const diffBtn = codeElement
+        .parent()
+        .find(".code-btns-container .diff-btn");
+      const undoBtn = codeElement
+        .parent()
+        .find(".code-btns-container .undo-btn");
+
       codeElement
         .parent()
         .find(".code-btns-container img:eq(0)")
         .click(() => {
           vscode.postMessage({ command: "openCodeFile", code });
         });
-      codeElement
-        .parent()
-        .find(".code-btns-container img:eq(1)")
-        .click(() => {
-          vscode.postMessage({ command: "appendToActiveFile", code });
-        });
-      codeElement
-        .parent()
-        .find(".code-btns-container img:eq(2)")
-        .click(() => {
-          vscode.postMessage({ command: "replaceActiveFile", code });
-        });
+
+      replaceBtn.click(() => {
+        vscode.postMessage({ command: "replaceActiveFile", code });
+        replaceBtn.hide();
+        appendBtn.show();
+        diffBtn.show();
+        undoBtn.show();
+      });
+
+      appendBtn.click(() => {
+        vscode.postMessage({ command: "appendToActiveFile", code });
+        appendBtn.hide();
+        replaceBtn.show();
+        diffBtn.show();
+        undoBtn.show();
+      });
       codeElement
         .parent()
         .find(".code-btns-container img:eq(3)")
         .click(() => {
           vscode.postMessage({ command: "copyCodeBlock", code });
         });
-      codeElement
-        .parent()
-        .find(".code-btns-container img:eq(4)")
-        .click(() => {
-          vscode.postMessage({ command: "diffCodeBlock", code });
-        });
-      codeElement
-        .parent()
-        .find(".code-btns-container img:eq(5)")
-        .click(() => {
-          vscode.postMessage({ command: "undoCodeBlock", code });
-        });
+
+      diffBtn.click(() => {
+        vscode.postMessage({ command: "diffCodeBlock", code });
+      });
+
+      undoBtn.click(() => {
+        vscode.postMessage({ command: "undoCodeBlock", code });
+      });
     });
     msgArray.push({ role: "assistant", content: markedContent });
   } else {
