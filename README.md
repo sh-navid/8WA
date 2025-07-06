@@ -68,3 +68,9 @@ Alternatively, you can use the provided [CompileScript](./compile.py).
 
 ## Licensing
 NaBotX is released under the Apache License 2.0. See the [LICENSE](./LICENSE) file for complete license information.
+
+## Font Attribution
+
+This project utilizes the Sansation font, designed by Bernd Montag.
+
+License: [Creative Commons Attribution-ShareAlike 3.0 Unported](https://creativecommons.org/licenses/by-sa/3.0/)
