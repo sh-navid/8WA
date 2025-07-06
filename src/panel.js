@@ -260,7 +260,7 @@ function addBotMessage(response) {
       replaceBtn.click(() => {
         vscode.postMessage({ command: "replaceActiveFile", code });
         replaceBtn.hide();
-        appendBtn.show();
+        appendBtn.hide();
         diffBtn.show();
         undoBtn.show();
       });
@@ -268,7 +268,7 @@ function addBotMessage(response) {
       appendBtn.click(() => {
         vscode.postMessage({ command: "appendToActiveFile", code });
         appendBtn.hide();
-        replaceBtn.show();
+        replaceBtn.hide();
         diffBtn.show();
         undoBtn.show();
       });
@@ -285,6 +285,10 @@ function addBotMessage(response) {
 
       undoBtn.click(() => {
         vscode.postMessage({ command: "undoCodeBlock", code });
+        appendBtn.show();
+        replaceBtn.show();
+        diffBtn.hide();
+        undoBtn.hide();
       });
     });
     msgArray.push({ role: "assistant", content: markedContent });
