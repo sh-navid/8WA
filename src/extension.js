@@ -17,6 +17,7 @@ class NaBotXSidePanelProvider {
     constructor(extensionUri) {
         this._extensionUri = extensionUri;
         this._view = null;
+        this._backupFilePath = null; // Store the backup file path
     }
 
     async resolveWebviewView(webviewView) {
@@ -54,6 +55,9 @@ class NaBotXSidePanelProvider {
             case "diffCodeBlock":
                 await this._diffCodeBlock(message.code);
                 break;
+            case "undoCodeBlock":
+                await this._undoCodeBlock();
+                break;
         }
     }
 
@@ -72,14 +76,14 @@ class NaBotXSidePanelProvider {
         const originalFilePath = document.uri.fsPath;
         const fileExtension = path.extname(originalFilePath);
         const fileName = path.basename(originalFilePath, fileExtension);
-        const cloneFilePath = path.join(
+        this._backupFilePath = path.join(
             path.dirname(originalFilePath),
             `${fileName}.n8x${fileExtension}`
         );
 
         try {
             // Create a clone of the current file
-            await fs.promises.copyFile(originalFilePath, cloneFilePath);
+            await fs.promises.copyFile(originalFilePath, this._backupFilePath);
 
             // Apply the modification function (append or replace)
             const modifiedCode = removeCommentStructure(code);
@@ -280,6 +284,39 @@ class NaBotXSidePanelProvider {
             }
         } catch (error) {
             vscode.window.showErrorMessage(`Failed to show diff view: ${error.message}`);
+        }
+    }
+
+    async _undoCodeBlock() {
+        if (!vscode.window.activeTextEditor) {
+            vscode.window.showErrorMessage("No active text editor found.");
+            return;
+        }
+
+        if (!this._backupFilePath) {
+            vscode.window.showErrorMessage('No .n8x backup file found for this file. Ensure you have appended or replaced code first.');
+            return;
+        }
+
+        const activeEditor = vscode.window.activeTextEditor;
+        const document = activeEditor.document;
+        const originalFilePath = document.uri.fsPath;
+
+
+        try {
+            // Read content from backup file
+            const backupContent = await fs.promises.readFile(this._backupFilePath, 'utf8');
+
+            // Write content to original file
+            await fs.promises.writeFile(originalFilePath, backupContent);
+
+            // Reopen the file to refresh the changes
+            await vscode.commands.executeCommand("vscode.open", vscode.Uri.file(originalFilePath));
+
+            vscode.window.showInformationMessage('File successfully restored from .n8x backup.');
+
+        } catch (error) {
+            vscode.window.showErrorMessage(`Failed to restore file from backup: ${error.message}`);
         }
     }
 
@@ -485,6 +522,15 @@ async function activate(context) {
                 //   }
                 // }
                 nabotxSidePanelProvider._diffCodeBlock('');
+            }
+        )
+    );
+
+     context.subscriptions.push(
+        vscode.commands.registerCommand(
+            "nabotx.undoCodeBlock",
+            async () => {
+                 nabotxSidePanelProvider._undoCodeBlock();
             }
         )
     );
