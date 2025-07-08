@@ -1,7 +1,7 @@
+/* */
 const vscode = require("vscode");
 const path = require("path");
 const fs = require("fs");
-const os = require('os'); // Required for temporary file path if no workspace
 const { commentPath } = require("./utils/pathUtils");
 const { getRelativePath } = require("./utils/fileUtils");
 const { removeCommentStructure } = require("./utils/codeUtils");
@@ -88,6 +88,9 @@ class NaBotXSidePanelProvider {
             // Apply the modification function (append or replace)
             const modifiedCode = removeCommentStructure(code);
             await modifyFunction(modifiedCode);
+
+             // Save the modified document
+             await document.save();
 
         } catch (error) {
             vscode.window.showErrorMessage(
