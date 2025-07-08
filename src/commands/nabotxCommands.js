@@ -1,4 +1,3 @@
-/**/
 const vscode = require('vscode');
 const path = require('path');
 const fs = require('fs');
@@ -86,7 +85,12 @@ async function addDirectoryContentsToChat(provider, folderPath, ignoredPaths) {
       console.error(e);
     }
   }
+   const n8xIgnorePattern = /\.n8x\..*$/i;
+
   for await (const filePath of walk(folderPath, ignoredPaths)) {
+      if (n8xIgnorePattern.test(filePath)) {
+          continue; // Skip *.n8x.* files
+      }
     try {
       const fileUri = vscode.Uri.file(filePath);
       const { content } = await readFile(fileUri);
