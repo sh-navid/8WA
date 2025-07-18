@@ -7,6 +7,7 @@ export default [{
             ...globals.commonjs,
             ...globals.node,
             ...globals.mocha,
+            $: "readonly", // This line tells ESLint that '$' is a global variable
         },
 
         ecmaVersion: 2022,
