@@ -130,6 +130,7 @@ class NaBotXSidePanelProvider {
         // Check if the file/folder should be excluded based on n8x.json
         if (await this._isExcludedFromChat(relativePath)) {
             console.log(`File/folder ${relativePath} is excluded from chat.`);
+            vscode.window.showInformationMessage(`File/folder ${relativePath} is excluded from chat due to n8x.json configuration.`);
             return; // Don't add to chat if excluded
         }
 
@@ -170,15 +171,24 @@ class NaBotXSidePanelProvider {
                 for (const excludedPath of excludeList) {
                     const normalizedExcludedPath = excludedPath.replace(/\\/g, '/').replace(/^\//, '');  // Ensure no leading slash
 
-                    // Match directory or file exactly
-                    if (normalizedRelativePath === normalizedExcludedPath) {
-                        return true;
+
+                    // Check if the excluded path is a regex pattern
+                    if (this._isRegex(normalizedExcludedPath)) {
+                        const regex = new RegExp(normalizedExcludedPath);
+                        if (regex.test(normalizedRelativePath)) {
+                            return true;
+                        }
+                    } else {
+                        // Match directory or file exactly
+                        if (normalizedRelativePath === normalizedExcludedPath) {
+                            return true;
+                        }
+                        // Check if the relativePath starts with the excludedPath (for directories)
+                        if (normalizedRelativePath.startsWith(normalizedExcludedPath + '/')) {
+                            return true;
+                        }
                     }
 
-                    // Check if the relativePath starts with the excludedPath (for directories)
-                    if (normalizedRelativePath.startsWith(normalizedExcludedPath + '/')) {
-                        return true;
-                    }
                 }
             }
         } catch (e) {
@@ -187,6 +197,15 @@ class NaBotXSidePanelProvider {
         }
 
         return false;
+    }
+
+    _isRegex(str) {
+        try {
+            new RegExp(str);
+            return true;
+        } catch (e) {
+            return false;
+        }
     }
 
     async _buildProjectStructure(webviewView) {
@@ -486,9 +505,17 @@ async function activate(context) {
                     );
                 }
                 if (stats.isDirectory()) {
-                    const workspaceFolder =
-                        vscode.workspace.workspaceFolders[0].uri.fsPath;
+                    
                     const ignoredPaths = [".git", "node_modules", "obj", "bin"];
+
+                     // First, check if the directory is excluded
+                     const relPath = getRelativePath(resourceUri);
+                     if (await nabotxSidePanelProvider._isExcludedFromChat(relPath)) {
+                        console.log(`File/folder ${relPath} is excluded from chat.`);
+                        vscode.window.showInformationMessage(`File/folder ${relPath} is excluded from chat due to n8x.json configuration.`);
+                        return; // Don't add to chat if excluded
+                    }
+
                     await addDirectoryContentsToChat(
                         nabotxSidePanelProvider,
                         resourceUri.fsPath,
@@ -502,6 +529,7 @@ async function activate(context) {
                      // Check if the file/folder should be excluded based on n8x.json
                      if (await nabotxSidePanelProvider._isExcludedFromChat(relPath)) {
                         console.log(`File/folder ${relPath} is excluded from chat.`);
+                        vscode.window.showInformationMessage(`File/folder ${relPath} is excluded from chat due to n8x.json configuration.`);
                         return; // Don't add to chat if excluded
                     }
 
@@ -542,6 +570,7 @@ async function activate(context) {
             // Check if the file/folder should be excluded based on n8x.json
             if (await nabotxSidePanelProvider._isExcludedFromChat(relPath)) {
                 console.log(`File/folder ${relPath} is excluded from chat.`);
+                vscode.window.showInformationMessage(`File/folder ${relPath} is excluded from chat due to n8x.json configuration.`);
                 return; // Don't add to chat if excluded
             }
 
