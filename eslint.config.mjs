@@ -8,6 +8,8 @@ export default [{
             ...globals.node,
             ...globals.mocha,
             $: "readonly", // This line tells ESLint that '$' is a global variable
+            window: "readonly", // This line tells ESLint that 'window' is a global variable
+            document: "readonly", // This line tells ESLint that 'document' is a global variable
         },
 
         ecmaVersion: 2022,
