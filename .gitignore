@@ -1,15 +1,8 @@
 # Folders
 node_modules
 
-
-# Configs
-ai.config.json
-
-
-# Other Files
+# Files
 *-lock.json
-
 *.vsix
-
 n8x.json
 *.n8x.*
