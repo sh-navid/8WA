@@ -1,4 +1,3 @@
-/* */
 const vscode = require("vscode");
 const path = require("path");
 const fs = require("fs");
@@ -127,6 +126,13 @@ class NaBotXSidePanelProvider {
                 "No file content or path provided."
             );
         }
+
+        // Check if the file/folder should be excluded based on n8x.json
+        if (await this._isExcludedFromChat(relativePath)) {
+            console.log(`File/folder ${relativePath} is excluded from chat.`);
+            return; // Don't add to chat if excluded
+        }
+
         try {
             this._view.webview.postMessage({
                 command: "addTextToChat",
@@ -142,6 +148,45 @@ class NaBotXSidePanelProvider {
             );
             console.error("Error adding text to chat:", err);
         }
+    }
+
+    async _isExcludedFromChat(relativePath) {
+        if (!vscode.workspace.workspaceFolders) {
+            return false; // No workspace, don't exclude
+        }
+
+        const workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
+        const n8xJsonPath = path.join(workspaceFolder, "n8x.json");
+
+        try {
+            await fs.promises.access(n8xJsonPath, fs.constants.F_OK);
+            const n8xJsonContent = JSON.parse(await fs.promises.readFile(n8xJsonPath, 'utf8'));
+
+            if (n8xJsonContent.excludeFromChat && Array.isArray(n8xJsonContent.excludeFromChat)) {
+                const excludeList = n8xJsonContent.excludeFromChat;
+                // Normalize paths for comparison  "folder/subfolder" == "folder\\subfolder"
+                const normalizedRelativePath = relativePath.replace(/\\/g, '/');
+
+                for (const excludedPath of excludeList) {
+                    const normalizedExcludedPath = excludedPath.replace(/\\/g, '/').replace(/^\//, '');  // Ensure no leading slash
+
+                    // Match directory or file exactly
+                    if (normalizedRelativePath === normalizedExcludedPath) {
+                        return true;
+                    }
+
+                    // Check if the relativePath starts with the excludedPath (for directories)
+                    if (normalizedRelativePath.startsWith(normalizedExcludedPath + '/')) {
+                        return true;
+                    }
+                }
+            }
+        } catch (e) {
+            // If n8x.json doesn't exist or is invalid, don't exclude
+            return false;
+        }
+
+        return false;
     }
 
     async _buildProjectStructure(webviewView) {
@@ -453,6 +498,13 @@ async function activate(context) {
                     const doc = await vscode.workspace.openTextDocument(resourceUri);
                     const fileContent = doc.getText();
                     const relPath = getRelativePath(resourceUri);
+
+                     // Check if the file/folder should be excluded based on n8x.json
+                     if (await nabotxSidePanelProvider._isExcludedFromChat(relPath)) {
+                        console.log(`File/folder ${relPath} is excluded from chat.`);
+                        return; // Don't add to chat if excluded
+                    }
+
                     nabotxSidePanelProvider._addToChat(fileContent, relPath);
                 }
             }
@@ -486,6 +538,13 @@ async function activate(context) {
                 workspaceFolder + "/",
                 ""
             );
+
+            // Check if the file/folder should be excluded based on n8x.json
+            if (await nabotxSidePanelProvider._isExcludedFromChat(relPath)) {
+                console.log(`File/folder ${relPath} is excluded from chat.`);
+                return; // Don't add to chat if excluded
+            }
+
             nabotxSidePanelProvider._addToChat(selectedText, relPath);
         })
     );
