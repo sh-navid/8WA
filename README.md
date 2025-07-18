@@ -48,6 +48,24 @@ NaBotX offers multiple ways to interact:
     *   `/date`: Sends the current date to the chat.
     *   `/time`: Sends the current time to the chat.
 
+## n8x.json
+```json
+{
+  ...
+  "excludeFromChat":[
+    "/assets",
+    "/showcase",
+    "/node_modules",
+    "*.vsix"
+  ],
+  ...
+  "preference": [
+    "Anything that should be always remembered for your project"
+  ]
+  ...
+}
+```
+
 ## Roadmap
 
 Future development plans include:
