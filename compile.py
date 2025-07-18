@@ -1,6 +1,5 @@
-import json
 import subprocess
-import os
+import json
 
 
 def update_version_and_package():
