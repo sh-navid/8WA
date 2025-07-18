@@ -1,3 +1,4 @@
+/* */
 const vscode = require("vscode");
 const path = require("path");
 const fs = require("fs");
@@ -13,11 +14,23 @@ async function buildProjectStructure(webviewView) {
   }
 
   const workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
+  const n8xJsonPath = path.join(workspaceFolder, "n8x.json");
+  let excludeFromChat = [];
+
+  try {
+    await fs.promises.access(n8xJsonPath, fs.constants.F_OK);
+    const n8xJsonContent = JSON.parse(await fs.promises.readFile(n8xJsonPath, 'utf8'));
+    if (n8xJsonContent.excludeFromChat && Array.isArray(n8xJsonContent.excludeFromChat)) {
+      excludeFromChat = n8xJsonContent.excludeFromChat;
+    }
+  } catch (e) { }
+
   const ignoredPaths = [".git", "node_modules", "obj", "bin", ".gradle", "gradle", "build"];
 
   async function buildDirectoryStructure(
     folderPath,
     ignoredPaths,
+    excludeFromChat,
     prefix = "",
     isRoot = true
   ) {
@@ -46,6 +59,7 @@ async function buildProjectStructure(webviewView) {
         .split(path.sep)
         .join("/")
         .toLowerCase();
+
       const shouldIgnore = ignoredPaths.some((ignored) => {
         const normIgnored = ignored
           .replace(/\\/g, "/")
@@ -57,7 +71,17 @@ async function buildProjectStructure(webviewView) {
         );
       });
 
-      if (shouldIgnore) {
+      const shouldExcludeFromChat = excludeFromChat.some((excludedPath) => {
+        const normalizedExcludedPath = excludedPath.replace(/\\/g, '/').replace(/^\//, '').toLowerCase();
+        if (_isRegex(normalizedExcludedPath)) {
+          const regex = new RegExp(normalizedExcludedPath);
+          return regex.test(normRelativePath);
+        } else {
+          return normRelativePath === normalizedExcludedPath || normRelativePath.startsWith(normalizedExcludedPath + '/');
+        }
+      });
+
+      if (shouldIgnore || shouldExcludeFromChat) {
         continue;
       }
 
@@ -77,6 +101,7 @@ async function buildProjectStructure(webviewView) {
         structure += await buildDirectoryStructure(
           filePath,
           ignoredPaths,
+          excludeFromChat,
           nextPrefix,
           false
         );
@@ -88,7 +113,8 @@ async function buildProjectStructure(webviewView) {
   try {
     let projectStructure = `Project Structure:\n${await buildDirectoryStructure(
       workspaceFolder,
-      ignoredPaths
+      ignoredPaths,
+      excludeFromChat
     )}`;
     webviewView.webview.postMessage({
       command: "receiveProjectStructure",
