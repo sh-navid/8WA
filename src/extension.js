@@ -1,3 +1,4 @@
+/* */
 const vscode = require("vscode");
 
 const fs = require("fs");
@@ -64,6 +65,9 @@ class NaBotXSidePanelProvider {
                 break;
             case "undoCodeBlock":
                 await this._undoCodeBlock();
+                break;
+            case "callGitDiscard":
+                await this._callGitDiscard();
                 break;
         }
     }
@@ -138,6 +142,14 @@ class NaBotXSidePanelProvider {
 
     async _undoCodeBlock() {
       await undoCodeBlock(this);
+    }
+
+    async _callGitDiscard() {
+        try {
+            await vscode.commands.executeCommand('git.discardAllChanges');
+        } catch (error) {
+            vscode.window.showErrorMessage(`Failed to discard changes: ${error.message}`);
+        }
     }
 
     _getHtmlForWebview(webview) {
@@ -343,6 +355,15 @@ async function activate(context) {
             }
         )
     );
+    
+     context.subscriptions.push(
+      vscode.commands.registerCommand(
+          "nabotx.callGitDiscard",
+          async () => {
+              nabotxSidePanelProvider._callGitDiscard();
+          }
+      )
+  );
 
     const statusBarItem = vscode.window.createStatusBarItem(
         vscode.StatusBarAlignment.Right,
