@@ -148,6 +148,9 @@ function addMessage(text, fromUser = true, type = null) {
     .scrollTop($("#chatMessages")[0].scrollHeight);
 }
 
+// Store original code blocks for rollback
+let originalCodeBlocks = {};
+
 function addBotMessage(response) {
   const msgDiv = $("<div>").addClass("message bot");
   if (response?.choices?.[0]?.message?.content) {
@@ -311,13 +314,21 @@ function addBotMessage(response) {
 
       msgDiv.append(buttonsContainer);
 
+      // Store original code blocks before applying changes
+      msgDiv.find("pre code").each(function (index) {
+        const codeElement = $(this);
+        const code = codeElement.text();
+        originalCodeBlocks[index] = code;
+      });
+
       acceptButton.click(function () {
         const codeBlocks = msgDiv.find("pre code");
         let delay = 0; // Initialize delay
 
         // Iterate through each code block
-        codeBlocks.each(function () {
-          const code = $(this).text();
+        codeBlocks.each(function (index) {
+          const codeElement = $(this);
+          const code = codeElement.text();
           // Use setTimeout to create a delay for each code block
           setTimeout(() => {
             // Send messages to VSCode to open and replace the code
@@ -335,22 +346,32 @@ function addBotMessage(response) {
 
       rejectButton.click(function () {
         const codeBlocks = msgDiv.find("pre code");
-        let delay = 0;
+        let delay = 0; // Initialize delay
 
-        codeBlocks.each(function () {
-          const code = $(this).text();
+        // Iterate through each code block
+        codeBlocks.each(function (index) {
+          const codeElement = $(this);
+          // Retrieve original code from storage
+          const originalCode = originalCodeBlocks[index];
+
+          // Use setTimeout to create a delay for each code block
           setTimeout(() => {
-            // Send messages to VSCode to open and replace the code
-            vscode.postMessage({ command: "openCodeFile", code });
+            // Send messages to VSCode to open and replace the code with the original content
+            vscode.postMessage({ command: "openCodeFile", code: originalCode });
 
             setTimeout(() => {
-              vscode.postMessage({ command: "undoCodeBlock", code });
+              vscode.postMessage({
+                command: "replaceActiveFile",
+                code: originalCode,
+              });
             }, 1000); // nested timeout to ensure openFile happens first
-          }, delay);
-          delay += 2000;
+          }, delay); // Increment delay for the next code block
+          delay += 2000; // Increment delay for the next code block
         });
+
         rejectButton.hide();
         acceptButton.show();
+        originalCodeBlocks = {};
       });
     }
 
