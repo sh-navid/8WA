@@ -7,7 +7,7 @@ let msgArray = [
 ];
 
 let commandPanelVisible = false;
-let filteredCommands = []; // Store filtered commands
+let filteredCommands = [];
 
 const commands = [
   { name: "/time", description: "Show the current time" },
@@ -29,11 +29,11 @@ function showCommandPanel(filter = "") {
   if (!commandPanelVisible) {
     const commandPanel = $("<div>")
       .attr("id", "commandPanel")
-      .addClass("command-panel") // Add a class for styling
+      .addClass("command-panel")
       .css({
         position: "absolute",
         top: "auto",
-        bottom: "6rem", // Position above the input
+        bottom: "6rem",
         left: "50%",
         transform: "translateX(-50%)",
         zIndex: 1000,
@@ -52,12 +52,12 @@ function showCommandPanel(filter = "") {
 }
 
 function updateCommandPanel(commandPanel) {
-  commandPanel.empty(); // Clear existing buttons before re-populating
+  commandPanel.empty();
 
   filteredCommands.forEach((command) => {
     const commandButton = $("<button>")
       .text(command.name + " - " + command.description)
-      .addClass("command-button") // Add a class for styling
+      .addClass("command-button")
       .click(() => {
         $("#userInput").val(command.name);
         hideCommandPanel();
@@ -148,7 +148,6 @@ function addMessage(text, fromUser = true, type = null) {
     .scrollTop($("#chatMessages")[0].scrollHeight);
 }
 
-// Store original code blocks for rollback
 let originalCodeBlocks = {};
 
 function addBotMessage(response) {
@@ -193,19 +192,18 @@ function addBotMessage(response) {
         .addClass("more-button")
         .hide();
 
-      // Modified CSS for buttons
       const buttonContainer = $("<div>")
-        .addClass("code-buttons-container") // added to class name to not confuse the other .code-btns-container
+        .addClass("code-buttons-container")
         .css({
-          "text-align": "center", // Center the buttons horizontally
+          "text-align": "center",
           "margin-top": "5px",
           "margin-bottom": "0px",
           position: "absolute",
-          top: "0", // Position at the top
+          top: "0",
           left: "50%",
           transform: "translateX(-50%)",
           width: "100%",
-          "z-index": 1, // Ensure buttons are above the content
+          "z-index": 1,
         })
         .append(moreButton)
         .append(lessButton);
@@ -218,7 +216,7 @@ function addBotMessage(response) {
           top: "0",
           left: "50%",
           transform: "translateX(-50%)",
-          "z-index": 1, // Ensure buttons are above the content
+          "z-index": 1,
         });
       }
 
@@ -226,10 +224,9 @@ function addBotMessage(response) {
         preElement.animate(
           { "max-height": preElement[0].scrollHeight },
           "fast"
-        ); // Set max-height to scrollHeight
+        );
         moreButton.hide();
         lessButton.show();
-        // Modified CSS: set position to relative and adjust transform to none and left to 0
         setButtonPosition(true);
       });
 
@@ -237,7 +234,6 @@ function addBotMessage(response) {
         preElement.animate({ "max-height": "100px" }, "fast");
         lessButton.hide();
         moreButton.show();
-        // Modified CSS: set position to absolute, bottom to 0, left to 50%, and use transform
         setButtonPosition(false);
       });
 
@@ -296,7 +292,6 @@ function addBotMessage(response) {
       });
     });
 
-    // Add Accept and Reject buttons after all code blocks
     if (msgDiv.find("pre code").length > 0) {
       const acceptButton = $("<button>")
         .text("AcceptAll")
@@ -314,31 +309,26 @@ function addBotMessage(response) {
 
       msgDiv.append(buttonsContainer);
 
-      // Store original code blocks before applying changes
       msgDiv.find("pre code").each(function (index) {
         const codeElement = $(this);
-        const code = codeElement.text();
-        originalCodeBlocks[index] = code;
+        originalCodeBlocks[index] = codeElement.text();
       });
 
       acceptButton.click(function () {
         const codeBlocks = msgDiv.find("pre code");
-        let delay = 0; // Initialize delay
+        let delay = 0;
 
-        // Iterate through each code block
-        codeBlocks.each(function (index) {
+        codeBlocks.each(function () {
           const codeElement = $(this);
           const code = codeElement.text();
-          // Use setTimeout to create a delay for each code block
           setTimeout(() => {
-            // Send messages to VSCode to open and replace the code
             vscode.postMessage({ command: "openCodeFile", code });
 
             setTimeout(() => {
               vscode.postMessage({ command: "replaceActiveFile", code });
-            }, 1000); // nested timeout to ensure openFile happens first
-          }, delay); // Increment delay for the next code block
-          delay += 2000; // Increment delay for the next code block
+            }, 1000);
+          }, delay);
+          delay += 2000;
         });
         acceptButton.hide();
         rejectButton.show();
@@ -346,27 +336,12 @@ function addBotMessage(response) {
 
       rejectButton.click(function () {
         const codeBlocks = msgDiv.find("pre code");
-        let delay = 0; // Initialize delay
 
-        // Iterate through each code block
         codeBlocks.each(function (index) {
           const codeElement = $(this);
-          // Retrieve original code from storage
           const originalCode = originalCodeBlocks[index];
-
-          // Use setTimeout to create a delay for each code block
-          setTimeout(() => {
-            // Send messages to VSCode to open and replace the code with the original content
-            vscode.postMessage({ command: "openCodeFile", code: originalCode });
-
-            setTimeout(() => {
-              vscode.postMessage({
-                command: "replaceActiveFile",
-                code: originalCode,
-              });
-            }, 1000); // nested timeout to ensure openFile happens first
-          }, delay); // Increment delay for the next code block
-          delay += 2000; // Increment delay for the next code block
+          vscode.postMessage({ command: "openCodeFile", code: originalCode });
+          vscode.postMessage({ command: "replaceActiveFile", code: originalCode });
         });
 
         rejectButton.hide();
@@ -430,18 +405,13 @@ window.addEventListener("message", (event) => {
     case "receiveProjectStructure":
       const structure = message.structure;
       msgArray.push({ role: "user", content: structure });
-      proceedToSend(structure, structure, (send = false), (type = "structure"));
+      proceedToSend(structure, structure, false, "structure");
       break;
   }
 });
 
-async function proceedToSend(
-  userText,
-  combinedMessage,
-  send = true,
-  type = null
-) {
-  addMessage(userText, (fromUser = true), type);
+async function proceedToSend(userText, combinedMessage, send = true, type = null) {
+  addMessage(userText, true, type);
   $("#userInput").val("");
   $("#sendButton").prop("disabled", true);
   if (send) {
@@ -458,7 +428,7 @@ document.addEventListener("DOMContentLoaded", function () {
   $("#userInput").on("keydown", (e) => {
     if (e.key === "/") {
       showCommandPanel("/");
-      e.preventDefault(); // Prevent '/' from being entered initially
+      e.preventDefault();
     } else if (e.key === "Enter") {
       $("#sendButton").click();
       e.preventDefault();
@@ -466,7 +436,6 @@ document.addEventListener("DOMContentLoaded", function () {
     } else if (e.key === "Escape") {
       hideCommandPanel();
     } else {
-      // Filter commands based on input after '/'
       if ($("#userInput").val().startsWith("/")) {
         const filterText = $("#userInput").val();
         showCommandPanel(filterText);
@@ -483,30 +452,30 @@ document.addEventListener("DOMContentLoaded", function () {
     switch (text) {
       case "/time":
         text = `Current time: ${new Date().toLocaleTimeString()}`;
-        proceedToSend(text, text, (send = false));
+        proceedToSend(text, text, false);
         return;
       case "/date":
         text = `Current date: ${new Date().toLocaleDateString()}`;
-        proceedToSend(text, text, (send = false));
+        proceedToSend(text, text, false);
         return;
       case "/structure":
         vscode.postMessage({ command: "buildProjectStructure" });
         return;
       case "/task":
         text = `The /task feature is not implemented yet`;
-        proceedToSend(text, text, (send = false));
+        proceedToSend(text, text, false);
         return;
       case "/color":
         text = `The /color feature is not implemented yet`;
-        proceedToSend(text, text, (send = false));
+        proceedToSend(text, text, false);
         return;
       case "/calendar":
         text = `the /calendar feature is not implemented yet`;
-        proceedToSend(text, text, (send = false));
+        proceedToSend(text, text, false);
         return;
     }
 
-    proceedToSend(text, text, (send = true));
+    proceedToSend(text, text, true);
   });
 
   $(document).on("keydown", function (e) {
