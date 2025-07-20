@@ -334,23 +334,9 @@ function addBotMessage(response) {
       });
 
       rejectButton.click(function () {
-        const codeBlocks = msgDiv.find("pre code");
-        let delay = 0;
-
-        codeBlocks.each(function () {
-          const codeElement = $(this);
-          const code = codeElement.text();
-          setTimeout(() => {
-            vscode.postMessage({ command: "openCodeFile", code });
-
-            setTimeout(() => {
-              vscode.postMessage({ command: "callGitDiscard", code });// Fixme: can you call git discard command on this file? you should add callGitDiscard command in extension.js too
-            }, 1000);
-          }, delay);
-          delay += 2000;
-        });
-        acceptButton.show();
-        rejectButton.hide();
+          vscode.postMessage({ command: "callGitDiscard"});
+          acceptButton.show();
+          rejectButton.hide();
       });
     }
 
