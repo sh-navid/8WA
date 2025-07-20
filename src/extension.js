@@ -1,4 +1,3 @@
-/* */
 const vscode = require("vscode");
 
 const fs = require("fs");
@@ -146,7 +145,19 @@ class NaBotXSidePanelProvider {
 
     async _callGitDiscard() {
         try {
-            await vscode.commands.executeCommand('git.discardAllChanges');
+            if (!vscode.workspace.workspaceFolders) {
+                vscode.window.showErrorMessage("No workspace folder open.");
+                return;
+            }
+
+            const workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
+            const terminal = vscode.window.createTerminal({
+                name: 'Git Discard',
+                cwd: workspaceFolder,
+            });
+            terminal.show();
+            terminal.sendText('git restore .');
+
         } catch (error) {
             vscode.window.showErrorMessage(`Failed to discard changes: ${error.message}`);
         }
