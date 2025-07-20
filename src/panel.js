@@ -312,27 +312,41 @@ function addBotMessage(response) {
 
       acceptButton.click(function () {
         const codeBlocks = msgDiv.find("pre code");
+        let delay = 0; // Initialize delay
 
         // Iterate through each code block
         codeBlocks.each(function () {
           const code = $(this).text();
+          // Use setTimeout to create a delay for each code block
+          setTimeout(() => {
+            // Send messages to VSCode to open and replace the code
+            vscode.postMessage({ command: "openCodeFile", code });
 
-          // Send messages to VSCode to open and replace the code
-          vscode.postMessage({ command: "openCodeFile", code });
-          vscode.postMessage({ command: "replaceActiveFile", code });
+            setTimeout(() => {
+              vscode.postMessage({ command: "replaceActiveFile", code });
+            }, 500); // nested timeout to ensure openFile happens first
+          }, delay); // Increment delay for the next code block
+          delay += 1000; // Increment delay for the next code block
         });
         acceptButton.hide();
         rejectButton.show();
       });
 
       rejectButton.click(function () {
-        // Iterate through each code block
+        const codeBlocks = msgDiv.find("pre code");
+        let delay = 0;
+
         codeBlocks.each(function () {
           const code = $(this).text();
+          setTimeout(() => {
+            // Send messages to VSCode to open and replace the code
+            vscode.postMessage({ command: "openCodeFile", code });
 
-          // Send messages to VSCode to open and replace the code
-          vscode.postMessage({ command: "openCodeFile", code });
-          vscode.postMessage({ command: "undoCodeBlock", code });
+            setTimeout(() => {
+              vscode.postMessage({ command: "undoCodeBlock", code });
+            }, 500); // nested timeout to ensure openFile happens first
+          }, delay);
+          delay += 1000;
         });
         rejectButton.hide();
         acceptButton.show();
