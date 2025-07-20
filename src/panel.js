@@ -1,3 +1,4 @@
+/**/
 let msgArray = [
   {
     role: "assistant",
@@ -324,9 +325,9 @@ function addBotMessage(response) {
 
             setTimeout(() => {
               vscode.postMessage({ command: "replaceActiveFile", code });
-            }, 500); // nested timeout to ensure openFile happens first
+            }, 1000); // nested timeout to ensure openFile happens first
           }, delay); // Increment delay for the next code block
-          delay += 1000; // Increment delay for the next code block
+          delay += 2000; // Increment delay for the next code block
         });
         acceptButton.hide();
         rejectButton.show();
@@ -344,9 +345,9 @@ function addBotMessage(response) {
 
             setTimeout(() => {
               vscode.postMessage({ command: "undoCodeBlock", code });
-            }, 500); // nested timeout to ensure openFile happens first
+            }, 1000); // nested timeout to ensure openFile happens first
           }, delay);
-          delay += 1000;
+          delay += 2000;
         });
         rejectButton.hide();
         acceptButton.show();
