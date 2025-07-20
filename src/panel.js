@@ -326,6 +326,14 @@ function addBotMessage(response) {
       });
 
       rejectButton.click(function () {
+        // Iterate through each code block
+        codeBlocks.each(function () {
+          const code = $(this).text();
+
+          // Send messages to VSCode to open and replace the code
+          vscode.postMessage({ command: "openCodeFile", code });
+          vscode.postMessage({ command: "undoCodeBlock", code });
+        });
         rejectButton.hide();
         acceptButton.show();
       });
