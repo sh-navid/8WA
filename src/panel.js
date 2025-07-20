@@ -179,7 +179,7 @@ function addBotMessage(response) {
       const preElement = codeElement.parent();
       preElement.css({
         position: "relative",
-        "max-height": "200px",
+        "max-height": "100px",
         overflow: "hidden",
       });
 
@@ -230,7 +230,7 @@ function addBotMessage(response) {
       });
 
       lessButton.click(() => {
-        preElement.animate({ "max-height": "200px" }, "fast");
+        preElement.animate({ "max-height": "100px" }, "fast");
         lessButton.hide();
         moreButton.show();
         // Modified CSS: set position to absolute, bottom to 0, left to 50%, and use transform
@@ -291,6 +291,46 @@ function addBotMessage(response) {
         undoBtn.hide();
       });
     });
+
+    // Add Accept and Reject buttons after all code blocks
+    if (msgDiv.find("pre code").length > 0) {
+      const acceptButton = $("<button>")
+        .text("AcceptAll")
+        .addClass("accept-button");
+
+      const rejectButton = $("<button>")
+        .text("Rollback")
+        .addClass("reject-button")
+        .hide();
+
+      const buttonsContainer = $("<div>")
+        .addClass("code-decision-buttons")
+        .append(acceptButton)
+        .append(rejectButton);
+
+      msgDiv.append(buttonsContainer);
+
+      acceptButton.click(function () {
+        const codeBlocks = msgDiv.find("pre code");
+
+        // Iterate through each code block
+        codeBlocks.each(function () {
+          const code = $(this).text();
+
+          // Send messages to VSCode to open and replace the code
+          vscode.postMessage({ command: "openCodeFile", code });
+          vscode.postMessage({ command: "replaceActiveFile", code });
+        });
+        acceptButton.hide();
+        rejectButton.show();
+      });
+
+      rejectButton.click(function () {
+        rejectButton.hide();
+        acceptButton.show();
+      });
+    }
+
     msgArray.push({ role: "assistant", content: markedContent });
   } else {
     msgDiv.text("No response from bot.");

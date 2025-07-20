@@ -1,4 +1,3 @@
-/* General Styles */
 @font-face {
   font-family: "Sansation";
   src: url("../assets/fonts/Sansation-Regular.woff2") format("woff2"),
@@ -23,10 +22,10 @@ body {
   margin: 0;
   padding: 0;
   user-select: none;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
+  overflow-x: hidden;
+  font-family: "Sansation";
 }
 
-/* Header Styles */
 .headerContainer {
   position: fixed;
   top: 0;
@@ -44,7 +43,6 @@ header {
   padding: 1rem;
   gap: 0.75rem;
   transition: box-shadow 0.3s ease;
-  font-family: "Sansation";
   font-weight: bold;
   font-size: 1.1rem;
 }
@@ -61,7 +59,6 @@ header label {
   font-weight: 700;
 }
 
-/* Chat Messages Area */
 #chatMessages {
   display: flex;
   flex-direction: column;
@@ -71,11 +68,10 @@ header label {
   border-radius: 0.5rem;
   gap: 0.5rem;
   user-select: text;
-  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-y: auto;
   scrollbar-width: auto;
 }
 
-/* Input Area Styles */
 .input-wrapper {
   background: var(--vscode-editorWidget-background);
   box-shadow: 0 4px 12px var(--vscode-shadow, rgba(0, 0, 0, 0.15));
@@ -128,7 +124,6 @@ header label {
   background: var(--vscode-selectionBackground);
 }
 
-/* Icon Button Styles */
 .input-wrapper button.icon-btn {
   background-color: transparent !important;
   border: none !important;
@@ -144,7 +139,6 @@ header label {
   color: var(--vscode-button-hoverForeground);
 }
 
-/* Responsive Adjustments */
 @media (max-width: 480px) {
   .input-wrapper {
     width: 95%;
@@ -166,7 +160,6 @@ header label {
   }
 }
 
-/* Code Buttons Container */
 .code-btns-container {
   background-color: var(--vscode-editor-background);
   position: absolute;
@@ -190,16 +183,15 @@ header label {
   width: 0.8rem;
   height: 0.8rem;
   margin: 0.5rem;
-  cursor: pointer; /* Add pointer cursor */
-  opacity: 0.8; /* Make slightly transparent */
-  transition: opacity 0.3s ease; /* Smooth transition */
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
 }
 
 .code-btns-container img:hover {
   opacity: 0.5;
 }
 
-/* Code Block Styles */
 pre,
 .msg-container {
   background-color: var(--vscode-textBlockQuote-background);
@@ -208,7 +200,6 @@ pre,
   overflow: auto;
 }
 
-/* Link and Button Styles */
 .more-button,
 a {
   background-color: transparent;
@@ -218,48 +209,41 @@ a {
   user-select: none;
 }
 
-/* Short Text Style */
 .short-text {
   color: var(--vscode-disabledForeground);
 }
 
-/* ============= COMMAND PANEL ============ */
 .command-panel {
-  position: absolute;
-  top: 50%;
-  left: 50%;
+  background-color: var(--vscode-editorWidget-background);
+  border: 1px solid var(--vscode-editorWidget-border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  color: var(--vscode-editor-foreground);
   transform: translate(-50%, -50%);
-  background-color: var(
-    --vscode-editorWidget-background
-  ); /* Use VSCode theme color */
-  color: var(--vscode-editor-foreground); /* Use VSCode theme color */
-  padding: 10px;
-  border: 1px solid var(--vscode-editorWidget-border); /* Use VSCode theme color */
+  flex-direction: column;
+  border-radius: 0.5rem;
+  position: fixed;
+  padding: 1rem;
   z-index: 1000;
   display: flex;
-  flex-direction: column;
-  border-radius: 5px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Optional shadow */
-  width: 300px; /* Wider panel */
-  font-family: "Sansation";
+  width: 300px;
+  opacity: 0.7;
+  left: 50%;
+  top: 50%;
 }
 
 .command-button {
-  margin: 5px;
-  padding: 5px 10px;
+  margin: 0.5rem;
+  padding: 0.5rem 1rem;
   border: none;
-  border-radius: 5px;
+  border-radius: 0.5rem;
   cursor: pointer;
-  background-color: var(
-    --vscode-button-background
-  ); /* Use VSCode theme color */
-  color: var(--vscode-button-foreground); /* Use VSCode theme color */
+  background-color: var(--vscode-button-background);
+  color: var(--vscode-button-foreground);
+  font-family: "Sansation";
 }
 
 .command-button:hover {
-  background-color: var(
-    --vscode-button-hoverBackground
-  ); /* VSCode hover color */
+  background-color: var(--vscode-button-hoverBackground);
 }
 
 button:hover {
@@ -271,4 +255,32 @@ button:hover {
 .space {
   display: block;
   height: 5rem;
+}
+
+.accept-button,
+.reject-button {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-family: "Sansation";
+  cursor: pointer;
+  transition: color 0.3s ease;
+  margin: 0 auto;
+  background-color: transparent;
+}
+
+.accept-button {
+  color: #4caf50;
+}
+
+.accept-button:hover {
+  color: #388e3c;
+}
+
+.reject-button {
+  color: #f44336;
+}
+
+.reject-button:hover {
+  color: #d32f2f;
 }
