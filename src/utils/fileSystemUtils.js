@@ -1,6 +1,8 @@
+/*[[src/utils/fileSystemUtils.js]]*/
 const vscode = require("vscode");
 const path = require("path");
 const fs = require("fs");
+const os = require('os');
 
 const join = (provider, dir, fileName) =>
   path.join(provider._extensionUri.fsPath, dir, fileName);
@@ -54,14 +56,56 @@ async function handleN8xJson() {
       await fs.promises.access(n8xJsonPath, fs.constants.F_OK);
       console.log("n8x.json already exists.");
       const n8xJsonContent = JSON.parse(await fs.promises.readFile(n8xJsonPath, 'utf8'));
-      if (!n8xJsonContent.hasOwnProperty("tasks")) {
-        n8xJsonContent.tasks = [];
-        await fs.promises.writeFile(n8xJsonPath, JSON.stringify(n8xJsonContent, null, 2));
+
+      const ensurePropertyExists = async (obj, property, defaultValue) => {
+        if (!obj.hasOwnProperty(property)) {
+          obj[property] = defaultValue;
+          return true;
+        }
+        return false;
+      };
+
+      let modified = false;
+
+      if (await ensurePropertyExists(n8xJsonContent, "tasks", [])) {
+        modified = true;
         console.log('Added "tasks" to n8x.json.');
       }
+
+      if (await ensurePropertyExists(n8xJsonContent, "prefrences", {})) {
+        modified = true;
+        console.log('Added "prefrences" to n8x.json.');
+      }
+
+      if (await ensurePropertyExists(n8xJsonContent, "excludeFromChat", [])) {
+        modified = true;
+        console.log('Added "excludeFromChat" to n8x.json.');
+      }
+
+      if (!n8xJsonContent.prefrences.hasOwnProperty("os")) {
+        n8xJsonContent.prefrences["os"] = os.platform();
+        modified = true;
+        console.log('Added "os" to n8x.json preferences.');
+      }
+
+      if (!n8xJsonContent.prefrences.hasOwnProperty("stack")) {
+        n8xJsonContent.prefrences["stack"] = "";
+        modified = true;
+        console.log('Added "stack" to n8x.json preferences.');
+      }
+
+      if (modified) {
+        await fs.promises.writeFile(n8xJsonPath, JSON.stringify(n8xJsonContent, null, 2));
+      }
+
     } catch (e) {
       const defaultN8xConfig = {
-        tasks: []
+        tasks: [],
+        prefrences: {
+          os: os.platform(),
+          stack: ""
+        },
+        excludeFromChat: []
       };
       try {
         await fs.promises.writeFile(
