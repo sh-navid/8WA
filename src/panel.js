@@ -171,7 +171,6 @@ function addBotMessage(response) {
         <div class="code-btns-container">
           <img src="${btnOpenCodeFile}" alt="Open Code File"  />
           <img class="replace-btn" src="${btnReplace}" alt="Replace File" />
-          <img class="append-btn" src="${btnAppend}" alt="Append in File" />
           <img class="copy-btn" src="${btnCopy}" alt="Copy File"  />
           <img class="diff-btn" src="${btnDiff}" alt="Diff File" style="display: none;" />
           <img class="undo-btn" src="${btnUndo}" alt="Undo File" style="display: none;" />
@@ -239,9 +238,6 @@ function addBotMessage(response) {
       const replaceBtn = codeElement
         .parent()
         .find(".code-btns-container .replace-btn");
-      const appendBtn = codeElement
-        .parent()
-        .find(".code-btns-container .append-btn");
       const diffBtn = codeElement
         .parent()
         .find(".code-btns-container .diff-btn");
@@ -259,18 +255,10 @@ function addBotMessage(response) {
       replaceBtn.click(() => {
         vscode.postMessage({ command: "replaceActiveFile", code });
         replaceBtn.hide();
-        appendBtn.hide();
         diffBtn.show();
         undoBtn.show();
       });
 
-      appendBtn.click(() => {
-        vscode.postMessage({ command: "appendToActiveFile", code });
-        appendBtn.hide();
-        replaceBtn.hide();
-        diffBtn.show();
-        undoBtn.show();
-      });
       codeElement
         .parent()
         .find(".code-btns-container img:eq(3)")
@@ -284,7 +272,6 @@ function addBotMessage(response) {
 
       undoBtn.click(() => {
         vscode.postMessage({ command: "undoCodeBlock", code });
-        appendBtn.show();
         replaceBtn.show();
         diffBtn.hide();
         undoBtn.hide();
