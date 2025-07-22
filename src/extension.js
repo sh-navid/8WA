@@ -1,18 +1,18 @@
 const vscode = require("vscode");
 
 const fs = require("fs");
+const path = require("path"); // Import the 'path' module
 const { commentPath } = require("./utils/pathUtils");
 const { getRelativePath } = require("./utils/fileUtils");
 const { removeCommentStructure } = require("./utils/codeUtils");
 const {
     openCodeFile,
-    appendToActiveFile,
     replaceActiveFile,
     copyCodeBlock,
     addDirectoryContentsToChat,
 } = require("./commands/nabotxCommands");
 const {
-    cloneAndModifyActiveFile,
+    
     buildProjectStructure,
     isExcludedFromChat,
     diffCodeBlock,
@@ -44,10 +44,8 @@ class NaBotXSidePanelProvider {
             case "openCodeFile":
                 await this._openCodeFile(message.code);
                 break;
-            case "appendToActiveFile":
-                await this._appendToActiveFile(message.code);
-                break;
             case "replaceActiveFile":
+                await this._openCodeFile(message.code);
                 await this._replaceActiveFile(message.code);
                 break;
             case "copyCodeBlock":
@@ -76,14 +74,50 @@ class NaBotXSidePanelProvider {
     }
 
     async _cloneAndModifyActiveFile(code, modifyFunction) {
-      await cloneAndModifyActiveFile(code, modifyFunction, this);
-    }
+      const editor = vscode.window.activeTextEditor;
+      if (!editor) {
+          vscode.window.showErrorMessage("No active editor.");
+          return;
+      }
 
-    async _appendToActiveFile(code) {
-        await this._cloneAndModifyActiveFile(code, async (modifiedCode) => {
-            await appendToActiveFile(modifiedCode);
-        });
-    }
+      const filePath = editor.document.uri.fsPath;
+      const workspaceFolder = vscode.workspace.getWorkspaceFolder(editor.document.uri);
+
+      if (!workspaceFolder) {
+          vscode.window.showErrorMessage("File is not part of a workspace.");
+          return;
+      }
+
+      const relativePath = path.relative(workspaceFolder.uri.fsPath, filePath);
+      const backupDir = path.join(workspaceFolder.uri.fsPath, ".n8x");
+      const backupPath = path.join(backupDir, relativePath);
+
+      // Ensure the .n8x directory exists
+      if (!fs.existsSync(backupDir)) {
+          fs.mkdirSync(backupDir, { recursive: true });
+      }
+      
+      // Create subdirectories if needed
+      const backupFileDir = path.dirname(backupPath);
+      if (!fs.existsSync(backupFileDir)) {
+          fs.mkdirSync(backupFileDir, { recursive: true });
+      }
+
+
+      // Check if the backup file already exists
+      if (!fs.existsSync(backupPath)) {
+          try {
+              // Copy the original file content to the backup file
+              fs.writeFileSync(backupPath, editor.document.getText());
+              console.log(`Backup file created: ${backupPath}`);
+          } catch (err) {
+              vscode.window.showErrorMessage(`Failed to create backup: ${err.message}`);
+              return;
+          }
+      }
+
+      await modifyFunction(code);
+  }
 
     async _replaceActiveFile(code) {
         await this._cloneAndModifyActiveFile(code, async (modifiedCode) => {
@@ -326,7 +360,7 @@ async function activate(context) {
             // Check if the file/folder should be excluded based on n8x.json
             if (await isExcludedFromChat(relPath)) {
                 console.log(`File/folder ${relPath} is excluded from chat.`);
-                vscode.window.showInformationMessage(`File/folder ${relPath} is excluded from chat due to n8x.json configuration.`);
+                // vscode.window.showInformationMessage(`File/folder ${relPath} is excluded from chat due to n8x.json configuration.`);
                 return; // Don't add to chat if excluded
             }
 
