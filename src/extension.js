@@ -2,23 +2,23 @@ const vscode = require("vscode");
 
 const fs = require("fs");
 const path = require("path"); // Import the 'path' module
-const { commentPath } = require("./utils/pathUtils");
-const { getRelativePath } = require("./utils/fileUtils");
-const { removeCommentStructure } = require("./utils/codeUtils");
+const { commentPath } = require("./helpers/pathHelper");
+const { getRelativePath } = require("./helpers/fileHelper");
+const { removeCommentStructure } = require("./helpers/codeHelper");
 const {
     openCodeFile,
     replaceActiveFile,
     copyCodeBlock,
     addDirectoryContentsToChat,
-} = require("./commands/nabotxCommands");
+} = require("./commands/commands");
 const {
     
     buildProjectStructure,
     isExcludedFromChat,
     diffCodeBlock,
     undoCodeBlock
-} = require("./utils/extensionUtils");
-const { load, uri, checkConfiguration, handleN8xJson, handleGitignore } = require("./utils/fileSystemUtils");
+} = require("./helpers/extensionHelper");
+const { load, uri, checkConfiguration, handleN8xJson, handleGitignore } = require("./helpers/fileSystemHelper");
 
 class NaBotXSidePanelProvider {
     constructor(extensionUri) {

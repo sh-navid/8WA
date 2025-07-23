@@ -14,7 +14,7 @@
 }
 
 body {
-  background-color: var(--vscode-editor-background);
+  background-color: var(--vscode-sideBar-background);
   color: var(--vscode-editor-foreground);
   font-family: "Sansation";
   margin: 0;

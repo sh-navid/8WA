@@ -1,7 +1,7 @@
 const vscode = require("vscode");
 const path = require("path");
 const fs = require("fs");
-const { removeCommentStructure } = require("./codeUtils");
+const { removeCommentStructure } = require("./codeHelper");
 
 async function buildProjectStructure(webviewView) {
   if (!vscode.workspace.workspaceFolders) {
