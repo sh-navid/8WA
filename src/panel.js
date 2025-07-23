@@ -280,11 +280,11 @@ function addBotMessage(response) {
 
     if (msgDiv.find("pre code").length > 0) {
       const acceptButton = $("<button>")
-        .text("AcceptAll")
+        .text("ACCEPT ALL")
         .addClass("accept-button");
 
       const rejectButton = $("<button>")
-        .text("Rollback")
+        .text("ROLLBACK ALL")
         .addClass("reject-button")
         .hide();
 
@@ -361,7 +361,7 @@ async function sendToLLM(message) {
         {
           message: {
             content:
-              "Error communicating with the LLM: " +
+              "Error communicating with AI: " +
               error.message +
               ` <a href="#" onclick="proceedToSend('Retry...','Please review chats and respond again')">Retry...</a>`,
           },
@@ -389,6 +389,7 @@ window.addEventListener("message", (event) => {
 
 async function proceedToSend(userText, combinedMessage, send = true, type = null) {
   addMessage(userText, true, type);
+  $("#logoHolder").hide();
   $("#userInput").val("");
   $("#sendButton").prop("disabled", true);
   if (send) {

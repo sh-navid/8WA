@@ -3,7 +3,7 @@ tabs {
   align-items: center;
   padding: 0.4rem 0;
   background-color: var(--vscode-editorWidget-background);
-  border-bottom: 1px solid var(--vscode-editorWidget-border, #ddd);
+  border-bottom: 1px solid var(--vscode-widget-border);
 }
 
 tab {

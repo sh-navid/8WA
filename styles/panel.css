@@ -16,14 +16,14 @@
 body {
   background-color: var(--vscode-editor-background);
   color: var(--vscode-editor-foreground);
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
+  font-family: "Sansation";
   margin: 0;
   padding: 0;
-  user-select: none;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
   overflow-x: hidden;
-  font-family: "Sansation";
+  user-select: none;
 }
 
 .headerContainer {
@@ -32,15 +32,15 @@ body {
   left: 0;
   right: 0;
   z-index: 9999;
-  background-color: var(--vscode-header-background); /* Header background */
-  border-bottom: 1px solid var(--vscode-panel-border); /* Optional border */
+  background-color: var(--vscode-header-background);
+  border-bottom: 1px solid var(--vscode-panel-border);
 }
 
 tabs img {
   width: 2rem;
   height: auto;
+  filter: invert(40%);
   transition: width 0.3s ease, height 0.3s ease;
-  filter: invert(80%);
 }
 
 #chatMessages {
@@ -51,12 +51,11 @@ tabs img {
   margin: 1rem;
   border-radius: 0.5rem;
   gap: 0.5rem;
-  user-select: text;
   overflow-y: auto;
   scrollbar-width: auto;
+  user-select: text;
 }
 
-/* Add fade-in animation for chat messages */
 #chatMessages > * {
   animation: fadeIn 0.5s ease-out forwards;
 }
@@ -73,31 +72,30 @@ tabs img {
 }
 
 .input-wrapper {
-  background: var(--vscode-editorWidget-background);
-  box-shadow: 0 4px 12px var(--vscode-shadow, rgba(0, 0, 0, 0.15));
   position: fixed;
   bottom: 1.25rem;
   left: 50%;
-  transform: translateX(-50%);
+  z-index: 1000;
   display: flex;
   align-items: center;
   width: 90%;
   max-width: 600px;
-  padding: 0.5rem 0.75rem;
+  background: var(--vscode-editorWidget-background);
+  border: 1px solid var(--vscode-widget-border);
   border-radius: 1rem;
+  padding: 0.5rem 0.75rem;
   gap: 0.5rem;
-  z-index: 1000;
-  border: 1px solid var(--vscode-widget-border); /* Consistent border */
+  transform: translateX(-50%);
+  box-shadow: 0 4px 12px var(--vscode-shadow, rgba(0, 0, 0, 0.15));
 }
 
 .input-wrapper textarea {
-  background-color: var(--vscode-input-background);
-  border: 1px solid var(--vscode-input-border);
+  background-color: transparent;
+  border: none;
   color: var(--vscode-input-foreground);
-  font-size: 0.8rem;
   font-family: "Sansation";
+  font-size: 0.8rem;
   padding: 0.75rem 1rem;
-  border-radius: 1rem;
   min-height: 2.5rem;
   max-height: 20rem;
   flex-grow: 1;
@@ -105,7 +103,7 @@ tabs img {
   resize: vertical;
   scrollbar-width: thin;
   scrollbar-color: var(--vscode-scrollbarSlider-background)
-    var(--vscode-input-background); /* Scrollbar colors */
+    var(--vscode-input-background);
 }
 
 .input-wrapper textarea::-webkit-scrollbar {
@@ -163,19 +161,19 @@ tabs img {
 }
 
 .code-btns-container {
-  background-color: var(--vscode-editor-background);
   position: absolute;
   top: -0.5rem;
   right: 0.5rem;
   display: flex;
   flex-wrap: nowrap;
-  overflow-x: auto;
   padding: 0.5rem;
   margin-top: 1rem;
   border-radius: 1rem;
+  background-color: var(--vscode-editor-background);
+  border: 1px solid var(--vscode-widget-border);
+  overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  border: 1px solid var(--vscode-widget-border);
 }
 
 .code-btns-container::-webkit-scrollbar {
@@ -197,11 +195,11 @@ tabs img {
 
 pre,
 .msg-container {
-  background-color: var(--vscode-textBlockQuote-background);
   border-radius: 0.5rem;
   padding: 0.5rem;
-  overflow: auto;
   border: 1px solid var(--vscode-widget-border);
+  background-color: transparent !important;
+  overflow: auto;
 }
 
 .more-button,
@@ -223,21 +221,21 @@ a:hover {
 }
 
 .command-panel {
-  background-color: var(--vscode-editorWidget-background);
-  border: 1px solid var(--vscode-editorWidget-border);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  color: var(--vscode-editor-foreground);
-  transform: translate(-50%, -50%);
-  flex-direction: column;
-  border-radius: 0.5rem;
   position: fixed;
-  padding: 1rem;
+  top: 50%;
+  left: 50%;
   z-index: 1000;
   display: flex;
+  flex-direction: column;
   width: 300px;
-  opacity: 0.65; /* Slightly less transparent */
-  left: 50%;
-  top: 50%;
+  padding: 1rem;
+  background-color: var(--vscode-editorWidget-background);
+  border: 1px solid var(--vscode-editorWidget-border);
+  border-radius: 0.5rem;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  color: var(--vscode-editor-foreground);
+  opacity: 0.65;
 }
 
 .command-button {
@@ -256,9 +254,9 @@ a:hover {
 }
 
 button {
+  border: none;
   transition: opacity 300ms !important;
   opacity: 0.8 !important;
-  border: none;
 }
 
 button:hover {
@@ -272,31 +270,34 @@ button:hover {
 
 .accept-button,
 .reject-button {
-  padding: 0.5rem;
-  border-radius: 0.5rem;
-  border: none;
-  font-family: "Sansation";
-  cursor: pointer;
-  transition: color 0.3s ease;
+  width: 100%;
   margin: 0 auto;
-  background-color: transparent;
-  text-decoration: underline;
-  text-align: center;
+  padding: .75rem;
+  border: 1px solid var(--vscode-editorWidget-border);
+  border-radius: 0.5rem;
+  background-color: var(--vscode-input-background);
+  font-family: "Sansation";
+  font-size: 85%;
   font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+  transition: color 0.3s ease;
+  background-color: transparent;
 }
 
 .accept-button {
-  color: #4caf50;
-}
-
-.accept-button:hover {
-  color: #388e3c;
+  color: var(--vscode-textLink-foreground);
 }
 
 .reject-button {
   color: #f44336;
 }
 
-.reject-button:hover {
-  color: #d32f2f;
+
+
+#logoHolder{
+  width: 100%;
+  text-align: center;
+  margin-top: 7rem;
+  transition: all 300ms;
 }

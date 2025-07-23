@@ -7,17 +7,22 @@
     ${styles} ${scripts}
   </head>
   <body>
-    <div class="headerContainer">
-      ${tabView}
-    </div>
+    <div class="headerContainer">${tabView}</div>
     <div>
       <div class="space"></div>
+      <div id="logoHolder">
+        <img src="${logo4.svg}" alt="NaBotX Logo" width="110rem" />
+        <br/>
+        <h3>Start to code with N8X</h3>
+        <span>Type / to use commands</span>
+      </div>
       <div
         id="chatMessages"
         role="log"
         aria-live="polite"
         aria-relevant="additions"
       ></div>
+      <div class="space"></div>
       <div class="space"></div>
     </div>
     <div class="input-wrapper">
