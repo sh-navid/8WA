@@ -19,6 +19,7 @@ const {
     undoCodeBlock
 } = require("./helpers/extensionHelper");
 const { load, uri, checkConfiguration, handleN8xJson, handleGitignore } = require("./helpers/fileSystemHelper");
+const { callGitDiscard } = require("./services/gitService");
 
 class NaBotXSidePanelProvider {
     constructor(extensionUri) {
@@ -178,23 +179,7 @@ class NaBotXSidePanelProvider {
     }
 
     async _callGitDiscard() {
-        try {
-            if (!vscode.workspace.workspaceFolders) {
-                vscode.window.showErrorMessage("No workspace folder open.");
-                return;
-            }
-
-            const workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
-            const terminal = vscode.window.createTerminal({
-                name: 'Git Discard',
-                cwd: workspaceFolder,
-            });
-            terminal.show();
-            terminal.sendText('git restore .');
-
-        } catch (error) {
-            vscode.window.showErrorMessage(`Failed to discard changes: ${error.message}`);
-        }
+        await callGitDiscard();
     }
 
     _getHtmlForWebview(webview) {
