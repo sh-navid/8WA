@@ -44,6 +44,8 @@ async function replaceActiveFile(code) {
       doc.positionAt(doc.getText().length)
     );
     await editor.edit(eb => eb.replace(fullRange, code));
+    // Save the document after replacing the content
+    await doc.save();
   } else {
     vscode.window.showErrorMessage('No active file to replace content.');
   }
