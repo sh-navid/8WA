@@ -7,7 +7,7 @@ const {
   ensureFileExists,
   openFile,
   getRelativePath
-} = require('../utils/fileUtils');
+} = require('../helpers/fileHelper');
 
 async function openCodeFile(code) {
   const filePathMatch = code.match(/^.*?\[\[(.*?)\]\]/);
