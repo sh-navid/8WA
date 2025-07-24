@@ -1,5 +1,5 @@
 /*[[src/panel.js]]*/
-import TabManager from './components/tabManager.js';
+// import TabManager from './components/tabManager.js';
 
 let msgArray = [
   {
@@ -12,15 +12,8 @@ let commandPanelVisible = false;
 let filteredCommands = [];
 
 const commands = [
-  { name: "/time", description: "Show the current time" },
-  { name: "/date", description: "Show the current date" },
-  { name: "/structure", description: "Build project structure" },
-  { name: "/task", description: "The /task feature is not implemented yet" },
-  { name: "/color", description: "The /color feature is not implemented yet" },
-  {
-    name: "/calendar",
-    description: "The /calendar feature is not implemented yet",
-  },
+  { name: "/tree", description: "Build project structure" },
+  { name: "/commit", description: "Generate commit message" },
 ];
 
 function showCommandPanel(filter = "") {
@@ -431,28 +424,13 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!text) return;
 
     switch (text) {
-      case "/time":
-        text = `Current time: ${new Date().toLocaleTimeString()}`;
-        proceedToSend(text, text, false);
-        return;
-      case "/date":
-        text = `Current date: ${new Date().toLocaleDateString()}`;
-        proceedToSend(text, text, false);
-        return;
-      case "/structure":
+      case "/tree":
         vscode.postMessage({ command: "buildProjectStructure" });
         return;
-      case "/task":
-        text = `The /task feature is not implemented yet`;
-        proceedToSend(text, text, false);
-        return;
-      case "/color":
-        text = `The /color feature is not implemented yet`;
-        proceedToSend(text, text, false);
-        return;
-      case "/calendar":
-        text = `the /calendar feature is not implemented yet`;
-        proceedToSend(text, text, false);
+      case "/commit":
+        text = `Generating commit message`;
+        let prompt = `Do not output any code or description; just make a commit message`;
+        proceedToSend(text, prompt, true);
         return;
     }
 
@@ -465,5 +443,5 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  new TabManager("#tabs", ".addTab", ".tabTemplate");
+  // new TabManager("#tabs", ".addTab", ".tabTemplate");
 });

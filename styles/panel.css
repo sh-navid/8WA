@@ -298,8 +298,7 @@ button:hover {
   display: flex;
   flex-direction: column;
   width: 300px;
-  padding: 1rem;
-  background-color: var(--vscode-editorWidget-background);
+  padding: .5rem;
   border: 1px solid var(--vscode-editorWidget-border);
   border-radius: 0.5rem;
   transform: translate(-50%, -50%);
@@ -309,14 +308,14 @@ button:hover {
 }
 
 .command-button {
-  margin: 0.5rem;
-  padding: 0.5rem 1rem;
+  margin: 0.2rem;
+  padding: 0.5rem 0.5rem;
+  text-align: left;
   border: none;
-  border-radius: 0.5rem;
+  border-radius: 0.25rem;
   cursor: pointer;
-  background-color: var(--vscode-button-background);
   color: var(--vscode-button-foreground);
-  font-family: "Sansation";
+  background-color: transparent;
 }
 
 .command-button:hover {
