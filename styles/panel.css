@@ -65,6 +65,7 @@ tabs img {
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -272,7 +273,7 @@ button:hover {
 .reject-button {
   width: 100%;
   margin: 0 auto;
-  padding: .75rem;
+  padding: 0.75rem;
   border: 1px solid var(--vscode-editorWidget-border);
   border-radius: 0.5rem;
   background-color: var(--vscode-input-background);
@@ -293,11 +294,73 @@ button:hover {
   color: #f44336;
 }
 
-
-
-#logoHolder{
+#logoHolder {
   width: 100%;
   text-align: center;
   margin-top: 7rem;
   transition: all 300ms;
+}
+
+tabs {
+  display: flex;
+  align-items: center;
+  padding: 0.4rem 0;
+  background-color: var(--vscode-sideBar-background);
+  border-bottom: 1px solid var(--vscode-widget-border);
+}
+
+tab {
+  position: relative;
+  min-width: 3rem;
+  margin: 0 0.3rem;
+  padding: 0.1rem 0.6rem;
+  cursor: pointer;
+  border: 1px solid var(--vscode-editorWidget-border);
+  border-radius: 0.25rem;
+  height: 1.79rem;
+  line-height: 1.6rem;
+}
+
+tab.active {
+  background-color: var(--vscode-input-background);
+  color: var(--vscode-editor-foreground);
+  border-bottom: none;
+}
+
+.addTab,
+.remTab {
+  cursor: pointer;
+  transition: opacity 300ms;
+}
+
+tabs .addTab {
+  border: none;
+  padding-right: 0.5rem;
+  width: 1.2rem;
+}
+
+tabs .remTab {
+  position: absolute;
+  top: 0.1rem;
+  right: 0.3rem;
+  width: 0.7rem;
+  height: 0.7rem;
+  transform: rotate(45deg);
+}
+
+tabs .addTab:hover,
+tabs .remTab:hover {
+  opacity: 0.5;
+}
+
+tabs select {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid var(--vscode-editorWidget-border);
+  background-color: var(--vscode-input-background);
+  color: orange;
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.7rem;
+  cursor: pointer;
 }
