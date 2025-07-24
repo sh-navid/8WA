@@ -14,6 +14,10 @@ let filteredCommands = [];
 const commands = [
   { name: "/tree", description: "Build project structure" },
   { name: "/commit", description: "Generate commit message" },
+  {
+    name: "/break",
+    description: "Think to break project into smaller more clear structure",
+  },
 ];
 
 function showCommandPanel(filter = "") {
@@ -87,6 +91,7 @@ function clearChat() {
     },
   ];
   $("#chatMessages").html("");
+  $("#logoHolder").show();
 }
 
 function highlightCode(codeElement, code) {
@@ -317,9 +322,9 @@ function addBotMessage(response) {
       });
 
       rejectButton.click(function () {
-          vscode.postMessage({ command: "callGitDiscard"});
-          acceptButton.show();
-          rejectButton.hide();
+        vscode.postMessage({ command: "callGitDiscard" });
+        acceptButton.show();
+        rejectButton.hide();
       });
     }
 
@@ -383,7 +388,12 @@ window.addEventListener("message", (event) => {
   }
 });
 
-async function proceedToSend(userText, combinedMessage, send = true, type = null) {
+async function proceedToSend(
+  userText,
+  combinedMessage,
+  send = true,
+  type = null
+) {
   addMessage(userText, true, type);
   $("#logoHolder").hide();
   $("#userInput").val("");
@@ -423,13 +433,20 @@ document.addEventListener("DOMContentLoaded", function () {
     let text = $("#userInput").val().trim();
     if (!text) return;
 
+    let prompt = "";
+
     switch (text) {
       case "/tree":
         vscode.postMessage({ command: "buildProjectStructure" });
         return;
       case "/commit":
         text = `Generating commit message`;
-        let prompt = `Do not output any code or description; just make a commit message`;
+        prompt = `Do not output any code or description; just make a commit message`;
+        proceedToSend(text, prompt, true);
+        return;
+      case "/break":
+        text = `Generating commit message`;
+        prompt = `Do not output any code; Think about how to make project structure more clean by moving files, methods etc to repositories, services, helpers, components, views. models and such.`;
         proceedToSend(text, prompt, true);
         return;
     }
