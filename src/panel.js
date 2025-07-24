@@ -413,24 +413,27 @@ document.addEventListener("DOMContentLoaded", function () {
   clearChat();
 
   $("#userInput").on("keydown", (e) => {
-    if (e.key === "/") {
+  if (e.key === "Enter") {
+    $("#sendButton").click();
+    e.preventDefault();
+    hideCommandPanel();
+  } else if (e.key === "Escape") {
+    hideCommandPanel();
+  } else if (e.key === "/") {
+    if ($("#userInput").val() === "") {
       showCommandPanel("/");
-      e.preventDefault();
-    } else if (e.key === "Enter") {
-      $("#sendButton").click();
-      e.preventDefault();
-      hideCommandPanel();
-    } else if (e.key === "Escape") {
-      hideCommandPanel();
     } else {
-      if ($("#userInput").val().startsWith("/")) {
-        const filterText = $("#userInput").val();
-        showCommandPanel(filterText);
-      } else {
-        hideCommandPanel();
-      }
+      hideCommandPanel();
     }
-  });
+  } else {
+    if ($("#userInput").val().startsWith("/")) {
+      const filterText = $("#userInput").val() + e.key;
+      showCommandPanel(filterText);
+    } else {
+      hideCommandPanel();
+    }
+  }
+});
 
   $("#sendButton").click(() => {
     let text = $("#userInput").val().trim();
