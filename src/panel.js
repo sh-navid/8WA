@@ -440,14 +440,21 @@ document.addEventListener("DOMContentLoaded", function () {
         vscode.postMessage({ command: "buildProjectStructure" });
         return;
       case "/commit":
-        text = `Generating commit message`;
+        text = `Generating commit message...`;
         prompt = `Do not output any code or description; just make a commit message`;
         proceedToSend(text, prompt, true);
         return;
       case "/break":
-        text = `Generating commit message`;
-        prompt = `Do not output any code; Think about how to make project structure more clean by moving files, methods etc to repositories, services, helpers, components, views. models and such.`;
-        proceedToSend(text, prompt, true);
+        vscode.postMessage({ command: "buildProjectStructure" });
+        // FIXME: also add project prefrences here
+        setTimeout(() => {
+          vscode.postMessage({ command: "buildPreferencesStructure" });
+        }, 1000);
+        setTimeout(() => {
+          text = `Thinking about project structure...`;
+          prompt = `Do not output any code; Think about how to make project structure more clean by moving files, methods etc to repositories, services, helpers, components, views. models and such.`;
+          proceedToSend(text, prompt, true);
+        }, 2000);
         return;
     }
 

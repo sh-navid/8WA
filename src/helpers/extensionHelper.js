@@ -126,6 +126,12 @@ async function buildProjectStructure(webviewView) {
   }
 }
 
+async function buildPreferencesStructure(webviewView) {
+  //FIXME: you should find n8x.json file in root folder of structure and return value of key "prefrences"
+}
+
+
+
 async function isExcludedFromChat(relativePath) {
   if (!vscode.workspace.workspaceFolders) {
     return false;
@@ -283,9 +289,10 @@ async function undoCodeBlock(provider) {
 }
 
 module.exports = {
+  buildPreferencesStructure,
+  cloneAndModifyActiveFile,
   buildProjectStructure,
   isExcludedFromChat,
-  cloneAndModifyActiveFile,
   diffCodeBlock,
   undoCodeBlock
 };
