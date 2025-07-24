@@ -1,6 +1,4 @@
 /*[[src/panel.js]]*/
-// import TabManager from './components/tabManager.js';
-
 let msgArray = [
   {
     role: "assistant",
@@ -385,6 +383,11 @@ window.addEventListener("message", (event) => {
       msgArray.push({ role: "user", content: structure });
       proceedToSend(structure, structure, false, "structure");
       break;
+    case "receiveProjectPreferences":
+      const preferences = message.preferences;
+      msgArray.push({ role: "user", content: preferences });
+      proceedToSend(preferences, preferences, false, "preferences");
+      break;
   }
 });
 
@@ -446,7 +449,6 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       case "/break":
         vscode.postMessage({ command: "buildProjectStructure" });
-        // FIXME: also add project prefrences here
         setTimeout(() => {
           vscode.postMessage({ command: "buildPreferencesStructure" });
         }, 1000);
@@ -466,6 +468,4 @@ document.addEventListener("DOMContentLoaded", function () {
       hideCommandPanel();
     }
   });
-
-  // new TabManager("#tabs", ".addTab", ".tabTemplate");
 });
