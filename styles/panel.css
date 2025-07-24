@@ -1,3 +1,4 @@
+/*[[styles/panel.css]]*/
 @font-face {
   font-family: "Sansation";
   src: url("../assets/fonts/Sansation-Regular.woff2") format("woff2"),
@@ -7,6 +8,7 @@
   font-style: normal;
 }
 
+/* Resets and Transitions */
 * {
   box-sizing: border-box;
   transition: background-color 0.3s ease, color 0.3s ease,
@@ -26,6 +28,7 @@ body {
   user-select: none;
 }
 
+/* Header Styles */
 .headerContainer {
   position: fixed;
   top: 0;
@@ -36,6 +39,15 @@ body {
   border-bottom: 1px solid var(--vscode-panel-border);
 }
 
+/* Tab Styles */
+tabs {
+  display: flex;
+  align-items: center;
+  padding: 0.4rem 0;
+  background-color: var(--vscode-sideBar-background);
+  border-bottom: 1px solid var(--vscode-widget-border);
+}
+
 tabs img {
   width: 2rem;
   height: auto;
@@ -43,6 +55,63 @@ tabs img {
   transition: width 0.3s ease, height 0.3s ease;
 }
 
+tab {
+  position: relative;
+  min-width: 3rem;
+  margin: 0 0.3rem;
+  padding: 0.1rem 0.6rem;
+  cursor: pointer;
+  border: 1px solid var(--vscode-editorWidget-border);
+  border-radius: 0.25rem;
+  height: 1.79rem;
+  line-height: 1.6rem;
+}
+
+tab.active {
+  background-color: var(--vscode-input-background);
+  color: var(--vscode-editor-foreground);
+  border-bottom: none;
+}
+
+.addTab,
+.remTab {
+  cursor: pointer;
+  transition: opacity 300ms;
+}
+
+tabs .addTab {
+  border: none;
+  padding-right: 0.5rem;
+  width: 1.2rem;
+}
+
+tabs .remTab {
+  position: absolute;
+  top: 0.1rem;
+  right: 0.3rem;
+  width: 0.7rem;
+  height: 0.7rem;
+  transform: rotate(45deg);
+}
+
+tabs .addTab:hover,
+tabs .remTab:hover {
+  opacity: 0.5;
+}
+
+tabs select {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid var(--vscode-editorWidget-border);
+  background-color: var(--vscode-input-background);
+  color: orange;
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.7rem;
+  cursor: pointer;
+}
+
+/* Chat Message Styles */
 #chatMessages {
   display: flex;
   flex-direction: column;
@@ -72,6 +141,7 @@ tabs img {
   }
 }
 
+/* Input Wrapper Styles */
 .input-wrapper {
   position: fixed;
   bottom: 1.25rem;
@@ -140,27 +210,7 @@ tabs img {
   color: var(--vscode-button-hoverForeground);
 }
 
-@media (max-width: 480px) {
-  .input-wrapper {
-    width: 95%;
-    padding: 0.5rem 0.75rem;
-  }
-
-  .input-wrapper button.icon-btn {
-    font-size: 1rem;
-    padding: 0.4rem;
-  }
-
-  header img {
-    width: 5rem;
-    height: auto;
-  }
-
-  header label {
-    font-size: 1rem;
-  }
-}
-
+/* Code Button Container Styles */
 .code-btns-container {
   position: absolute;
   top: -0.5rem;
@@ -194,6 +244,7 @@ tabs img {
   opacity: 0.5;
 }
 
+/* Code and Message Container Styles */
 pre,
 .msg-container {
   border-radius: 0.5rem;
@@ -203,6 +254,7 @@ pre,
   overflow: auto;
 }
 
+/* Link and Button Styles */
 .more-button,
 a {
   background-color: transparent;
@@ -217,10 +269,27 @@ a:hover {
   color: var(--vscode-textLink-activeForeground);
 }
 
+button {
+  border: none;
+  transition: opacity 300ms !important;
+  opacity: 0.8 !important;
+}
+
+button:hover {
+  opacity: 0.5 !important;
+}
+
+/* Utility Styles */
 .short-text {
   color: var(--vscode-disabledForeground);
 }
 
+.space {
+  display: block;
+  height: 3rem;
+}
+
+/* Command Panel Styles */
 .command-panel {
   position: fixed;
   top: 50%;
@@ -254,21 +323,7 @@ a:hover {
   background-color: var(--vscode-button-hoverBackground);
 }
 
-button {
-  border: none;
-  transition: opacity 300ms !important;
-  opacity: 0.8 !important;
-}
-
-button:hover {
-  opacity: 0.5 !important;
-}
-
-.space {
-  display: block;
-  height: 3rem;
-}
-
+/* Special Buttons */
 .accept-button,
 .reject-button {
   width: 100%;
@@ -294,6 +349,7 @@ button:hover {
   color: #f44336;
 }
 
+/* Logo Holder Style */
 #logoHolder {
   width: 100%;
   text-align: center;
@@ -301,66 +357,24 @@ button:hover {
   transition: all 300ms;
 }
 
-tabs {
-  display: flex;
-  align-items: center;
-  padding: 0.4rem 0;
-  background-color: var(--vscode-sideBar-background);
-  border-bottom: 1px solid var(--vscode-widget-border);
-}
+/* Media Queries */
+@media (max-width: 480px) {
+  .input-wrapper {
+    width: 95%;
+    padding: 0.5rem 0.75rem;
+  }
 
-tab {
-  position: relative;
-  min-width: 3rem;
-  margin: 0 0.3rem;
-  padding: 0.1rem 0.6rem;
-  cursor: pointer;
-  border: 1px solid var(--vscode-editorWidget-border);
-  border-radius: 0.25rem;
-  height: 1.79rem;
-  line-height: 1.6rem;
-}
+  .input-wrapper button.icon-btn {
+    font-size: 1rem;
+    padding: 0.4rem;
+  }
 
-tab.active {
-  background-color: var(--vscode-input-background);
-  color: var(--vscode-editor-foreground);
-  border-bottom: none;
-}
+  header img {
+    width: 5rem;
+    height: auto;
+  }
 
-.addTab,
-.remTab {
-  cursor: pointer;
-  transition: opacity 300ms;
-}
-
-tabs .addTab {
-  border: none;
-  padding-right: 0.5rem;
-  width: 1.2rem;
-}
-
-tabs .remTab {
-  position: absolute;
-  top: 0.1rem;
-  right: 0.3rem;
-  width: 0.7rem;
-  height: 0.7rem;
-  transform: rotate(45deg);
-}
-
-tabs .addTab:hover,
-tabs .remTab:hover {
-  opacity: 0.5;
-}
-
-tabs select {
-  appearance: none;
-  -webkit-appearance: none;
-  border: 1px solid var(--vscode-editorWidget-border);
-  background-color: var(--vscode-input-background);
-  color: orange;
-  padding: 0.3rem 0.5rem;
-  border-radius: 0.25rem;
-  font-size: 0.7rem;
-  cursor: pointer;
+  header label {
+    font-size: 1rem;
+  }
 }
