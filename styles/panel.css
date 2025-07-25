@@ -1,5 +1,5 @@
 @font-face {
-  font-family: "Sansation";
+  font-family: "AppFont";
   src: url("../assets/fonts/Sansation-Regular.woff2") format("woff2"),
     url("../assets/fonts/Sansation-Regular.woff") format("woff"),
     url("../assets/fonts/Sansation-Regular.ttf") format("truetype");
@@ -12,12 +12,13 @@
   box-sizing: border-box;
   transition: background-color 0.3s ease, color 0.3s ease,
     border-color 0.3s ease, opacity 0.3s ease;
+  font-family: "AppFont" !important;
 }
 
 body {
   background-color: var(--vscode-sideBar-background);
   color: var(--vscode-editor-foreground);
-  font-family: "Sansation";
+
   margin: 0;
   padding: 0;
   height: 100vh;
@@ -163,7 +164,6 @@ tabs select {
   background-color: transparent;
   border: none;
   color: var(--vscode-input-foreground);
-  font-family: "Sansation";
   font-size: 0.8rem;
   padding: 0.75rem 1rem;
   min-height: 2.5rem;
@@ -330,7 +330,6 @@ button:hover {
   border: 1px solid var(--vscode-editorWidget-border);
   border-radius: 0.5rem;
   background-color: var(--vscode-input-background);
-  font-family: "Sansation";
   font-size: 85%;
   font-weight: bold;
   cursor: pointer;
