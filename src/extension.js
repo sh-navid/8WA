@@ -167,6 +167,7 @@ class NaBotXSidePanelProvider {
       this._view.webview.postMessage({
         command: "addTextToChat",
         path: relativePath,
+        raw: selectedText,
         text:
           commentPath(relativePath, "[[" + relativePath + "]]") +
           "\n" +
