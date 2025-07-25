@@ -1,4 +1,3 @@
-/*[[styles/panel.css]]*/
 @font-face {
   font-family: "Sansation";
   src: url("../assets/fonts/Sansation-Regular.woff2") format("woff2"),
@@ -298,7 +297,7 @@ button:hover {
   display: flex;
   flex-direction: column;
   width: 300px;
-  padding: .5rem;
+  padding: 0.5rem;
   border: 1px solid var(--vscode-editorWidget-border);
   border-radius: 0.5rem;
   transform: translate(-50%, -50%);
@@ -376,4 +375,12 @@ button:hover {
   header label {
     font-size: 1rem;
   }
+}
+
+.code-block-file-name {
+  font-weight: bold;
+  position: block;
+  cursor: pointer;
+  color: white;
+  padding-bottom: 0.2rem;
 }
