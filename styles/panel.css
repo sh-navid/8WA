@@ -1,8 +1,6 @@
 @font-face {
   font-family: "AppFont";
-  src: url("../assets/fonts/Sansation-Regular.woff2") format("woff2"),
-    url("../assets/fonts/Sansation-Regular.woff") format("woff"),
-    url("../assets/fonts/Sansation-Regular.ttf") format("truetype");
+  src: url("../assets/fonts/Sansation-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
