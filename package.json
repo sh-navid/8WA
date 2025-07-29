@@ -3,7 +3,7 @@
   "displayName": "NaBotX",
   "description": "This VSCode extension helps developers code more efficiently with AI assistance. Currently, it serves as a simple alternative to Copilot or Cursor.",
   "publisher": "sh-navid",
-  "version": "0.2.322",
+  "version": "0.2.402",
   "icon": "assets/logo.png",
   "repository": {
     "type": "git",
@@ -110,19 +110,8 @@
       }
     }
   },
-  "scripts": {
-    "lint": "eslint .",
-    "pretest": "npm run lint",
-    "test": "vscode-test"
-  },
-  "dependencies": {
-    "react": "^17.0.0",
-    "react-dom": "^17.0.0",
-    "react-router-dom": "^6.0.0",
-    "styled-components": "^5.3.0"
-  },
+  "scripts": {},
   "devDependencies": {
-    "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
     "@types/vscode": "^1.100.0",
     "@vscode/test-cli": "^0.0.10",
@@ -135,6 +124,8 @@
     "views/**/*",
     "configs/**/*",
     "styles/**/*",
-    "assets/**/*"
-  ]
+    "assets/**/*",
+    "dist/*"
+  ],
+  "activation": true
 }

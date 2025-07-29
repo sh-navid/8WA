@@ -207,7 +207,6 @@ class NaBotXSidePanelProvider {
 
   _getHtmlForWebview(webview) {
     let html = load(this, "views", "panel.html");
-    const tabView = load(this, "views", "tab.html");
     const defaultConfig = { path: "", token: "", model: "" };
     const configuration = vscode.workspace.getConfiguration("nabotx");
     const pathValue = configuration.get("path") || defaultConfig.path;
@@ -233,7 +232,6 @@ class NaBotXSidePanelProvider {
       .join("");
 
     html = html
-      .replaceAll(/\$\{tabView\}/g, tabView)
       .replaceAll(/\$\{path\}/g, pathValue)
       .replaceAll(/\$\{token\}/g, tokenValue)
       .replaceAll(/\$\{model\}/g, modelValue)

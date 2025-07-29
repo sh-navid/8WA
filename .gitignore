@@ -1,8 +1,11 @@
 # Folders
 node_modules
+vsix
 
 # Files
 *-lock.json
 *.vsix
 n8x.json
 *.n8x.*
+.n8x
+dist

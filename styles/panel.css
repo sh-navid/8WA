@@ -10,7 +10,7 @@
   box-sizing: border-box;
   transition: background-color 0.3s ease, color 0.3s ease,
     border-color 0.3s ease, opacity 0.3s ease;
-  font-family: "AppFont" !important;
+  font-family: "Sansation" !important;
 }
 
 body {
@@ -37,90 +37,20 @@ body {
   border-bottom: 1px solid var(--vscode-panel-border);
 }
 
-/* Tab Styles */
-tabs {
-  display: flex;
-  align-items: center;
-  padding: 0.4rem 0;
-  background-color: var(--vscode-sideBar-background);
-  border-bottom: 1px solid var(--vscode-widget-border);
-}
-
-tabs img {
-  width: 2rem;
-  height: auto;
-  filter: invert(40%);
-  transition: width 0.3s ease, height 0.3s ease;
-}
-
-tab {
-  position: relative;
-  min-width: 3rem;
-  margin: 0 0.3rem;
-  padding: 0.1rem 0.6rem;
-  cursor: pointer;
-  border: 1px solid var(--vscode-editorWidget-border);
-  border-radius: 0.25rem;
-  height: 1.79rem;
-  line-height: 1.6rem;
-}
-
-tab.active {
-  background-color: var(--vscode-input-background);
-  color: var(--vscode-editor-foreground);
-  border-bottom: none;
-}
-
-.addTab,
-.remTab {
-  cursor: pointer;
-  transition: opacity 300ms;
-}
-
-tabs .addTab {
-  border: none;
-  padding-right: 0.5rem;
-  width: 1.2rem;
-}
-
-tabs .remTab {
-  position: absolute;
-  top: 0.1rem;
-  right: 0.3rem;
-  width: 0.7rem;
-  height: 0.7rem;
-  transform: rotate(45deg);
-}
-
-tabs .addTab:hover,
-tabs .remTab:hover {
-  opacity: 0.5;
-}
-
-tabs select {
-  appearance: none;
-  -webkit-appearance: none;
-  border: 1px solid var(--vscode-editorWidget-border);
-  background-color: var(--vscode-input-background);
-  color: orange;
-  padding: 0.3rem 0.5rem;
-  border-radius: 0.25rem;
-  font-size: 0.7rem;
-  cursor: pointer;
-}
-
 /* Chat Message Styles */
 #chatMessages {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   padding: 1rem;
-  margin: 1rem;
-  border-radius: 0.5rem;
-  gap: 0.5rem;
+  margin: 0.25rem !important;
+  border-radius: 0.25rem;
+  gap: 0.1rem;
   overflow-y: auto;
   scrollbar-width: auto;
   user-select: text;
+
+  /* background-color: #f44336 !important; */
 }
 
 #chatMessages > * {
@@ -142,20 +72,20 @@ tabs select {
 /* Input Wrapper Styles */
 .input-wrapper {
   position: fixed;
-  bottom: 1.25rem;
+  bottom: .9rem;
   left: 50%;
   z-index: 1000;
   display: flex;
   align-items: center;
-  width: 90%;
   max-width: 600px;
   background: var(--vscode-editorWidget-background);
   border: 1px solid var(--vscode-widget-border);
-  border-radius: 1rem;
-  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
   gap: 0.5rem;
   transform: translateX(-50%);
   box-shadow: 0 4px 12px var(--vscode-shadow, rgba(0, 0, 0, 0.15));
+  width: 97%;
+  padding: 0.4rem 0.65rem;
 }
 
 .input-wrapper textarea {
@@ -164,7 +94,7 @@ tabs select {
   color: var(--vscode-input-foreground);
   font-size: 0.8rem;
   padding: 0.75rem 1rem;
-  min-height: 2.5rem;
+  min-height: 8rem;
   max-height: 20rem;
   flex-grow: 1;
   outline: none;
@@ -172,6 +102,7 @@ tabs select {
   scrollbar-width: thin;
   scrollbar-color: var(--vscode-scrollbarSlider-background)
     var(--vscode-input-background);
+  margin-top: 1.5rem !important;
 }
 
 .input-wrapper textarea::-webkit-scrollbar {
@@ -283,7 +214,7 @@ button:hover {
 
 .space {
   display: block;
-  height: 3rem;
+  height: 3.1rem;
 }
 
 /* Command Panel Styles */
@@ -334,6 +265,8 @@ button:hover {
   text-align: center;
   transition: color 0.3s ease;
   background-color: transparent;
+  margin-bottom: 5em;
+  position: relative;
 }
 
 .accept-button {
@@ -348,15 +281,15 @@ button:hover {
 #logoHolder {
   width: 100%;
   text-align: center;
-  margin-top: 7rem;
+  margin-top: 8rem;
   transition: all 300ms;
 }
 
 /* Media Queries */
 @media (max-width: 480px) {
   .input-wrapper {
-    width: 95%;
-    padding: 0.5rem 0.75rem;
+    width: 97%;
+    padding: 0.4rem 0.65rem;
   }
 
   .input-wrapper button.icon-btn {
@@ -380,4 +313,56 @@ button:hover {
   cursor: pointer;
   color: white;
   padding-bottom: 0.2rem;
+}
+
+.input-button-wrapper * {
+  display: block;
+}
+
+/* Agent Mode Styles */
+.input-wrapper .agent-mode {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  color: var(--vscode-input-foreground);
+  margin-left: auto; /* Push to the right */
+  position: absolute;
+  top: 0.25rem;
+  left: 1rem;
+}
+
+.input-wrapper .agent-mode label {
+  cursor: pointer;
+}
+
+.input-wrapper .agent-mode input[type="checkbox"] {
+  appearance: none;
+  width: 1.2rem;
+  height: 1.2rem;
+  background-color: var(--vscode-input-background);
+  border: 1px solid var(--vscode-widget-border);
+  border-radius: 0.2rem;
+  cursor: pointer;
+  position: relative;
+}
+
+.input-wrapper .agent-mode input[type="checkbox"]:checked {
+  background-color: var(--vscode-textLink-foreground);
+  border-color: var(--vscode-textLink-foreground);
+}
+
+.input-wrapper .agent-mode input[type="checkbox"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--vscode-focusBorder);
+}
+
+.input-wrapper .agent-mode input[type="checkbox"]:checked::before {
+  content: "\2713"; /* Unicode checkmark */
+  font-size: 1rem;
+  color: var(--vscode-input-foreground);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

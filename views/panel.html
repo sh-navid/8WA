@@ -7,14 +7,15 @@
     ${styles} ${scripts}
   </head>
   <body>
-    <div class="headerContainer">${tabView}</div>
     <div>
-      <div class="space"></div>
       <div id="logoHolder">
         <img src="${logo4.svg}" alt="NaBotX Logo" width="110rem" />
-        <br/>
+        <br />
         <h3>Start to code with N8X</h3>
         <span>Type / to use commands</span>
+        <br/>
+        <br/>
+        <span>Use <kbd>Ctrl</kbd>+<kbd>Enter</kbd> to send</span>
       </div>
       <div
         id="chatMessages"
@@ -24,11 +25,15 @@
       ></div>
       <div class="space"></div>
       <div class="space"></div>
+      <div class="space"></div>
+      <div class="space"></div>
     </div>
+
     <div class="input-wrapper">
-      <button onclick="clearChat()" class="icon-btn" title="Clear Chat">
-        <img width="15rem" src="${clear.png}" alt="Clear Chat" />
-      </button>
+      <div class="agent-mode">
+        <input type="checkbox" id="agentModeCheckbox" />
+        <label for="agentModeCheckbox">Agent Mode</label>
+      </div>
       <textarea
         id="userInput"
         placeholder="Type your prompt or use /command"
@@ -36,9 +41,19 @@
         aria-label="Message input"
         autofocus
       ></textarea>
-      <button id="sendButton" class="icon-btn" title="Send Message">
-        <img width="15rem" src="${send.png}" alt="Send Message" />
-      </button>
+
+      <div class="input-button-wrapper">
+        <button onclick="clearChat()" class="icon-btn" title="Clear Chat">
+          <img width="15rem" src="${clear.png}" />
+        </button>
+        <button
+          id="sendButton"
+          class="icon-btn"
+          title="Send Message to ${model}"
+        >
+          <img width="15rem" src="${send.png}" />
+        </button>
+      </div>
     </div>
 
     <script>
