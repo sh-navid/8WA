@@ -71,6 +71,11 @@ async function handleN8xJson() {
         console.log('Added "tasks" to n8x.json.');
       }
 
+      if (await ensurePropertyExists(n8xJsonContent, "story", [])) {
+        modified = true;
+        console.log('Added "story" to n8x.json.');
+      }
+
       if (await ensurePropertyExists(n8xJsonContent, "prefrences", {})) {
         modified = true;
         console.log('Added "prefrences" to n8x.json.');

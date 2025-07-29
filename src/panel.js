@@ -1,4 +1,3 @@
-/*[[src/panel.js]]*/
 let msgArray = [
   {
     role: "assistant",
@@ -96,11 +95,15 @@ function highlightCode(codeElement, code) {
   Prism.highlightElement(codeElement[0]);
 }
 
-function addMessage(text, fromUser = true, type = null) {
+function addMessage(file, text, fromUser = true, type = null) {
   let msgDiv = $("<div>")
     .addClass("msg-container")
     .addClass("message")
     .addClass(fromUser ? "user" : "bot");
+
+  if ((file + "").trim() !== "") {
+    msgDiv.append(`<div class='code-block-file-name'>${file}</div>`);
+  }
 
   if (type && type === "structure") {
     msgDiv = $("<pre>")
@@ -163,6 +166,8 @@ function addBotMessage(response) {
     msgDiv.find("pre code").each(function () {
       const codeElement = $(this);
       const code = codeElement.text();
+      // Identify if the code block is a terminal script, e.g., has #[[Terminal]] on the first line
+      const isTerminalCode = code.trim().startsWith("#[[Terminal]]");
 
       highlightCode(codeElement, code);
 
@@ -252,15 +257,22 @@ function addBotMessage(response) {
         });
 
       replaceBtn.click(() => {
-        vscode.postMessage({ command: "replaceActiveFile", code });
-        replaceBtn.hide();
-        diffBtn.show();
-        undoBtn.show();
+        // Use copyToTerminal command when the code block is a terminal script
+        const replaceCommand = isTerminalCode
+          ? "copyToTerminal"
+          : "replaceActiveFile";
+        vscode.postMessage({ command: replaceCommand, code });
+        if(!isTerminalCode){
+
+          replaceBtn.hide();
+          diffBtn.show();
+          undoBtn.show();
+        }
       });
 
       codeElement
         .parent()
-        .find(".code-btns-container img:eq(3)")
+        .find(".code-btns-container img:eq(2)")
         .click(() => {
           vscode.postMessage({ command: "copyCodeBlock", code });
         });
@@ -306,11 +318,17 @@ function addBotMessage(response) {
         codeBlocks.each(function () {
           const codeElement = $(this);
           const code = codeElement.text();
+          // Use copyToTerminal command when the code block is a terminal script
+          const isTerminalCode = code.trim().startsWith("#[[Terminal]]");
+          const replaceCommand = isTerminalCode
+            ? "copyToTerminal"
+            : "replaceActiveFile";
+
           setTimeout(() => {
             vscode.postMessage({ command: "openCodeFile", code });
 
             setTimeout(() => {
-              vscode.postMessage({ command: "replaceActiveFile", code });
+              vscode.postMessage({ command: replaceCommand, code });
             }, 1000);
           }, delay);
           delay += 2000;
@@ -362,7 +380,7 @@ async function sendToLLM(message) {
             content:
               "Error communicating with AI: " +
               error.message +
-              ` <a href="#" onclick="proceedToSend('Retry...','Please review chats and respond again')">Retry...</a>`,
+              ` <a href="#" onclick="proceedToSend('','Retry...','Please review chats and respond again')">Retry...</a>`,
           },
         },
       ],
@@ -376,28 +394,35 @@ window.addEventListener("message", (event) => {
   switch (message.command) {
     case "addTextToChat":
       msgArray.push({ role: "user", content: message.text });
-      addMessage(message.text, true);
+      addMessage(message.path, message.raw, true);
       break;
     case "receiveProjectStructure":
       const structure = message.structure;
       msgArray.push({ role: "user", content: structure });
-      proceedToSend(structure, structure, false, "structure");
+      proceedToSend(message.path, structure, structure, false, "structure");
       break;
     case "receiveProjectPreferences":
       const preferences = message.preferences;
       msgArray.push({ role: "user", content: preferences });
-      proceedToSend(preferences, preferences, false, "preferences");
+      proceedToSend(
+        message.path,
+        preferences,
+        preferences,
+        false,
+        "preferences"
+      );
       break;
   }
 });
 
 async function proceedToSend(
+  file,
   userText,
   combinedMessage,
   send = true,
   type = null
 ) {
-  addMessage(userText, true, type);
+  addMessage(file, userText, true, type);
   $("#logoHolder").hide();
   $("#userInput").val("");
   $("#sendButton").prop("disabled", true);
@@ -413,18 +438,21 @@ document.addEventListener("DOMContentLoaded", function () {
   clearChat();
 
   $("#userInput").on("keydown", (e) => {
-    if (e.key === "/") {
-      showCommandPanel("/");
-      e.preventDefault();
-    } else if (e.key === "Enter") {
+    if (e.key === "Enter") {
       $("#sendButton").click();
       e.preventDefault();
       hideCommandPanel();
     } else if (e.key === "Escape") {
       hideCommandPanel();
+    } else if (e.key === "/") {
+      if ($("#userInput").val() === "") {
+        showCommandPanel("/");
+      } else {
+        hideCommandPanel();
+      }
     } else {
       if ($("#userInput").val().startsWith("/")) {
-        const filterText = $("#userInput").val();
+        const filterText = $("#userInput").val() + e.key;
         showCommandPanel(filterText);
       } else {
         hideCommandPanel();
@@ -445,7 +473,7 @@ document.addEventListener("DOMContentLoaded", function () {
       case "/commit":
         text = `Generating commit message...`;
         prompt = `Do not output any code or description; just make a commit message`;
-        proceedToSend(text, prompt, true);
+        proceedToSend("", text, prompt, true);
         return;
       case "/break":
         vscode.postMessage({ command: "buildProjectStructure" });
@@ -455,12 +483,12 @@ document.addEventListener("DOMContentLoaded", function () {
         setTimeout(() => {
           text = `Thinking about project structure...`;
           prompt = `Do not output any code; Think about how to make project structure more clean by moving files, methods etc to repositories, services, helpers, components, views. models and such.`;
-          proceedToSend(text, prompt, true);
+          proceedToSend("", text, prompt, true);
         }, 2000);
         return;
     }
 
-    proceedToSend(text, text, true);
+    proceedToSend("", text, text, true);
   });
 
   $(document).on("keydown", function (e) {

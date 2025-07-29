@@ -7,8 +7,9 @@ const { getRelativePath } = require("./helpers/fileHelper");
 const { removeCommentStructure } = require("./helpers/codeHelper");
 const {
   openCodeFile,
-  replaceActiveFile,
   copyCodeBlock,
+  sendToTerminal,
+  replaceActiveFile,
   addDirectoryContentsToChat,
 } = require("./commands/commands");
 const {
@@ -75,6 +76,9 @@ class NaBotXSidePanelProvider {
         break;
       case "callGitDiscard":
         await this._callGitDiscard();
+        break;
+      case "sendToTerminal":
+        await sendToTerminal(message.code);
         break;
     }
   }
@@ -157,9 +161,9 @@ class NaBotXSidePanelProvider {
     // Check if the file/folder should be excluded based on n8x.json
     if (await isExcludedFromChat(relativePath)) {
       console.log(`File/folder ${relativePath} is excluded from chat.`);
-      vscode.window.showInformationMessage(
-        `File/folder ${relativePath} is excluded from chat due to n8x.json configuration.`
-      );
+      // vscode.window.showInformationMessage(
+      //   `File/folder ${relativePath} is excluded from chat due to n8x.json configuration.`
+      // );
       return; // Don't add to chat if excluded
     }
 
@@ -167,6 +171,7 @@ class NaBotXSidePanelProvider {
       this._view.webview.postMessage({
         command: "addTextToChat",
         path: relativePath,
+        raw: selectedText,
         text:
           commentPath(relativePath, "[[" + relativePath + "]]") +
           "\n" +
@@ -304,9 +309,9 @@ async function activate(context) {
           const relPath = getRelativePath(resourceUri);
           if (await isExcludedFromChat(relPath)) {
             console.log(`File/folder ${relPath} is excluded from chat.`);
-            vscode.window.showInformationMessage(
-              `File/folder ${relPath} is excluded from chat due to n8x.json configuration.`
-            );
+            // vscode.window.showInformationMessage(
+            //   `File/folder ${relPath} is excluded from chat due to n8x.json configuration.`
+            // );
             return; // Don't add to chat if excluded
           }
 
@@ -323,9 +328,9 @@ async function activate(context) {
           // Check if the file/folder should be excluded based on n8x.json
           if (await isExcludedFromChat(relPath)) {
             console.log(`File/folder ${relPath} is excluded from chat.`);
-            vscode.window.showInformationMessage(
-              `File/folder ${relPath} is excluded from chat due to n8x.json configuration.`
-            );
+            // vscode.window.showInformationMessage(
+            //   `File/folder ${relPath} is excluded from chat due to n8x.json configuration.`
+            // );
             return; // Don't add to chat if excluded
           }
 
