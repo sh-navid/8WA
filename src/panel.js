@@ -1,4 +1,3 @@
-/*[[src/panel.js]]*/
 let msgArray = [
   {
     role: "assistant",
@@ -167,6 +166,8 @@ function addBotMessage(response) {
     msgDiv.find("pre code").each(function () {
       const codeElement = $(this);
       const code = codeElement.text();
+      // Identify if the code block is a terminal script, e.g., has #[[Terminal]] on the first line
+      const isTerminalCode = code.trim().startsWith("#[[Terminal]]");
 
       highlightCode(codeElement, code);
 
@@ -256,15 +257,22 @@ function addBotMessage(response) {
         });
 
       replaceBtn.click(() => {
-        vscode.postMessage({ command: "replaceActiveFile", code });
-        replaceBtn.hide();
-        diffBtn.show();
-        undoBtn.show();
+        // Use copyToTerminal command when the code block is a terminal script
+        const replaceCommand = isTerminalCode
+          ? "copyToTerminal"
+          : "replaceActiveFile";
+        vscode.postMessage({ command: replaceCommand, code });
+        if(!isTerminalCode){
+
+          replaceBtn.hide();
+          diffBtn.show();
+          undoBtn.show();
+        }
       });
 
       codeElement
         .parent()
-        .find(".code-btns-container img:eq(3)")
+        .find(".code-btns-container img:eq(2)")
         .click(() => {
           vscode.postMessage({ command: "copyCodeBlock", code });
         });
@@ -310,11 +318,17 @@ function addBotMessage(response) {
         codeBlocks.each(function () {
           const codeElement = $(this);
           const code = codeElement.text();
+          // Use copyToTerminal command when the code block is a terminal script
+          const isTerminalCode = code.trim().startsWith("#[[Terminal]]");
+          const replaceCommand = isTerminalCode
+            ? "copyToTerminal"
+            : "replaceActiveFile";
+
           setTimeout(() => {
             vscode.postMessage({ command: "openCodeFile", code });
 
             setTimeout(() => {
-              vscode.postMessage({ command: "replaceActiveFile", code });
+              vscode.postMessage({ command: replaceCommand, code });
             }, 1000);
           }, delay);
           delay += 2000;

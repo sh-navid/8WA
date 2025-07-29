@@ -7,8 +7,9 @@ const { getRelativePath } = require("./helpers/fileHelper");
 const { removeCommentStructure } = require("./helpers/codeHelper");
 const {
   openCodeFile,
-  replaceActiveFile,
   copyCodeBlock,
+  sendToTerminal,
+  replaceActiveFile,
   addDirectoryContentsToChat,
 } = require("./commands/commands");
 const {
@@ -75,6 +76,9 @@ class NaBotXSidePanelProvider {
         break;
       case "callGitDiscard":
         await this._callGitDiscard();
+        break;
+      case "sendToTerminal":
+        await sendToTerminal(message.code);
         break;
     }
   }
