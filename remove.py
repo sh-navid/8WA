@@ -41,6 +41,15 @@ def remove_directory(root_dir, directory_name):
     else:
         print(f"Directory {dir_path} does not exist.")
 
+def remove_dist_directory(root_dir):
+    """
+    Removes the 'dist' directory if it exists.
+
+    Args:
+        root_dir (str): The root directory to search from.
+    """
+    remove_directory(root_dir, "dist")
+
 if __name__ == "__main__":
     root_directory = "."  # Current directory
     file_pattern = r".*n8x.*"  # Matches any file containing "n8x" in its name
@@ -49,3 +58,4 @@ if __name__ == "__main__":
 
     remove_files_by_pattern(root_directory, file_pattern, exclude_file)
     remove_directory(root_directory, directory_to_remove)
+    remove_dist_directory(root_directory)
