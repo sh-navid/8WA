@@ -72,7 +72,7 @@ body {
 /* Input Wrapper Styles */
 .input-wrapper {
   position: fixed;
-  bottom: .9rem;
+  bottom: 0.5rem;
   left: 50%;
   z-index: 1000;
   display: flex;
@@ -125,13 +125,34 @@ body {
 
 .input-wrapper button.icon-btn {
   background-color: transparent !important;
-  border: none !important;
   color: var(--vscode-button-foreground);
+  border: none !important;
+  white-space: nowrap;
   font-size: 1.2rem;
   font-weight: 600;
   padding: 0.5rem;
   cursor: pointer;
-  white-space: nowrap;
+}
+
+.input-button-wrapper {
+  position: absolute !important;
+  top: 0.6rem;
+  right: 1.2rem;
+}
+
+.input-button-wrapper * {
+  display: inline-block !important;
+  margin-left: 1rem;
+  transition: opacity 200ms ease-in-out;
+}
+
+.input-button-wrapper *:hover {
+  opacity: .4;
+  cursor: pointer;
+}
+
+.input-button-wrapper *:first-child {
+  margin-bottom: .1rem !important;
 }
 
 .input-wrapper button.icon-btn:hover {
