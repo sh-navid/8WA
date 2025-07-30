@@ -1,0 +1,38 @@
+/*[[port/client/src/index.css]]*/
+
+/* @font-face {
+  font-family: "Sansation";
+  src: url('/fonts/Sansation/Sansation-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+} */
+
+:root {
+  --background: #1e1e1f; /* Slightly darker background */
+  --header-background: #1e1e1f; /* Slightly darker header */
+  --panel-border: #3a3a3b; /* Darker panel border */
+  --foreground: #b0b0b0; /* Slightly darker foreground */
+  --widget-background: #333333; /* Darker widget background */
+  --widget-border: #3a3a3b; /* Darker widget border */
+  --input-foreground: #ffffff;
+  --scrollbarSlider-background: #66666666; /* Darker scrollbar */
+  --scrollbarSlider-hoverBackground: #525252b3; /* Darker scrollbar hover */
+  --button-foreground: #cccccc; /* Slightly darker button text */
+  --button-hoverForeground: #ffffff;
+  --editor-background: #181818; /* Slightly darker editor background */
+  --textLink-foreground: #4d8cd6; /* Slightly darker link */
+  --textLink-activeForeground: #005a9b; /* Slightly darker active link */
+  --disabledForeground: #666666; /* Darker disabled text */
+  --focusBorder: #f00;
+}
+
+html, body {
+  padding: 0;
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
+  font-family: 'Sansation' !important;
+}
