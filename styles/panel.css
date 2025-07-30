@@ -72,7 +72,7 @@ body {
 /* Input Wrapper Styles */
 .input-wrapper {
   position: fixed;
-  bottom: .9rem;
+  bottom: 0.5rem;
   left: 50%;
   z-index: 1000;
   display: flex;
@@ -125,13 +125,34 @@ body {
 
 .input-wrapper button.icon-btn {
   background-color: transparent !important;
-  border: none !important;
   color: var(--vscode-button-foreground);
+  border: none !important;
+  white-space: nowrap;
   font-size: 1.2rem;
   font-weight: 600;
   padding: 0.5rem;
   cursor: pointer;
-  white-space: nowrap;
+}
+
+.input-button-wrapper {
+  position: absolute !important;
+  top: 0.6rem;
+  right: 1.2rem;
+}
+
+.input-button-wrapper * {
+  display: inline-block !important;
+  margin-left: 1rem;
+  transition: opacity 200ms ease-in-out;
+}
+
+.input-button-wrapper *:hover {
+  opacity: 0.4;
+  cursor: pointer;
+}
+
+.input-button-wrapper *:first-child {
+  margin-bottom: .1rem !important;
 }
 
 .input-wrapper button.icon-btn:hover {
@@ -358,6 +379,54 @@ button:hover {
 }
 
 .input-wrapper .agent-mode input[type="checkbox"]:checked::before {
+  content: "\2713"; /* Unicode checkmark */
+  font-size: 1rem;
+  color: var(--vscode-input-foreground);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* HP Mode Styles */
+.input-wrapper .hp-mode {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  color: var(--vscode-input-foreground);
+  margin-left: auto; /* Push to the right */
+  position: absolute;
+  top: 0.25rem;
+  left: 8rem;
+}
+
+.input-wrapper .hp-mode label {
+  cursor: pointer;
+}
+
+.input-wrapper .hp-mode input[type="checkbox"] {
+  appearance: none;
+  width: 1.2rem;
+  height: 1.2rem;
+  background-color: var(--vscode-input-background);
+  border: 1px solid var(--vscode-widget-border);
+  border-radius: 0.2rem;
+  cursor: pointer;
+  position: relative;
+}
+
+.input-wrapper .hp-mode input[type="checkbox"]:checked {
+  background-color: var(--vscode-textLink-foreground);
+  border-color: var(--vscode-textLink-foreground);
+}
+
+.input-wrapper .hp-mode input[type="checkbox"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--vscode-focusBorder);
+}
+
+.input-wrapper .hp-mode input[type="checkbox"]:checked::before {
   content: "\2713"; /* Unicode checkmark */
   font-size: 1rem;
   color: var(--vscode-input-foreground);
