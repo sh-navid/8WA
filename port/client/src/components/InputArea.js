@@ -1,8 +1,8 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
-import clear from '../assets/clear.png';
-import send from '../assets/send.png';
+import clear from "../assets/clear.png";
+import send from "../assets/send.png";
 
 export const InputWrapper = styled.div`
   position: fixed;
@@ -59,7 +59,7 @@ export const AgentModeCheckbox = styled.input`
   }
 
   &:checked::before {
-    content: '\\2713';
+    content: "\\2713";
     font-size: 1rem;
     color: var(--input-foreground);
     position: absolute;
@@ -106,7 +106,7 @@ export const HpModeCheckbox = styled.input`
   }
 
   &:checked::before {
-    content: '\\2713';
+    content: "\\2713";
     font-size: 1rem;
     color: var(--input-foreground);
     position: absolute;
@@ -154,8 +154,8 @@ export const InputWrapperTextarea = styled.textarea`
 
 export const InputButtonWrapper = styled.div`
   position: absolute !important;
-  top: 0.6rem;
-  right: 1.2rem;
+  top: 0rem;
+  right: 0.8rem;
 `;
 
 export const InputWrapperButton = styled.img`
@@ -167,54 +167,59 @@ export const InputWrapperButton = styled.img`
   font-weight: 600;
   padding: 0.5rem;
   cursor: pointer;
-  width: 15rem;
+  width: 2rem;
+
+  &:hover {
+    opacity: 0.5;
+  }
 `;
 
+export const CleanButton = styled(InputWrapperButton)`
+  width: 2.05rem;
+`;
+
+export const SendButton = styled(InputWrapperButton)``;
+
 const InputArea = ({
-    userInput,
-    setUserInput,
-    clearChat,
-    handleUserInputKeyDown,
-    handleSendButtonClick,
-    model
+  userInput,
+  setUserInput,
+  clearChat,
+  handleUserInputKeyDown,
+  handleSendButtonClick,
+  model,
 }) => {
-    return (
-        <InputWrapper>
-            <AgentMode>
-                <AgentModeCheckbox type="checkbox" id="agentModeCheckbox" />
-                <AgentModeLabel htmlFor="agentModeCheckbox">Agent Mode</AgentModeLabel>
-            </AgentMode>
+  return (
+    <InputWrapper>
+      <AgentMode>
+        <AgentModeCheckbox type="checkbox" id="agentModeCheckbox" />
+        <AgentModeLabel htmlFor="agentModeCheckbox">Agent</AgentModeLabel>
+      </AgentMode>
+      <HpMode>
+        <HpModeCheckbox type="checkbox" id="hpModeCheckbox" />
+        <HpModeLabel htmlFor="hpModeCheckbox">Harmonic</HpModeLabel>
+      </HpMode>
+      <InputWrapperTextarea
+        id="userInput"
+        placeholder="Type your prompt or use /command"
+        autoComplete="off"
+        aria-label="Message input"
+        autoFocus
+        value={userInput}
+        onChange={(e) => setUserInput(e.target.value)}
+        onKeyDown={handleUserInputKeyDown}
+      />
+      <InputButtonWrapper>
+        <CleanButton src={clear} onClick={clearChat} title="Clear Chat" />
 
-            <HpMode>
-                <HpModeCheckbox type="checkbox" id="hpModeCheckbox" />
-                <HpModeLabel htmlFor="hpModeCheckbox">Harmonic Popcorn</HpModeLabel>
-            </HpMode>
-            <InputWrapperTextarea
-                id="userInput"
-                placeholder="Type your prompt or use /command"
-                autoComplete="off"
-                aria-label="Message input"
-                autoFocus
-                value={userInput}
-                onChange={(e) => setUserInput(e.target.value)}
-                onKeyDown={handleUserInputKeyDown}
-            />
-            <InputButtonWrapper>
-                <InputWrapperButton
-                    src={clear}
-                    onClick={clearChat}
-                    title="Clear Chat"
-                />
-
-                <InputWrapperButton
-                    src={send}
-                    id="sendButton"
-                    title={`Send Message to ${model}`}
-                    onClick={handleSendButtonClick}
-                />
-            </InputButtonWrapper>
-        </InputWrapper>
-    );
+        <SendButton
+          src={send}
+          id="sendButton"
+          title={`Send Message to ${model}`}
+          onClick={handleSendButtonClick}
+        />
+      </InputButtonWrapper>
+    </InputWrapper>
+  );
 };
 
 export default InputArea;

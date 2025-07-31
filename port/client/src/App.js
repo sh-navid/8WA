@@ -6,6 +6,7 @@ import 'prismjs/themes/prism.css';
 import Kbd from './components/Kbd';
 import Space from './components/Space';
 import InputArea from './components/InputArea';
+import CommandPanel from './components/CommandPanel'; 
 
 import btnOpenCodeFile from './assets/btn-open-code-file.png';
 import btnReplace from './assets/btn-replace.png';
@@ -30,15 +31,6 @@ const commands = [
         name: "/break",
         description: "Think to break project into smaller more clear structure" },
 ];
-
-
-
-
-
-
-
-
-
 
 export const Body = styled.div`
   background-color: var(--background);
@@ -534,40 +526,12 @@ function App() {
 
             </ChatMessages>
             {commandPanelVisible && (
-                <div className="command-panel" style={{
-                    position: 'absolute',
-                    top: 'auto',
-                    bottom: '6rem',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    zIndex: 1000,
-                    display: 'flex',
-                    flexDirection: 'column',
-                }}>
-                    {filteredCommands.length > 0 ? (
-                        filteredCommands.map((command, index) => (
-                            <button
-                                key={index}
-                                className="command-button"
-                                onClick={() => {
-                                    setUserInput(command.name);
-                                    hideCommandPanel();
-                                    handleSendButtonClick();
-                                }}
-                            >
-                                {command.name} - {command.description}
-                            </button>
-                        ))
-                    ) : (
-                        <div style={{
-                            padding: '5px',
-                            textAlign: 'center',
-                            color: 'var(--vscode-disabledForeground)',
-                        }}>
-                            No matching commands
-                        </div>
-                    )}
-                </div>
+                <CommandPanel
+                    filteredCommands={filteredCommands}
+                    setUserInput={setUserInput}
+                    hideCommandPanel={hideCommandPanel}
+                    handleSendButtonClick={handleSendButtonClick}
+                />
             )}
             <Space size={"4rem"}/>
 
