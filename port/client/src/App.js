@@ -8,7 +8,6 @@ import {
     Body,
     LogoHolder,
     ChatMessages,
-    Space,
     InputWrapper,
     AgentMode,
     AgentModeLabel,
@@ -20,6 +19,9 @@ import {
     InputButtonWrapper,
     InputWrapperButton
 } from './components/StyledComponents';
+
+import Kbd from './components/Kbd';
+import Space from './components/Space'; // Import Space component
 
 import btnOpenCodeFile from './assets/btn-open-code-file.png';
 import btnReplace from './assets/btn-replace.png';
@@ -303,9 +305,10 @@ function App() {
                 <img src={logo4} alt="NaBotX Logo" width="110rem" />
                 <br />
                 <h3>Start to code with N8X</h3>
-                <span>Type <kbd>/</kbd> to use commands</span>
+                <span>Type <Kbd>/</Kbd> to use commands</span>
                 <br />
                 <br />
+                <span>Use <Kbd>Ctrl</Kbd> + <Kbd>Enter</Kbd> to send</span>
             </LogoHolder>
             <ChatMessages
                 id="chatMessages"
@@ -355,10 +358,7 @@ function App() {
                     )}
                 </div>
             )}
-            <Space />
-            <Space />
-            <Space />
-            <Space />
+            <Space size={"4rem"}/>
 
             <InputWrapper>
                 <AgentMode>
