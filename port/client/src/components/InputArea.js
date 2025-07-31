@@ -38,8 +38,6 @@ export const InputWrapperTextarea = styled.textarea`
   scrollbar-color: var(--scrollbarSlider-background) var(--input-background);
   margin-top: 1.5rem !important;
 
-  border: 1px solid black;
-
   &::-webkit-scrollbar {
     width: 0.625rem;
   }
