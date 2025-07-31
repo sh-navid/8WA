@@ -28,15 +28,15 @@ export const InputWrapperTextarea = styled.textarea`
   border: none;
   color: var(--input-foreground);
   font-size: 0.8rem;
-  padding: 0.75rem 1rem;
-  min-height: 8rem;
+  padding: 0.5rem .4rem;
+  min-height: 6rem;
   max-height: 20rem;
   flex-grow: 1;
   outline: none;
   resize: vertical;
   scrollbar-width: thin;
   scrollbar-color: var(--scrollbarSlider-background) var(--input-background);
-  margin-top: 1.5rem !important;
+  margin-top: 2rem !important;
 
   &::-webkit-scrollbar {
     width: 0.625rem;
@@ -57,33 +57,30 @@ export const InputWrapperTextarea = styled.textarea`
   }
 `;
 
-export const InputButtonWrapper = styled.div`
-  position: absolute !important;
-  top: 0rem;
-  right: 0.8rem;
-`;
-
-export const InputWrapperButton = styled.img`
+export const InputButton = styled.img`
   background-color: transparent !important;
   color: var(--button-foreground);
   border: none !important;
-  white-space: nowrap;
-  font-size: 1.2rem;
-  font-weight: 600;
   padding: 0.5rem;
   cursor: pointer;
   width: 2rem;
+
+  position: absolute !important;
+  top: 0.5rem;
+  right: 0.5rem;
 
   &:hover {
     opacity: 0.5;
   }
 `;
 
-export const CleanButton = styled(InputWrapperButton)`
+export const CleanButton = styled(InputButton)`
   width: 2.05rem;
+  right: auto;
+  left: 0.5rem;
 `;
 
-export const SendButton = styled(InputWrapperButton)``;
+export const SendButton = styled(InputButton)``;
 
 const InputArea = ({
   userInput,
@@ -106,18 +103,6 @@ const InputArea = ({
   };
   return (
     <InputWrapper>
-      <Checkbox
-        label="Agent Mode"
-        checked={agentMode}
-        onChange={handleAgentModeChange}
-        position="1rem"
-      />
-      <Checkbox
-        label="HP Mode"
-        checked={hpMode}
-        onChange={handleHpModeChange}
-        position="8rem"
-      />
       <InputWrapperTextarea
         id="userInput"
         placeholder="Type your prompt or use /command"
@@ -128,16 +113,15 @@ const InputArea = ({
         onChange={(e) => setUserInput(e.target.value)}
         onKeyDown={handleUserInputKeyDown}
       />
-      <InputButtonWrapper>
-        <CleanButton src={clear} onClick={clearChat} title="Clear Chat" />
 
-        <SendButton
-          src={send}
-          id="sendButton"
-          title={`Send Message to ${model}`}
-          onClick={handleSendButtonClick}
-        />
-      </InputButtonWrapper>
+      <CleanButton src={clear} onClick={clearChat} title="Clear Chat" />
+
+      <SendButton
+        src={send}
+        id="sendButton"
+        title={`Send Message to ${model}`}
+        onClick={handleSendButtonClick}
+      />
     </InputWrapper>
   );
 };
