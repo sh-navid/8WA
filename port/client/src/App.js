@@ -1,4 +1,3 @@
-//[[port/client/src/App.js]]
 import React, { useState, useEffect, useRef } from 'react';
 import * as marked from 'marked';
 import Prism from 'prismjs';
@@ -8,20 +7,11 @@ import {
     Body,
     LogoHolder,
     ChatMessages,
-    InputWrapper,
-    AgentMode,
-    AgentModeLabel,
-    AgentModeCheckbox,
-    HpMode,
-    HpModeLabel,
-    HpModeCheckbox,
-    InputWrapperTextarea,
-    InputButtonWrapper,
-    InputWrapperButton
 } from './components/StyledComponents';
 
 import Kbd from './components/Kbd';
-import Space from './components/Space'; // Import Space component
+import Space from './components/Space';
+import InputArea from './components/InputArea';
 
 import btnOpenCodeFile from './assets/btn-open-code-file.png';
 import btnReplace from './assets/btn-replace.png';
@@ -360,41 +350,14 @@ function App() {
             )}
             <Space size={"4rem"}/>
 
-            <InputWrapper>
-                <AgentMode>
-                    <AgentModeCheckbox type="checkbox" id="agentModeCheckbox" />
-                    <AgentModeLabel htmlFor="agentModeCheckbox">Agent Mode</AgentModeLabel>
-                </AgentMode>
-
-                <HpMode>
-                    <HpModeCheckbox type="checkbox" id="hpModeCheckbox" />
-                    <HpModeLabel htmlFor="hpModeCheckbox">Harmonic Popcorn</HpModeLabel>
-                </HpMode>
-                <InputWrapperTextarea
-                    id="userInput"
-                    placeholder="Type your prompt or use /command"
-                    autoComplete="off"
-                    aria-label="Message input"
-                    autoFocus
-                    value={userInput}
-                    onChange={(e) => setUserInput(e.target.value)}
-                    onKeyDown={handleUserInputKeyDown}
-                />
-                <InputButtonWrapper>
-                    <InputWrapperButton
-                        src={clear}
-                        onClick={clearChat}
-                        title="Clear Chat"
-                    />
-
-                    <InputWrapperButton
-                        src={send}
-                        id="sendButton"
-                        title={`Send Message to ${model}`}
-                        onClick={handleSendButtonClick}
-                    />
-                </InputButtonWrapper>
-            </InputWrapper>
+            <InputArea
+                userInput={userInput}
+                setUserInput={setUserInput}
+                clearChat={clearChat}
+                handleUserInputKeyDown={handleUserInputKeyDown}
+                handleSendButtonClick={handleSendButtonClick}
+                model={model}
+            />
         </Body>
     );
 }
