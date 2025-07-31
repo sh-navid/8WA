@@ -1,4 +1,3 @@
-//[[port/client/src/components/StyledComponents.js]]
 import styled from 'styled-components';
 
 export const Body = styled.div`
@@ -11,7 +10,6 @@ export const Body = styled.div`
   flex-direction: column;
   overflow-x: hidden;
   user-select: none;
-  font-family: "AppFont";
 `;
 
 export const LogoHolder = styled.div`
@@ -50,11 +48,6 @@ export const ChatMessages = styled.div`
   &::-webkit-scrollbar-thumb:hover {
     background-color: var(--scrollbarSlider-hoverBackground);
   }
-`;
-
-export const Space = styled.div`
-  display: block;
-  height: 3.1rem;
 `;
 
 export const InputWrapper = styled.div`
@@ -183,7 +176,8 @@ export const InputWrapperTextarea = styled.textarea`
   scrollbar-width: thin;
   scrollbar-color: var(--scrollbarSlider-background) var(--input-background);
   margin-top: 1.5rem !important;
-  font-family: "AppFont";
+
+  border: 1px solid black;
 
   &::-webkit-scrollbar {
     width: 0.625rem;
