@@ -8,22 +8,22 @@
 }
 
 :root {
-  --background: #1e1e1f; /* Slightly darker background */
-  --header-background: #1e1e1f; /* Slightly darker header */
-  --panel-border: #3a3a3b; /* Darker panel border */
-  --foreground: #b0b0b0; /* Slightly darker foreground */
-  --widget-background: #333333; /* Darker widget background */
-  --widget-border: #3a3a3b; /* Darker widget border */
+  --background: #121212; /* Even darker background for sharper contrast */
+  --header-background: #181818; /* Even darker header for sharper contrast */
+  --panel-border: #424242; /* Slightly lighter panel border for sharper definition */
+  --foreground: #cfcfcf; /* Brighter foreground for better readability */
+  --widget-background: #2a2a2a; /* Darker widget background */
+  --widget-border: #424242; /* Slightly lighter widget border for definition */
   --input-foreground: #ffffff;
-  --scrollbarSlider-background: #66666666; /* Darker scrollbar */
-  --scrollbarSlider-hoverBackground: #525252b3; /* Darker scrollbar hover */
-  --button-foreground: #cccccc; /* Slightly darker button text */
+  --scrollbarSlider-background: #55555566; /* Darker scrollbar */
+  --scrollbarSlider-hoverBackground: #404040b3; /* Darker scrollbar hover */
+  --button-foreground: #dddddd; /* Brighter button text */
   --button-hoverForeground: #ffffff;
-  --editor-background: #181818; /* Slightly darker editor background */
-  --textLink-foreground: #4d8cd6; /* Slightly darker link */
-  --textLink-activeForeground: #005a9b; /* Slightly darker active link */
-  --disabledForeground: #666666; /* Darker disabled text */
-  --focusBorder: #f00;
+  --editor-background: #0f0f0f; /* Even darker editor background */
+  --textLink-foreground: #6ab0ff; /* Brighter link */
+  --textLink-activeForeground: #3391ff; /* Brighter active link */
+  --disabledForeground: #777777; /* Slightly lighter disabled text */
+  --focusBorder: #ff3333; /* Stronger focus border */
 }
 
 html, body {
@@ -33,6 +33,6 @@ html, body {
 
 * {
   box-sizing: border-box;
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease; /* Slightly faster transition */
   font-family: 'Sansation' !important;
 }
