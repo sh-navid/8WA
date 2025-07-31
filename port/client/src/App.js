@@ -2,11 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import * as marked from 'marked';
 import Prism from 'prismjs';
 import 'prismjs/themes/prism.css';
+import styled from 'styled-components';
 
 import Kbd from './components/Kbd';
 import Space from './components/Space';
 import InputArea from './components/InputArea';
-import CommandPanel from './components/CommandPanel'; 
+import CommandPanel from './components/CommandPanel';
+import Message from './components/Message';
 
 import btnOpenCodeFile from './assets/btn-open-code-file.png';
 import btnReplace from './assets/btn-replace.png';
@@ -16,7 +18,6 @@ import btnUndo from './assets/btn-undo.png';
 import clear from './assets/clear.png';
 import logo4 from './assets/logo2.png';
 import send from './assets/send.png';
-import styled from 'styled-components';
 
 // Mock dynamic variables for demonstration
 const token = "sampleToken";
@@ -452,54 +453,6 @@ function App() {
                 proceedToSend("", text, text, true);
                 break;
         }
-    };
-
-    //Component for rendering each message
-    const Message = ({ msg }) => {
-        const [expanded, setExpanded] = useState(false);
-
-        if (msg.type === 'structure') {
-            return (
-                <pre className={`msg-container message ${msg.fromUser ? "user" : "bot"}`}>
-                    {msg.file && <div className='code-block-file-name'>{msg.file}</div>}
-                    {msg.text}
-                </pre>
-            );
-        }
-
-        if (msg.type === 'bot') {
-            return (
-                <div className="message bot">
-                    <div dangerouslySetInnerHTML={{ __html: msg.content }} />
-                </div>
-            );
-        }
-
-
-        return (
-            <div className={`msg-container message ${msg.fromUser ? "user" : "bot"}`}>
-                {msg.file && <div className='code-block-file-name'>{msg.file}</div>}
-                {
-                    msg.text.length > 100 && msg.fromUser ? (
-                        <>
-                            <span className="short-text">{expanded ? msg.text : msg.text.substring(0, 100)}</span>
-                            {
-                                !expanded && msg.text.length > 100 && (
-                                    <button className="more-button" onClick={() => setExpanded(true)}>Expand</button>
-                                )
-                            }
-                            {
-                                expanded && (
-                                    <button className="more-button" onClick={() => setExpanded(false)}>Collapse</button>
-                                )
-                            }
-                        </>
-                    ) : (
-                        msg.text
-                    )
-                }
-            </div>
-        );
     };
 
     return (
