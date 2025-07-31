@@ -1,8 +1,10 @@
+/* [[port/client/src/components/InputArea.js]] */
 import React from "react";
 import styled from "styled-components";
 
 import clear from "../assets/clear.png";
 import send from "../assets/send.png";
+import Checkbox from "./Checkbox";
 
 export const InputWrapper = styled.div`
   position: fixed;
@@ -20,100 +22,6 @@ export const InputWrapper = styled.div`
   box-shadow: 0 4px 12px var(--shadow, rgba(0, 0, 0, 0.15));
   width: 97%;
   padding: 0.4rem 0.65rem;
-`;
-
-export const AgentMode = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-size: 0.85rem;
-  color: var(--input-foreground);
-  margin-left: auto;
-  position: absolute;
-  top: 0.25rem;
-  left: 1rem;
-`;
-
-export const AgentModeLabel = styled.label`
-  cursor: pointer;
-`;
-
-export const AgentModeCheckbox = styled.input`
-  appearance: none;
-  width: 1.2rem;
-  height: 1.2rem;
-  background-color: var(--input-background);
-  border: 1px solid var(--widget-border);
-  border-radius: 0.2rem;
-  cursor: pointer;
-  position: relative;
-
-  &:checked {
-    background-color: var(--textLink-foreground);
-    border-color: var(--textLink-foreground);
-  }
-
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px var(--focusBorder);
-  }
-
-  &:checked::before {
-    content: "\\2713";
-    font-size: 1rem;
-    color: var(--input-foreground);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-`;
-
-export const HpMode = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-size: 0.85rem;
-  color: var(--input-foreground);
-  margin-left: auto;
-  position: absolute;
-  top: 0.25rem;
-  left: 8rem;
-`;
-
-export const HpModeLabel = styled.label`
-  cursor: pointer;
-`;
-
-export const HpModeCheckbox = styled.input`
-  appearance: none;
-  width: 1.2rem;
-  height: 1.2rem;
-  background-color: var(--input-background);
-  border: 1px solid var(--widget-border);
-  border-radius: 0.2rem;
-  cursor: pointer;
-  position: relative;
-
-  &:checked {
-    background-color: var(--textLink-foreground);
-    border-color: var(--textLink-foreground);
-  }
-
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px var(--focusBorder);
-  }
-
-  &:checked::before {
-    content: "\\2713";
-    font-size: 1rem;
-    color: var(--input-foreground);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
 `;
 
 export const InputWrapperTextarea = styled.textarea`
@@ -181,45 +89,61 @@ export const CleanButton = styled(InputWrapperButton)`
 export const SendButton = styled(InputWrapperButton)``;
 
 const InputArea = ({
-  userInput,
-  setUserInput,
-  clearChat,
-  handleUserInputKeyDown,
-  handleSendButtonClick,
-  model,
-}) => {
-  return (
-    <InputWrapper>
-      <AgentMode>
-        <AgentModeCheckbox type="checkbox" id="agentModeCheckbox" />
-        <AgentModeLabel htmlFor="agentModeCheckbox">Agent</AgentModeLabel>
-      </AgentMode>
-      <HpMode>
-        <HpModeCheckbox type="checkbox" id="hpModeCheckbox" />
-        <HpModeLabel htmlFor="hpModeCheckbox">Harmonic</HpModeLabel>
-      </HpMode>
-      <InputWrapperTextarea
-        id="userInput"
-        placeholder="Type your prompt or use /command"
-        autoComplete="off"
-        aria-label="Message input"
-        autoFocus
-        value={userInput}
-        onChange={(e) => setUserInput(e.target.value)}
-        onKeyDown={handleUserInputKeyDown}
-      />
-      <InputButtonWrapper>
-        <CleanButton src={clear} onClick={clearChat} title="Clear Chat" />
+                       userInput,
+                       setUserInput,
+                       clearChat,
+                       handleUserInputKeyDown,
+                       handleSendButtonClick,
+                       model,
+                       agentMode,
+                       setAgentMode,
+                       hpMode,
+                       setHpMode,
+                   }) => {
 
-        <SendButton
-          src={send}
-          id="sendButton"
-          title={`Send Message to ${model}`}
-          onClick={handleSendButtonClick}
-        />
-      </InputButtonWrapper>
-    </InputWrapper>
-  );
+    const handleAgentModeChange = (e) => {
+        setAgentMode(e.target.checked);
+    };
+
+    const handleHpModeChange = (e) => {
+        setHpMode(e.target.checked);
+    };
+    return (
+        <InputWrapper>
+            <Checkbox
+                label="Agent Mode"
+                checked={agentMode}
+                onChange={handleAgentModeChange}
+                position="1rem"
+            />
+            <Checkbox
+                label="HP Mode"
+                checked={hpMode}
+                onChange={handleHpModeChange}
+                position="8rem"
+            />
+            <InputWrapperTextarea
+                id="userInput"
+                placeholder="Type your prompt or use /command"
+                autoComplete="off"
+                aria-label="Message input"
+                autoFocus
+                value={userInput}
+                onChange={(e) => setUserInput(e.target.value)}
+                onKeyDown={handleUserInputKeyDown}
+            />
+            <InputButtonWrapper>
+                <CleanButton src={clear} onClick={clearChat} title="Clear Chat"/>
+
+                <SendButton
+                    src={send}
+                    id="sendButton"
+                    title={`Send Message to ${model}`}
+                    onClick={handleSendButtonClick}
+                />
+            </InputButtonWrapper>
+        </InputWrapper>
+    );
 };
 
 export default InputArea;
