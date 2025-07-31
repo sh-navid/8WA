@@ -11,8 +11,8 @@
   --header-background: #181818; /* Even darker header for sharper contrast */
   --panel-border: #424242; /* Slightly lighter panel border for sharper definition */
   --foreground: #cfcfcf; /* Brighter foreground for better readability */
-  --widget-background: #2a2a2a; /* Darker widget background */
-  --widget-border: #424242; /* Slightly lighter widget border for definition */
+  --widget-background: #202020; /* Darker widget background */
+  --widget-border: #303030; /* Slightly lighter widget border for definition */
   --input-foreground: #ffffff;
   --scrollbarSlider-background: #55555566; /* Darker scrollbar */
   --scrollbarSlider-hoverBackground: #404040b3; /* Darker scrollbar hover */
