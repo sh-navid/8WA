@@ -1,6 +1,5 @@
-/* [[port/client/src/components/InputArea.js]] */
-import React from "react";
 import styled from "styled-components";
+import React from "react";
 
 import clear from "../assets/clear.png";
 import send from "../assets/send.png";
@@ -89,61 +88,60 @@ export const CleanButton = styled(InputWrapperButton)`
 export const SendButton = styled(InputWrapperButton)``;
 
 const InputArea = ({
-                       userInput,
-                       setUserInput,
-                       clearChat,
-                       handleUserInputKeyDown,
-                       handleSendButtonClick,
-                       model,
-                       agentMode,
-                       setAgentMode,
-                       hpMode,
-                       setHpMode,
-                   }) => {
+  userInput,
+  setUserInput,
+  clearChat,
+  handleUserInputKeyDown,
+  handleSendButtonClick,
+  model,
+  agentMode,
+  setAgentMode,
+  hpMode,
+  setHpMode,
+}) => {
+  const handleAgentModeChange = (e) => {
+    setAgentMode(e.target.checked);
+  };
 
-    const handleAgentModeChange = (e) => {
-        setAgentMode(e.target.checked);
-    };
+  const handleHpModeChange = (e) => {
+    setHpMode(e.target.checked);
+  };
+  return (
+    <InputWrapper>
+      <Checkbox
+        label="Agent Mode"
+        checked={agentMode}
+        onChange={handleAgentModeChange}
+        position="1rem"
+      />
+      <Checkbox
+        label="HP Mode"
+        checked={hpMode}
+        onChange={handleHpModeChange}
+        position="8rem"
+      />
+      <InputWrapperTextarea
+        id="userInput"
+        placeholder="Type your prompt or use /command"
+        autoComplete="off"
+        aria-label="Message input"
+        autoFocus
+        value={userInput}
+        onChange={(e) => setUserInput(e.target.value)}
+        onKeyDown={handleUserInputKeyDown}
+      />
+      <InputButtonWrapper>
+        <CleanButton src={clear} onClick={clearChat} title="Clear Chat" />
 
-    const handleHpModeChange = (e) => {
-        setHpMode(e.target.checked);
-    };
-    return (
-        <InputWrapper>
-            <Checkbox
-                label="Agent Mode"
-                checked={agentMode}
-                onChange={handleAgentModeChange}
-                position="1rem"
-            />
-            <Checkbox
-                label="HP Mode"
-                checked={hpMode}
-                onChange={handleHpModeChange}
-                position="8rem"
-            />
-            <InputWrapperTextarea
-                id="userInput"
-                placeholder="Type your prompt or use /command"
-                autoComplete="off"
-                aria-label="Message input"
-                autoFocus
-                value={userInput}
-                onChange={(e) => setUserInput(e.target.value)}
-                onKeyDown={handleUserInputKeyDown}
-            />
-            <InputButtonWrapper>
-                <CleanButton src={clear} onClick={clearChat} title="Clear Chat"/>
-
-                <SendButton
-                    src={send}
-                    id="sendButton"
-                    title={`Send Message to ${model}`}
-                    onClick={handleSendButtonClick}
-                />
-            </InputButtonWrapper>
-        </InputWrapper>
-    );
+        <SendButton
+          src={send}
+          id="sendButton"
+          title={`Send Message to ${model}`}
+          onClick={handleSendButtonClick}
+        />
+      </InputButtonWrapper>
+    </InputWrapper>
+  );
 };
 
 export default InputArea;

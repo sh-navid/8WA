@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+import styled from "styled-components";
+import React from "react";
 
 const CheckboxContainer = styled.div`
   display: flex;
@@ -37,7 +37,7 @@ const CheckboxInput = styled.input`
   }
 
   &:checked::before {
-    content: '\\2713';
+    content: "\\2713";
     font-size: 1rem;
     color: var(--input-foreground);
     position: absolute;
@@ -48,18 +48,14 @@ const CheckboxInput = styled.input`
 `;
 
 function Checkbox({ label, checked, onChange, position }) {
-    return (
-        <CheckboxContainer style={{ left: position }}>
-            <CheckboxLabel>
-                {label}
-                <CheckboxInput
-                    type="checkbox"
-                    checked={checked}
-                    onChange={onChange}
-                />
-            </CheckboxLabel>
-        </CheckboxContainer>
-    );
+  return (
+    <CheckboxContainer style={{ left: position }}>
+      <CheckboxLabel>
+        {label}
+        <CheckboxInput type="checkbox" checked={checked} onChange={onChange} />
+      </CheckboxLabel>
+    </CheckboxContainer>
+  );
 }
 
 export default Checkbox;
