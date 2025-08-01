@@ -1,13 +1,10 @@
 # Folders
-front/node_modules
+port/client/node_modules
+port/server/node_modules
 node_modules
 .vscode/
 test/
 vsix/
-
-
-# Configs
-**/ai.config.json
 
 
 # Source of icon files
