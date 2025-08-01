@@ -84,14 +84,13 @@ To compile NaBotX from source:
 
 1. Install `vsce` (Visual Studio Code Extensions) globally using npm: `npm install -g vsce`
 2. Package the extension using the command: `vsce package`
-3. For simplicity you can call this
+3. You can use the provided [Compile Python Script](./compile.py):
   - `python3 compile.py`
 
 
 ## Test
 - `npm run test`
 
-Alternatively, you can use the provided [CompileScript](./compile.py).
 
 ## Licensing
 NaBotX is released under the Apache License 2.0. See the [LICENSE](./LICENSE) file for complete license information.
