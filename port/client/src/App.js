@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import * as marked from 'marked';
 import Prism from 'prismjs';
 import 'prismjs/themes/prism.css';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 import Kbd from './components/Kbd';
 import Space from './components/Space';
@@ -10,15 +10,7 @@ import InputArea from './components/InputArea';
 import CommandPanel from './components/CommandPanel';
 import Message from './components/Message';
 
-import btnOpenCodeFile from './assets/btn-open-code-file.png';
-import btnReplace from './assets/btn-replace.png';
-import btnCopy from './assets/btn-copy.png';
-import btnDiff from './assets/btn-diff.png';
-import btnUndo from './assets/btn-undo.png';
-import clear from './assets/clear.png';
 import logo4 from './assets/logo2.png';
-import send from './assets/send.png';
-import Checkbox from './components/Checkbox';
 
 // Mock dynamic variables for demonstration
 const token = "sampleToken";
@@ -46,12 +38,29 @@ export const Body = styled.div`
   user-select: none;
 `;
 
+const fadeOut = keyframes`
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+    display: none;
+  }
+`;
+
 export const LogoHolder = styled.div`
   width: 100%;
   text-align: center;
   margin-top: 8rem;
   transition: all 300ms;
+  opacity: ${props => (props.show ? 1 : 0)};
+  transform: ${props => (props.show ? 'translateY(0)' : 'translateY(-20px)')};
+  animation: ${props => (!props.show ? fadeOut : 'none')} 0.3s ease-out forwards;
+  display: ${props => (props.show ? 'block' : 'none')};
 `;
+
 
 export const ChatMessages = styled.div`
   display: flex;
@@ -92,10 +101,8 @@ function App() {
     const [chatMessages, setChatMessages] = useState([]);
     const [commandPanelVisible, setCommandPanelVisible] = useState(false);
     const [filteredCommands, setFilteredCommands] = useState([]);
-    const [originalCodeBlocks, setOriginalCodeBlocks] = useState({});
     const chatMessagesRef = useRef(null);
-    const [agentMode, setAgentMode] = useState(false);
-    const [hpMode, setHpMode] = useState(false);
+    const [showLogo, setShowLogo] = useState(true);
 
     const vscode = typeof window !== 'undefined' ? window.vscode : undefined;
 
@@ -117,6 +124,14 @@ function App() {
     useEffect(() => {
         if (chatMessagesRef.current) {
             chatMessagesRef.current.scrollTop = chatMessagesRef.current.scrollHeight;
+        }
+    }, [chatMessages]);
+
+    useEffect(() => {
+        if (chatMessages.length > 0) {
+            setShowLogo(false);
+        } else {
+            setShowLogo(true);
         }
     }, [chatMessages]);
 
@@ -158,6 +173,7 @@ function App() {
     const clearChat = () => {
         setMsgArray([{ role: "assistant", content: `Rules: ${rules}` }]);
         setChatMessages([]);
+        setShowLogo(true);
     };
 
     const addMessage = (file, text, fromUser = true, type = null) => {
@@ -165,12 +181,9 @@ function App() {
             const newMessages = [...prevMessages, { file, text, fromUser, type }];
             return newMessages;
         });
+        setShowLogo(false);
     };
 
-
-    const highlightCode = (code) => {
-        return Prism.highlight(code, Prism.languages.javascript, 'javascript');
-    };
 
     const addBotMessage = (response) => {
         if (response?.choices?.[0]?.message?.content) {
@@ -231,6 +244,7 @@ function App() {
         if (send) {
             const response = await sendToLLM(combinedMessage);
             addBotMessage(response);
+            setShowLogo(false);
         }
     };
 
@@ -293,16 +307,9 @@ function App() {
         }
     };
 
-    const handleAgentModeChange = (e) => {
-        setAgentMode(e.target.checked);
-    };
-
-    const handleHpModeChange = (e) => {
-        setHpMode(e.target.checked);
-    };
     return (
         <Body>
-            <LogoHolder>
+            <LogoHolder show={showLogo}>
                 <img src={logo4} alt="NaBotX Logo" width="110rem" />
                 <br />
                 <h3>Start to code with N8X</h3>

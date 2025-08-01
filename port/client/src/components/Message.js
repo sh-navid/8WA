@@ -1,5 +1,5 @@
 /* [[port/client/src/components/Message.js]] */
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 //Component for rendering each message
 const Message = ({ msg }) => {
