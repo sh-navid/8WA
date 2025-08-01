@@ -85,7 +85,7 @@ To compile NaBotX from source:
 1. Install `vsce` (Visual Studio Code Extensions) globally using npm: `npm install -g vsce`
 2. Package the extension using the command: `vsce package`
 3. For simplicity you can call this
-  - `python3 remove.py && python3 compile.py`
+  - `python3 compile.py`
 
 
 ## Test
