@@ -8,6 +8,7 @@ NaBotX is a VSCode extension designed to boost developer productivity with AI-dr
 
 ## Latest Release
 - [NaBoTX-Release-V0.1.99](https://github.com/sh-navid/NabotX/releases/tag/Release-V0.1.99)
+- [NaBoTX-Release-V0.2.74](https://github.com/sh-navid/NabotX/releases/tag/Release-V0.2.74)
 
 ## NaBotX Overview
 ![NaBotX Extension](./showcase/V06.png)
