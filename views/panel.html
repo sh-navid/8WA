@@ -5,58 +5,95 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>NaBotX</title>
     ${styles} ${scripts}
+
+    <style>
+iframe {
+  border: none !important; /* Remove border */
+  padding: 0 !important;  /* Remove padding */
+  overflow: hidden !important; /*Hide scroll*/
+}
+</style>
   </head>
   <body>
-    <div>
-      <div id="logoHolder">
-        <img src="${logo4.svg}" alt="NaBotX Logo" width="110rem" />
-        <br />
-        <h3>Start to code with N8X</h3>
-        <span>Type <kbd>/</kbd> to use commands</span>
-        <br />
-        <br />
-        <span>Use <kbd>Ctrl</kbd>+<kbd>Enter</kbd> to send</span>
+    <script>
+      let preview = true;
+
+      const switchView = () => {
+        preview = !preview;
+        if (preview) {
+          $(".tab1").hide();
+          $(".tab2").show();
+          $(".switch-button").text("Preview")
+        } else {
+          $(".tab2").hide();
+          $(".tab1").show();
+          $(".switch-button").text("Assistant")
+        }
+      };
+    </script>
+
+    <button class="switch-button" style="color: gray; background-color: transparent;" onclick="switchView()">-</button>
+
+    <div class="tab1">
+      <div>
+        <div id="logoHolder">
+          <img src="${logo4.svg}" alt="NaBotX Logo" width="110rem" />
+          <br />
+          <h3>Start to code with N8X</h3>
+          <span>Type <kbd>/</kbd> to use commands</span>
+          <br />
+          <br />
+          <span>Use <kbd>Ctrl</kbd>+<kbd>Enter</kbd> to send</span>
+        </div>
+        <div
+          id="chatMessages"
+          role="log"
+          aria-live="polite"
+          aria-relevant="additions"
+        ></div>
+        <div class="space"></div>
+        <div class="space"></div>
+        <div class="space"></div>
+        <div class="space"></div>
       </div>
-      <div
-        id="chatMessages"
-        role="log"
-        aria-live="polite"
-        aria-relevant="additions"
-      ></div>
-      <div class="space"></div>
-      <div class="space"></div>
-      <div class="space"></div>
-      <div class="space"></div>
+
+      <div class="input-wrapper">
+        <textarea
+          id="userInput"
+          placeholder="Type your prompt or use /command"
+          autocomplete="off"
+          aria-label="Message input"
+          autofocus
+        ></textarea>
+
+        <div class="input-button-wrapper">
+          <img
+            width="15rem"
+            src="${clear.png}"
+            onclick="clearChat()"
+            class="icon-btn"
+            title="Clear Chat"
+          />
+
+          <img
+            width="15rem"
+            src="${send.png}"
+            id="sendButton"
+            class="icon-btn"
+            title="Send Message to ${model}"
+          />
+        </div>
+      </div>
     </div>
 
-    <div class="input-wrapper">
-      <textarea
-        id="userInput"
-        placeholder="Type your prompt or use /command"
-        autocomplete="off"
-        aria-label="Message input"
-        autofocus
-      ></textarea>
-
-      <div class="input-button-wrapper">
-        <img
-          width="15rem"
-          src="${clear.png}"
-          onclick="clearChat()"
-          class="icon-btn"
-          title="Clear Chat"
-        />
-
-        <img
-          width="15rem"
-          src="${send.png}"
-          id="sendButton"
-          class="icon-btn"
-          title="Send Message to ${model}"
-        />
-      </div>
+    <div class="tab2" style="width: 100%; height: 100%;">
+      <iframe
+        src="http://localhost:3000"
+        width="99%"
+        height="99%"
+        style="border: none; margin: 0 auto;"
+      ></iframe>
     </div>
-
     <script>
       const vscode = acquireVsCodeApi();
 
@@ -71,6 +108,10 @@
       const model = "${model}";
       const path = "${path}";
       const rules = "${rules}";
+    </script>
+
+    <script>
+      switchView();
     </script>
   </body>
 </html>

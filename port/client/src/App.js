@@ -53,7 +53,7 @@ const fadeOut = keyframes`
 export const LogoHolder = styled.div`
   width: 100%;
   text-align: center;
-  margin-top: 8rem;
+  margin-top: 9rem;
   transition: all 300ms;
   opacity: ${props => (props.show ? 1 : 0)};
   transform: ${props => (props.show ? 'translateY(0)' : 'translateY(-20px)')};
