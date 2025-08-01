@@ -96,6 +96,7 @@ function highlightCode(codeElement, code) {
 }
 
 function addMessage(file, text, fromUser = true, type = null) {
+  $("#logoHolder").hide();
   let msgDiv = $("<div>")
     .addClass("msg-container")
     .addClass("message")

@@ -1,30 +1,55 @@
+/*[[port/client/src/index.css]]*/
 @font-face {
-  font-family: "AppFont";
-  src: url("../assets/fonts/Sansation-Regular.ttf") format("truetype");
+  font-family: "Sansation";
+  src: url('assets/fonts/Sansation/Sansation-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
-/* Resets and Transitions */
+:root {
+  --background: #121212; /* Even darker background for sharper contrast */
+  --header-background: #181818; /* Even darker header for sharper contrast */
+  --panel-border: #424242; /* Slightly lighter panel border for sharper definition */
+  --foreground: #cfcfcf; /* Brighter foreground for better readability */
+  --widget-background: #202020; /* Darker widget background */
+  --widget-border: #303030; /* Slightly lighter widget border for definition */
+  --input-foreground: #ffffff;
+  --scrollbarSlider-background: #55555566; /* Darker scrollbar */
+  --scrollbarSlider-hoverBackground: #404040b3; /* Darker scrollbar hover */
+  --button-foreground: #dddddd; /* Brighter button text */
+  --button-hoverForeground: #ffffff;
+  --editor-background: #0f0f0f; /* Even darker editor background */
+  --textLink-foreground: #6ab0ff; /* Brighter link */
+  --textLink-activeForeground: #3391ff; /* Brighter active link */
+  --disabledForeground: #777777; /* Slightly lighter disabled text */
+  --focusBorder: #ff3333; /* Stronger focus border */
+}
+
 * {
   box-sizing: border-box;
-  transition: background-color 0.3s ease, color 0.3s ease,
-    border-color 0.3s ease, opacity 0.3s ease;
-  font-family: "Sansation" !important;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease; /* Slightly faster transition */
+  font-family: 'Sansation' !important;
+}
+
+/* --------------------------------------------------------------- */
+
+html,body{
+  margin: 0;
+  border: none !important; /* Remove border */
+  padding: 0 !important;  /* Remove padding */
 }
 
 body {
-  background-color: var(--vscode-sideBar-background);
-  color: var(--vscode-editor-foreground);
-
-  margin: 0;
-  padding: 0;
+  background-color: var(--background);
+  color: var(--foreground);
+  
   height: 100vh;
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
   user-select: none;
 }
+
 
 /* Header Styles */
 .headerContainer {
@@ -33,24 +58,24 @@ body {
   left: 0;
   right: 0;
   z-index: 9999;
-  background-color: var(--vscode-header-background);
-  border-bottom: 1px solid var(--vscode-panel-border);
+  background-color: var(--header-background);
+  border-bottom: 1px solid var(--panel-border);
 }
 
 /* Chat Message Styles */
 #chatMessages {
-  display: flex;
+  display: block;
   flex-direction: column;
   flex-grow: 1;
   padding: 1rem;
-  margin: 0.25rem !important;
+  margin: 0.25rem auto !important;
   border-radius: 0.25rem;
   gap: 0.1rem;
   overflow-y: auto;
   scrollbar-width: auto;
   user-select: text;
-
-  /* background-color: #f44336 !important; */
+  max-width: 38rem;
+  width: 100%;
 }
 
 #chatMessages > * {
@@ -69,63 +94,27 @@ body {
   }
 }
 
-/* Input Wrapper Styles */
-.input-wrapper {
-  position: fixed;
-  bottom: 0.5rem;
-  left: 50%;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  max-width: 600px;
-  background: var(--vscode-editorWidget-background);
-  border: 1px solid var(--vscode-widget-border);
-  border-radius: 0.5rem;
-  gap: 0.5rem;
-  transform: translateX(-50%);
-  box-shadow: 0 4px 12px var(--vscode-shadow, rgba(0, 0, 0, 0.15));
-  width: 97%;
-  padding: 0.4rem 0.65rem;
-}
-
-.input-wrapper textarea {
-  background-color: transparent;
-  border: none;
-  color: var(--vscode-input-foreground);
-  font-size: 0.8rem;
-  padding: 0.75rem 1rem;
-  min-height: 8rem;
-  max-height: 20rem;
-  flex-grow: 1;
-  outline: none;
-  resize: vertical;
-  scrollbar-width: thin;
-  scrollbar-color: var(--vscode-scrollbarSlider-background)
-    var(--vscode-input-background);
-  margin-top: 1.5rem !important;
-}
-
 .input-wrapper textarea::-webkit-scrollbar {
   width: 0.625rem;
 }
 
 .input-wrapper textarea::-webkit-scrollbar-track {
-  background: var(--vscode-input-background);
+  background: var(--input-background);
   border-radius: 1rem;
 }
 
 .input-wrapper textarea::-webkit-scrollbar-thumb {
-  background: var(--vscode-scrollbarSlider-background);
+  background: var(--scrollbarSlider-background);
   border-radius: 1rem;
 }
 
 .input-wrapper textarea::-webkit-scrollbar-thumb:hover {
-  background: var(--vscode-scrollbarSlider-hoverBackground);
+  background: var(--scrollbarSlider-hoverBackground);
 }
 
 .input-wrapper button.icon-btn {
   background-color: transparent !important;
-  color: var(--vscode-button-foreground);
+  color: var(--button-foreground);
   border: none !important;
   white-space: nowrap;
   font-size: 1.2rem;
@@ -156,7 +145,7 @@ body {
 }
 
 .input-wrapper button.icon-btn:hover {
-  color: var(--vscode-button-hoverForeground);
+  color: var(--button-hoverForeground);
 }
 
 /* Code Button Container Styles */
@@ -169,8 +158,8 @@ body {
   padding: 0.5rem;
   margin-top: 1rem;
   border-radius: 1rem;
-  background-color: var(--vscode-editor-background);
-  border: 1px solid var(--vscode-widget-border);
+  background-color: var(--editor-background);
+  border: 1px solid var(--widget-border);
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -198,7 +187,7 @@ pre,
 .msg-container {
   border-radius: 0.5rem;
   padding: 0.5rem;
-  border: 1px solid var(--vscode-widget-border);
+  border: 1px solid var(--widget-border);
   background-color: transparent !important;
   overflow: auto;
 }
@@ -208,14 +197,14 @@ pre,
 a {
   background-color: transparent;
   border: none;
-  color: var(--vscode-textLink-foreground);
+  color: var(--textLink-foreground);
   text-decoration: none;
   user-select: none;
 }
 
 .more-button:hover,
 a:hover {
-  color: var(--vscode-textLink-activeForeground);
+  color: var(--textLink-activeForeground);
 }
 
 button {
@@ -230,7 +219,7 @@ button:hover {
 
 /* Utility Styles */
 .short-text {
-  color: var(--vscode-disabledForeground);
+  color: var(--disabledForeground);
 }
 
 .space {
@@ -248,11 +237,11 @@ button:hover {
   flex-direction: column;
   width: 300px;
   padding: 0.5rem;
-  border: 1px solid var(--vscode-editorWidget-border);
+  border: 1px solid var(--widget-border);
   border-radius: 0.5rem;
   transform: translate(-50%, -50%);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  color: var(--vscode-editor-foreground);
+  color: var(--foreground);
   opacity: 0.65;
 }
 
@@ -263,12 +252,12 @@ button:hover {
   border: none;
   border-radius: 0.25rem;
   cursor: pointer;
-  color: var(--vscode-button-foreground);
+  color: var(--button-foreground);
   background-color: transparent;
 }
 
 .command-button:hover {
-  background-color: var(--vscode-button-hoverBackground);
+  background-color: var(--button-hoverForeground);
 }
 
 /* Special Buttons */
@@ -277,9 +266,9 @@ button:hover {
   width: 100%;
   margin: 0 auto;
   padding: 0.75rem;
-  border: 1px solid var(--vscode-editorWidget-border);
+  border: 1px solid var(--widget-border);
   border-radius: 0.5rem;
-  background-color: var(--vscode-input-background);
+  background-color: var(--input-background);
   font-size: 85%;
   font-weight: bold;
   cursor: pointer;
@@ -291,40 +280,23 @@ button:hover {
 }
 
 .accept-button {
-  color: var(--vscode-textLink-foreground);
+  color: var(--textLink-foreground);
 }
 
 .reject-button {
   color: #f44336;
 }
 
-/* Logo Holder Style */
-#logoHolder {
-  width: 100%;
-  text-align: center;
-  margin-top: 8rem;
-  transition: all 300ms;
-}
-
 /* Media Queries */
 @media (max-width: 480px) {
   .input-wrapper {
-    width: 97%;
+    width: 100%;
     padding: 0.4rem 0.65rem;
   }
 
-  .input-wrapper button.icon-btn {
-    font-size: 1rem;
-    padding: 0.4rem;
-  }
-
-  header img {
-    width: 5rem;
-    height: auto;
-  }
-
-  header label {
-    font-size: 1rem;
+  #chatMessages{
+    width: 100%;
+    margin: 0 !important;
   }
 }
 
