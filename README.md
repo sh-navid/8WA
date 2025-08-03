@@ -84,14 +84,13 @@ To compile NaBotX from source:
 
 1. Install `vsce` (Visual Studio Code Extensions) globally using npm: `npm install -g vsce`
 2. Package the extension using the command: `vsce package`
-3. For simplicity you can call this
-  - `python3 remove.py && python3 compile.py`
+3. You can use the provided [Compile Python Script](./compile.py):
+  - `python3 compile.py`
 
 
 ## Test
 - `npm run test`
 
-Alternatively, you can use the provided [CompileScript](./compile.py).
 
 ## Licensing
 NaBotX is released under the Apache License 2.0. See the [LICENSE](./LICENSE) file for complete license information.
@@ -101,3 +100,7 @@ NaBotX is released under the Apache License 2.0. See the [LICENSE](./LICENSE) fi
 This project utilizes the Sansation font, designed by Bernd Montag.
 
 License: [Creative Commons Attribution-ShareAlike 3.0 Unported](https://creativecommons.org/licenses/by-sa/3.0/)
+
+
+## Dependency Attributions
+ - FIXME

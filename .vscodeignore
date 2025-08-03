@@ -1,8 +1,7 @@
 # Folders
-port/client/node_modules
-port/server/node_modules
 node_modules
 .vscode/
+port/
 test/
 vsix/
 
