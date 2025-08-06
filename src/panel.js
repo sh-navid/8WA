@@ -1,12 +1,13 @@
 let msgArray = [
   {
-    role: "assistant",
+    role: "system",
     content: "${rules}",
   },
 ];
 
 let commandPanelVisible = false;
 let filteredCommands = [];
+let originalCodeBlocks = {};
 
 const commands = [
   { name: "/tree", description: "Build project structure" },
@@ -140,7 +141,7 @@ function addMessage(file, text, fromUser = true, type = null) {
     .scrollTop($("#chatMessages")[0].scrollHeight);
 }
 
-let originalCodeBlocks = {};
+
 
 function addBotMessage(response) {
   const msgDiv = $("<div>").addClass("message bot");
