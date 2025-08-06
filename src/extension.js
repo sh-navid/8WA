@@ -50,10 +50,10 @@ class NaBotXSidePanelProvider {
   async _handleMessage(webviewView, message) {
     switch (message.command) {
       case "openCodeFile":
-        await this._openCodeFile(message.code);
+        await openCodeFile(message.code);
         break;
       case "replaceActiveFile":
-        await this._openCodeFile(message.code);
+        await openCodeFile(message.code);
         await this._replaceActiveFile(message.code);
         break;
       case "copyCodeBlock":
@@ -81,10 +81,6 @@ class NaBotXSidePanelProvider {
         await sendToTerminal(message.code);
         break;
     }
-  }
-
-  async _openCodeFile(code) {
-    await openCodeFile(code);
   }
 
   async _cloneAndModifyActiveFile(code, modifyFunction) {
