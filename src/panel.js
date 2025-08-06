@@ -26,16 +26,6 @@ function showCommandPanel(filter = "") {
     const commandPanel = $("<div>")
       .attr("id", "commandPanel")
       .addClass("command-panel")
-      .css({
-        position: "absolute",
-        top: "auto",
-        bottom: "6rem",
-        left: "50%",
-        transform: "translateX(-50%)",
-        zIndex: 1000,
-        display: "flex",
-        flexDirection: "column",
-      });
 
     updateCommandPanel(commandPanel);
 
