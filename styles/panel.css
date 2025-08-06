@@ -339,3 +339,55 @@ button:hover {
 .input-button-wrapper * {
   display: block;
 }
+
+
+
+ /* Tab Buttons Styling */
+      .tab-buttons {
+        padding: 10px;
+        text-align: center;
+      }
+
+      .tab-button {
+        background-color: transparent;
+        border: none;
+        padding: 5px 10px;
+        margin: 0 2px;
+        cursor: pointer;
+        font-size: 16px;
+        color: rgb(129, 129, 129);
+      }
+
+      .tab-button.active {
+        background-color: #303030;
+      }
+
+      /* Tab Content Styling */
+      .tab-content {
+        flex: 1;
+        padding: 10px;
+        overflow: auto; /* Enable scrolling within tabs if content overflows */
+        height: 100%; /* Occupy full height */
+      }
+
+      /* Specific Styling for Tab 1 (Assistant) */
+      .tab1 {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+      }
+
+      /* Specific Styling for Tab 2 (Preview) */
+      .tab2 {
+        width: 100%;
+        height: 100%;
+      }
+
+      .tab2 iframe {
+        border: none !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+        width: 100%;
+        height: 100%;
+      }
