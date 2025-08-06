@@ -63,7 +63,7 @@ class NaBotXSidePanelProvider {
         await this._addToChat(message.selectedText);
         break;
       case "buildProjectStructure":
-        await this._buildProjectStructure(webviewView);
+        await buildProjectStructure(webviewView);
         break;
       case "buildPreferencesStructure":
         await this._buildPreferencesStructure(webviewView);
@@ -179,10 +179,6 @@ class NaBotXSidePanelProvider {
       );
       console.error("Error adding text to chat:", err);
     }
-  }
-
-  async _buildProjectStructure(webviewView) {
-    await buildProjectStructure(webviewView);
   }
 
   async _buildPreferencesStructure(webviewView) {
