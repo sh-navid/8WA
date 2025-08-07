@@ -1,7 +1,7 @@
 const vscode = require("vscode");
 
 const fs = require("fs");
-const path = require("path"); // Import the 'path' module
+const path = require("path");
 const { commentPath } = require("./helpers/pathHelper");
 const { getRelativePath } = require("./helpers/fileHelper");
 const { removeCommentStructure } = require("./helpers/codeHelper");
@@ -32,7 +32,7 @@ class NaBotXSidePanelProvider {
   constructor(extensionUri) {
     this._extensionUri = extensionUri;
     this._view = null;
-    this._backupFilePath = null; // Store the backup file path
+    this._backupFilePath = null;
   }
 
   async resolveWebviewView(webviewView) {
@@ -104,21 +104,17 @@ class NaBotXSidePanelProvider {
     const backupDir = path.join(workspaceFolder.uri.fsPath, ".n8x");
     const backupPath = path.join(backupDir, relativePath);
 
-    // Ensure the .n8x directory exists
     if (!fs.existsSync(backupDir)) {
       fs.mkdirSync(backupDir, { recursive: true });
     }
 
-    // Create subdirectories if needed
     const backupFileDir = path.dirname(backupPath);
     if (!fs.existsSync(backupFileDir)) {
       fs.mkdirSync(backupFileDir, { recursive: true });
     }
 
-    // Check if the backup file already exists
     if (!fs.existsSync(backupPath)) {
       try {
-        // Copy the original file content to the backup file
         fs.writeFileSync(backupPath, editor.document.getText());
         console.log(`Backup file created: ${backupPath}`);
       } catch (err) {
@@ -154,13 +150,9 @@ class NaBotXSidePanelProvider {
       );
     }
 
-    // Check if the file/folder should be excluded based on n8x.json
     if (await isExcludedFromChat(relativePath)) {
       console.log(`File/folder ${relativePath} is excluded from chat.`);
-      // vscode.window.showInformationMessage(
-      //   `File/folder ${relativePath} is excluded from chat due to n8x.json configuration.`
-      // );
-      return; // Don't add to chat if excluded
+      return;
     }
 
     try {
@@ -279,14 +271,10 @@ async function activate(context) {
         if (stats.isDirectory()) {
           const ignoredPaths = [".git", "node_modules", "obj", "bin"];
 
-          // First, check if the directory is excluded
           const relPath = getRelativePath(resourceUri);
           if (await isExcludedFromChat(relPath)) {
             console.log(`File/folder ${relPath} is excluded from chat.`);
-            // vscode.window.showInformationMessage(
-            //   `File/folder ${relPath} is excluded from chat due to n8x.json configuration.`
-            // );
-            return; // Don't add to chat if excluded
+            return;
           }
 
           await addDirectoryContentsToChat(
@@ -299,13 +287,9 @@ async function activate(context) {
           const fileContent = doc.getText();
           const relPath = getRelativePath(resourceUri);
 
-          // Check if the file/folder should be excluded based on n8x.json
           if (await isExcludedFromChat(relPath)) {
             console.log(`File/folder ${relPath} is excluded from chat.`);
-            // vscode.window.showInformationMessage(
-            //   `File/folder ${relPath} is excluded from chat due to n8x.json configuration.`
-            // );
-            return; // Don't add to chat if excluded
+            return;
           }
 
           nabotxSidePanelProvider._addToChat(fileContent, relPath);
@@ -342,11 +326,9 @@ async function activate(context) {
         ""
       );
 
-      // Check if the file/folder should be excluded based on n8x.json
       if (await isExcludedFromChat(relPath)) {
         console.log(`File/folder ${relPath} is excluded from chat.`);
-        // vscode.window.showInformationMessage(`File/folder ${relPath} is excluded from chat due to n8x.json configuration.`);
-        return; // Don't add to chat if excluded
+        return;
       }
 
       nabotxSidePanelProvider._addToChat(selectedText, relPath);
