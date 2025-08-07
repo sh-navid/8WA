@@ -1,13 +1,11 @@
 let msgArray = [
   {
     role: "system",
-    content: "${rules}",
+    content: `Rules: ${rules}`,
   },
 ];
 
-
 let originalCodeBlocks = {};
-
 
 function clearChat() {
   msgArray = [
@@ -78,8 +76,6 @@ function addMessage(file, text, fromUser = true, type = null) {
     .append(msgDiv)
     .scrollTop($("#chatMessages")[0].scrollHeight);
 }
-
-
 
 function addBotMessage(response) {
   const msgDiv = $("<div>").addClass("message bot");
@@ -192,8 +188,7 @@ function addBotMessage(response) {
           ? "copyToTerminal"
           : "replaceActiveFile";
         vscode.postMessage({ command: replaceCommand, code });
-        if(!isTerminalCode){
-
+        if (!isTerminalCode) {
           replaceBtn.hide();
           diffBtn.show();
           undoBtn.show();
