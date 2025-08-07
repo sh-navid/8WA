@@ -38,7 +38,8 @@
     "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js",
     "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js",
     "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js",
-    "~/panel.js"
+    "~/panel.js",
+    "~/locals/commandPanel.js"
   ],
   "assets": [
     "~/btn-open-code-file.png",
