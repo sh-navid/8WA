@@ -1,9 +1,4 @@
-let msgArray = [
-  {
-    role: "system",
-    content: `Rules: ${rules}`,
-  },
-];
+let msgArray = [];
 
 let originalCodeBlocks = {};
 
