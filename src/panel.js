@@ -361,21 +361,21 @@ document.addEventListener("DOMContentLoaded", function () {
     if (e.key === "Enter") {
       $("#sendButton").click();
       e.preventDefault();
-      hideCommandPanel();
+      commandPanel.hide();
     } else if (e.key === "Escape") {
-      hideCommandPanel();
+      commandPanel.hide();
     } else if (e.key === "/") {
       if ($("#userInput").val() === "") {
-        showCommandPanel("/");
+        commandPanel.show("/");
       } else {
-        hideCommandPanel();
+        commandPanel.hide();
       }
     } else {
       if ($("#userInput").val().startsWith("/")) {
         const filterText = $("#userInput").val() + e.key;
-        showCommandPanel(filterText);
+        commandPanel.show(filterText);
       } else {
-        hideCommandPanel();
+        commandPanel.hide();
       }
     }
   });
@@ -413,7 +413,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   $(document).on("keydown", function (e) {
     if (e.key === "Escape") {
-      hideCommandPanel();
+      commandPanel.hide();
     }
   });
 });
