@@ -66,16 +66,16 @@ class NaBotXSidePanelProvider {
         await buildProjectStructure(webviewView);
         break;
       case "buildPreferencesStructure":
-        await this._buildPreferencesStructure(webviewView);
+        await buildPreferencesStructure(webviewView);
         break;
       case "diffCodeBlock":
-        await this._diffCodeBlock(message.code);
+        await diffCodeBlock(message.code);
         break;
       case "undoCodeBlock":
-        await this._undoCodeBlock();
+        await undoCodeBlock();
         break;
       case "callGitDiscard":
-        await this._callGitDiscard();
+        await callGitDiscard();
         break;
       case "sendToTerminal":
         await sendToTerminal(message.code);
@@ -179,22 +179,6 @@ class NaBotXSidePanelProvider {
       );
       console.error("Error adding text to chat:", err);
     }
-  }
-
-  async _buildPreferencesStructure(webviewView) {
-    await buildPreferencesStructure(webviewView);
-  }
-
-  async _diffCodeBlock(code) {
-    await diffCodeBlock(code, this);
-  }
-
-  async _undoCodeBlock() {
-    await undoCodeBlock(this);
-  }
-
-  async _callGitDiscard() {
-    await callGitDiscard();
   }
 
   _getHtmlForWebview(webview) {
