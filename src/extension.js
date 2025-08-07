@@ -175,11 +175,12 @@ class NaBotXSidePanelProvider {
 
   _getHtmlForWebview(webview) {
     let html = load(this, "views", "panel.html");
-    const defaultConfig = { path: "", token: "", model: "" };
+    const defaultConfig = { path: "", token: "", model: "", previewUrl: "http://localhost:3000" };
     const configuration = vscode.workspace.getConfiguration("nabotx");
     const pathValue = configuration.get("path") || defaultConfig.path;
     const tokenValue = configuration.get("token") || defaultConfig.token;
     const modelValue = configuration.get("model") || defaultConfig.model;
+    const previewUrlValue = configuration.get("previewUrl") || defaultConfig.previewUrl;
     const general = load(this, "configs", "general.config.json", true);
 
     const scripts = general.scripts
@@ -203,6 +204,7 @@ class NaBotXSidePanelProvider {
       .replaceAll(/\$\{path\}/g, pathValue)
       .replaceAll(/\$\{token\}/g, tokenValue)
       .replaceAll(/\$\{model\}/g, modelValue)
+      .replaceAll(/\$\{previewUrl\}/g, previewUrlValue)
       .replaceAll(/\$\{rules\}/g, general.rules.assistant)
       .replaceAll(/\$\{scripts\}/g, scripts)
       .replaceAll(/\$\{styles\}/g, styles);
@@ -398,7 +400,8 @@ async function activate(context) {
     if (
       event.affectsConfiguration("nabotx.path") ||
       event.affectsConfiguration("nabotx.token") ||
-      event.affectsConfiguration("nabotx.model")
+      event.affectsConfiguration("nabotx.model") ||
+      event.affectsConfiguration("nabotx.previewUrl")
     ) {
       checkConfiguration();
     }
