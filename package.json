@@ -3,7 +3,7 @@
   "displayName": "NaBotX",
   "description": "This VSCode extension helps developers code more efficiently with AI assistance. Currently, it serves as a simple alternative to Copilot or Cursor.",
   "publisher": "sh-navid",
-  "version": "0.2.525",
+  "version": "0.2.526",
   "icon": "assets/logo.png",
   "repository": {
     "type": "git",

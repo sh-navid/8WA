@@ -47,11 +47,9 @@ const commandPanel = {
 
     if (this.filteredCommands.length === 0) {
       $commandPanel.append(
-        $("<div>").text("No matching commands").css({
-          padding: "5px",
-          "text-align": "center",
-          color: "var(--vscode-disabledForeground)",
-        })
+        $("<div>")
+          .text("No matching commands")
+          .addClass("no-commands")
       );
     }
   },
