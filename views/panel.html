@@ -4,17 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>NaBotX</title>
-    ${styles} ${scripts}
-
+    ${styles} 
+    ${scripts}
     <style>
     </style>
   </head>
   <body>
     <div class="tab-buttons">
-      <button class="tab-button active" onclick="openTab('tab1')">
+      <button class="tab-button active" onclick="locals.openTab('tab1')">
         Assistant
       </button>
-      <button class="tab-button" onclick="openTab('tab2')">Preview</button>
+      <button class="tab-button" onclick="locals.openTab('tab2')">Preview</button>
     </div>
 
     <div class="container">
@@ -89,28 +89,6 @@
       const model = "${model}";
       const path = "${path}";
       const rules = "${rules}";
-
-      function openTab(tabId) {
-        // Hide all tabs
-        const tabs = document.querySelectorAll(".tab-content");
-        tabs.forEach((tab) => (tab.style.display = "none"));
-
-        // Deactivate all buttons
-        const buttons = document.querySelectorAll(".tab-button");
-        buttons.forEach((button) => button.classList.remove("active"));
-
-        // Show the selected tab
-        document.getElementById(tabId).style.display = "flex"; // or "block" depending on your layout
-        // Activate the button
-        document
-          .querySelector(`.tab-button[onclick="openTab('${tabId}')"]`)
-          .classList.add("active");
-      }
-
-      // Open the default tab on page load
-      document.addEventListener("DOMContentLoaded", () => {
-        openTab("tab1");
-      });
     </script>
   </body>
 </html>

@@ -39,6 +39,7 @@
     "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js",
     "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js",
     "~/panel.js",
+    "~/locals/tabManager.js",
     "~/locals/commandPanel.js"
   ],
   "assets": [
