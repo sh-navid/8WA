@@ -1,19 +1,15 @@
-// eslint-disable-next-line no-unused-vars
 const locals = {
   openTab: (tabId) => {
     // Hide all tabs
-    const tabs = document.querySelectorAll(".tab-content");
-    tabs.forEach((tab) => (tab.style.display = "none"));
+    $(".tab-content").hide();
 
     // Deactivate all buttons
-    const buttons = document.querySelectorAll(".tab-button");
-    buttons.forEach((button) => button.classList.remove("active"));
+    $(".tab-button").removeClass("active");
 
     // Show the selected tab
-    document.getElementById(tabId).style.display = "flex"; // or "block" depending on your layout
+    $("#" + tabId).show(); // or other jQuery show methods like fadeIn, slideDown
+
     // Activate the button
-    document
-      .querySelector(`.tab-button[onclick="locals.openTab('${tabId}')"]`)
-      .classList.add("active");
+    $(`.tab-button[onclick="locals.openTab('${tabId}')"]`).addClass("active");
   },
 };
