@@ -14,10 +14,13 @@
       "**Important**: DRY and clean code blocks. Always try to put smaller chunk of codes in services, helpers, repositories, models, middlewares, routers and so on according to stack of the project.",
       "**Important**: Please provide the full and complete code in a single block, including all imports and function definitions. Do not omit any parts, and do not use phrases like “continued below” or “…” to indicate missing code.",
       "**Commit Message**: This is mandatory; If you show a code block, always prepare a commit message at the very end of your answer in plain text like this -> **Commit:** [T] Message; Remember T can be Bug, Feature or Enhancement; (e.g. **Commit:** [Enhancement] Moved files to better location)"
-      ],
-    "tasks": [],
-    "coder": [],
-    "tester": []
+    ],
+    "prompts": {
+      "project": {
+        "create": "",
+        "refactor": ""
+      }
+    }
   },
   "styles": [
     "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.css",
@@ -35,13 +38,13 @@
     "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js",
     "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js",
     "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js",
-    "~/panel.js"
+    "~/panel.js",
+    "~/locals/tabManager.js",
+    "~/locals/commandPanel.js"
   ],
   "assets": [
     "~/btn-open-code-file.png",
     "~/btn-replace.png",
-    "~/btn-execute.png",
-    "~/btn-append.png",
     "~/btn-copy.png",
     "~/btn-diff.png",
     "~/btn-undo.png",

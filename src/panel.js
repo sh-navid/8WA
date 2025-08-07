@@ -1,84 +1,6 @@
-let msgArray = [
-  {
-    role: "assistant",
-    content: "${rules}",
-  },
-];
+let msgArray = [];
 
-let commandPanelVisible = false;
-let filteredCommands = [];
-
-const commands = [
-  { name: "/tree", description: "Build project structure" },
-  { name: "/commit", description: "Generate commit message" },
-  {
-    name: "/break",
-    description: "Think to break project into smaller more clear structure",
-  },
-];
-
-function showCommandPanel(filter = "") {
-  filteredCommands = commands.filter((command) =>
-    command.name.startsWith(filter)
-  );
-
-  if (!commandPanelVisible) {
-    const commandPanel = $("<div>")
-      .attr("id", "commandPanel")
-      .addClass("command-panel")
-      .css({
-        position: "absolute",
-        top: "auto",
-        bottom: "6rem",
-        left: "50%",
-        transform: "translateX(-50%)",
-        zIndex: 1000,
-        display: "flex",
-        flexDirection: "column",
-      });
-
-    updateCommandPanel(commandPanel);
-
-    $("body").append(commandPanel);
-    commandPanelVisible = true;
-  } else {
-    const commandPanel = $("#commandPanel");
-    updateCommandPanel(commandPanel);
-  }
-}
-
-function updateCommandPanel(commandPanel) {
-  commandPanel.empty();
-
-  filteredCommands.forEach((command) => {
-    const commandButton = $("<button>")
-      .text(command.name + " - " + command.description)
-      .addClass("command-button")
-      .click(() => {
-        $("#userInput").val(command.name);
-        hideCommandPanel();
-        $("#sendButton").click();
-      });
-    commandPanel.append(commandButton);
-  });
-
-  if (filteredCommands.length === 0) {
-    commandPanel.append(
-      $("<div>").text("No matching commands").css({
-        padding: "5px",
-        "text-align": "center",
-        color: "var(--vscode-disabledForeground)",
-      })
-    );
-  }
-}
-
-function hideCommandPanel() {
-  if (commandPanelVisible) {
-    $("#commandPanel").remove();
-    commandPanelVisible = false;
-  }
-}
+let originalCodeBlocks = {};
 
 function clearChat() {
   msgArray = [
@@ -149,8 +71,6 @@ function addMessage(file, text, fromUser = true, type = null) {
     .append(msgDiv)
     .scrollTop($("#chatMessages")[0].scrollHeight);
 }
-
-let originalCodeBlocks = {};
 
 function addBotMessage(response) {
   const msgDiv = $("<div>").addClass("message bot");
@@ -263,8 +183,7 @@ function addBotMessage(response) {
           ? "copyToTerminal"
           : "replaceActiveFile";
         vscode.postMessage({ command: replaceCommand, code });
-        if(!isTerminalCode){
-
+        if (!isTerminalCode) {
           replaceBtn.hide();
           diffBtn.show();
           undoBtn.show();
@@ -442,21 +361,21 @@ document.addEventListener("DOMContentLoaded", function () {
     if (e.key === "Enter") {
       $("#sendButton").click();
       e.preventDefault();
-      hideCommandPanel();
+      commandPanel.hide();
     } else if (e.key === "Escape") {
-      hideCommandPanel();
+      commandPanel.hide();
     } else if (e.key === "/") {
       if ($("#userInput").val() === "") {
-        showCommandPanel("/");
+        commandPanel.show("/");
       } else {
-        hideCommandPanel();
+        commandPanel.hide();
       }
     } else {
       if ($("#userInput").val().startsWith("/")) {
         const filterText = $("#userInput").val() + e.key;
-        showCommandPanel(filterText);
+        commandPanel.show(filterText);
       } else {
-        hideCommandPanel();
+        commandPanel.hide();
       }
     }
   });
@@ -494,7 +413,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   $(document).on("keydown", function (e) {
     if (e.key === "Escape") {
-      hideCommandPanel();
+      commandPanel.hide();
     }
   });
 });
