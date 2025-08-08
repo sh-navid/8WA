@@ -1,13 +1,13 @@
 {
-  "name": "n8x",
-  "displayName": "N8X",
+  "name": "8wa",
+  "displayName": "Infinit Web Apps (8WA)",
   "description": "AI code assistant",
   "publisher": "sh-navid",
-  "version": "0.2.545",
-  "icon": "assets/logo2.png",
+  "version": "0.2.558",
+  "icon": "assets/8WA.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sh-navid/n8x"
+    "url": "https://github.com/sh-navid/8wa"
   },
   "engines": {
     "vscode": "^1.100.0"
@@ -23,15 +23,15 @@
     "commands": [
       {
         "command": "nabotx.openSettings",
-        "title": "N8X: Open Settings"
+        "title": "8WA: Open Settings"
       },
       {
         "command": "nabotx.addToChat",
-        "title": "N8X: Add to Chat"
+        "title": "8WA: Add to Chat"
       },
       {
         "command": "nabotx.addToChatExplorer",
-        "title": "N8X: Add File/Folder to chat"
+        "title": "8WA: Add File/Folder to chat"
       }
     ],
     "menus": {
@@ -59,14 +59,14 @@
       "sidebar": [
         {
           "id": "nabotxSidePanel",
-          "title": "N8X",
+          "title": "Infinit Web Apps Extension (8WA)",
           "icon": "assets/logo.png"
         }
       ],
       "activitybar": [
         {
           "id": "nabotxActivityBar",
-          "title": "N8X",
+          "title": "Infinit Web Apps Extension (8WA)",
           "icon": "assets/logo.png"
         }
       ]
@@ -76,21 +76,21 @@
         {
           "type": "webview",
           "id": "nabotxActivityBarView",
-          "name": "N8X",
-          "icon": "assets/logo.png"
+          "name": "NaBotX",
+          "icon": "assets/8WA.png"
         }
       ],
       "nabotxSidePanel": [
         {
           "type": "webview",
           "id": "nabotxSidePanelView",
-          "name": "N8X",
-          "icon": "assets/logo.png"
+          "name": "NaBotX",
+          "icon": "assets/8WA.png"
         }
       ]
     },
     "configuration": {
-      "title": "N8X Configuration",
+      "title": "8WA Configuration",
       "properties": {
         "nabotx.path": {
           "type": "string",
