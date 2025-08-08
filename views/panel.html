@@ -4,22 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Infinit Web Apps (8WA)</title>
-    ${styles} 
-    ${scripts}
-    <style>
-    </style>
+    ${styles} ${scripts}
+    <style></style>
   </head>
   <body>
     <div class="tab-buttons">
       <button class="tab-button active" onclick="locals.openTab('tab1')">
         Assistant
       </button>
-      <button class="tab-button" onclick="locals.openTab('tab2')">Preview</button>
+      <button class="tab-button" onclick="locals.openTab('tab2')">
+        Preview
+      </button>
     </div>
 
     <div class="container">
-      <div id="tab2" class="tab-content tab2" style="display: none;">
-        <center><span>${previewUrl}</span></center>
+      <div id="tab2" class="tab-content tab2" style="display: none">
+        <span class="preview-url">${previewUrl}</span>
         <iframe src="${previewUrl}"></iframe>
       </div>
 

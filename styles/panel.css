@@ -417,3 +417,10 @@ button:hover {
     display: none;
   }
 }
+
+.preview-url {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  opacity: 0.5;
+}
