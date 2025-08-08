@@ -390,3 +390,44 @@ button:hover {
   text-align: center;
   color: var(--vscode-disabledForeground);
 }
+
+/* Split Screen Styles */
+@media (min-width: 1024px) {
+  .container {
+    display: flex;
+    height: 100%;
+  }
+
+  #tab1,
+  #tab2 {
+    display: flex !important; /* Ensure they are displayed */
+  }
+
+  #tab1 {
+    width: 30% !important;
+    border-left: 1px solid var(--vscode-widget-border);
+  }
+
+  #tab2 {
+    width: 70% !important;
+  }
+
+  /* Hide tab buttons */
+  .tab-buttons {
+    display: none;
+  }
+}
+
+.preview-url {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  opacity: 0.5;
+}
+
+/* Iframe Fix */
+@media (max-width: 1023px) {
+  .tab2 iframe {
+    height: calc(100vh - 70px); /* Adjust the subtraction value as needed */
+  }
+}
