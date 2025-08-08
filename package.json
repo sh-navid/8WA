@@ -1,10 +1,10 @@
 {
   "name": "n8x",
-  "displayName": "n8x",
-  "description": "This VSCode extension helps developers code more efficiently with AI assistance. Currently, it serves as a simple alternative to Copilot or Cursor.",
+  "displayName": "N8X",
+  "description": "AI code assistant",
   "publisher": "sh-navid",
-  "version": "0.2.538",
-  "icon": "assets/logo.png",
+  "version": "0.2.545",
+  "icon": "assets/logo2.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/sh-navid/n8x"
