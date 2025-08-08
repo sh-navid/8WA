@@ -60,14 +60,14 @@
         {
           "id": "nabotxSidePanel",
           "title": "Infinit Web Apps Extension (8WA)",
-          "icon": "assets/logo.png"
+          "icon": "assets/8WA.png"
         }
       ],
       "activitybar": [
         {
           "id": "nabotxActivityBar",
           "title": "Infinit Web Apps Extension (8WA)",
-          "icon": "assets/logo.png"
+          "icon": "assets/8WA.png"
         }
       ]
     },
