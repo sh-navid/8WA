@@ -1,13 +1,13 @@
 {
-  "name": "nabotx",
-  "displayName": "NaBotX",
+  "name": "n8x",
+  "displayName": "n8x",
   "description": "This VSCode extension helps developers code more efficiently with AI assistance. Currently, it serves as a simple alternative to Copilot or Cursor.",
   "publisher": "sh-navid",
-  "version": "0.2.537",
+  "version": "0.2.538",
   "icon": "assets/logo.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sh-navid/NaBotX"
+    "url": "https://github.com/sh-navid/n8x"
   },
   "engines": {
     "vscode": "^1.100.0"
@@ -23,15 +23,15 @@
     "commands": [
       {
         "command": "nabotx.openSettings",
-        "title": "NaBotX: Open Settings"
+        "title": "N8X: Open Settings"
       },
       {
         "command": "nabotx.addToChat",
-        "title": "NaBotX: Add to Chat"
+        "title": "N8X: Add to Chat"
       },
       {
         "command": "nabotx.addToChatExplorer",
-        "title": "NabotX: Add File/Folder to chat"
+        "title": "N8X: Add File/Folder to chat"
       }
     ],
     "menus": {
@@ -59,14 +59,14 @@
       "sidebar": [
         {
           "id": "nabotxSidePanel",
-          "title": "NaBotX",
+          "title": "N8X",
           "icon": "assets/logo.png"
         }
       ],
       "activitybar": [
         {
           "id": "nabotxActivityBar",
-          "title": "NaBotX",
+          "title": "N8X",
           "icon": "assets/logo.png"
         }
       ]
@@ -76,7 +76,7 @@
         {
           "type": "webview",
           "id": "nabotxActivityBarView",
-          "name": "NaBotX",
+          "name": "N8X",
           "icon": "assets/logo.png"
         }
       ],
@@ -84,13 +84,13 @@
         {
           "type": "webview",
           "id": "nabotxSidePanelView",
-          "name": "NaBotX",
+          "name": "N8X",
           "icon": "assets/logo.png"
         }
       ]
     },
     "configuration": {
-      "title": "NaBotX Configuration",
+      "title": "N8X Configuration",
       "properties": {
         "nabotx.path": {
           "type": "string",
