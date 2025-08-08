@@ -245,13 +245,12 @@ function addBotMessage(response) {
             : "replaceActiveFile";
 
           setTimeout(() => {
-            vscode.postMessage({ command: "openCodeFile", code });
-
-            setTimeout(() => {
-              vscode.postMessage({ command: replaceCommand, code });
-            }, 1000);
+            // vscode.postMessage({ command: "openCodeFile", code });
+            //setTimeout(() => {
+            vscode.postMessage({ command: replaceCommand, code });
+            //}, 500);
           }, delay);
-          delay += 2000;
+          delay += 1000;
         });
         acceptButton.hide();
         rejectButton.show();
