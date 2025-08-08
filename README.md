@@ -11,11 +11,7 @@
 - [N8X-Release-V0.2.74](https://github.com/sh-navid/NabotX/releases/tag/Release-V0.2.74)
 
 ## N8X Overview
-![N8X Extension](./showcase/V06.png)
-
-N8X integrates seamlessly into your workflow via the VSCode Extensions Panel.
-
-![N8X Extension in Extensions Panel](./showcase/C02.png)
+![N8X Extension](./showcase/V07.png)
 
 ## Key Features
 
@@ -84,8 +80,8 @@ To compile N8X from source:
 
 1. Install `vsce` (Visual Studio Code Extensions) globally using npm: `npm install -g vsce`
 2. Package the extension using the command: `vsce package`
-3. You can use the provided [Compile Python Script](./compile.py):
-  - `python3 compile.py`
+3. You can use the provided [Python Script](./pipeline.py):
+  - `python3 pipeline.py`
 
 
 ## Test
