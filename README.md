@@ -4,7 +4,7 @@
   <img src="./assets/8WA.png" alt="Infinit Web Apps (8WA) => (formerly known as NaBotX) Logo" width="120">
 </p>
 
-**8WA***(formerly known as NaBotX)* is a VSCode extension designed to boost developer productivity with AI-driven coding assistance. This lightweight and privacy-focused tool helps you write code faster and more accurately, while ensuring you retain complete control over your data.
+**8WA** *(formerly known as NaBotX)* is a VSCode extension designed to boost developer productivity with AI-driven coding assistance. This lightweight and privacy-focused tool helps you write code faster and more accurately, while ensuring you retain complete control over your data.
 
 ## Latest Release
 - [8WA-Release-V0.1.99](https://github.com/sh-navid/NabotX/releases/tag/Release-V0.1.99)
