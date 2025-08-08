@@ -11,7 +11,7 @@
 - [8WA-Release-V0.2.74](https://github.com/sh-navid/NabotX/releases/tag/Release-V0.2.74)
 
 ## 8WA Overview
-![8WA Extension](./showcase/V07.png)
+![8WA Extension](./showcase/V08.png)
 
 ## Key Features
 
