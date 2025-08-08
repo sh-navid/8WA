@@ -424,3 +424,10 @@ button:hover {
   left: 1rem;
   opacity: 0.5;
 }
+
+/* Iframe Fix */
+@media (max-width: 1023px) {
+  .tab2 iframe {
+    height: calc(100vh - 70px); /* Adjust the subtraction value as needed */
+  }
+}

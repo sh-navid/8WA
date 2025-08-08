@@ -3,7 +3,7 @@
   "displayName": "Infinite Web Apps (8WA)",
   "description": "AI code assistant",
   "publisher": "sh-navid",
-  "version": "0.2.580",
+  "version": "0.2.587",
   "icon": "assets/8WA.png",
   "repository": {
     "type": "git",
@@ -109,7 +109,7 @@
         },
         "nabotx.previewUrl": {
           "type": "string",
-          "default": "http://localhost:3000",
+          "default": "http://localhost:3000/",
           "description": "The URL to display in the preview tab."
         }
       }
