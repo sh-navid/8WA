@@ -1,41 +1,41 @@
-# N8X: Your AI-Powered VSCode Assistant
+# Infinit Web Apps (8WA): Your AI-Powered VSCode Assistant
 
 <p align="center">
-  <img src="./assets/logo2.png" alt="N8X (formerly known as NaBotX) Logo" width="120">
+  <img src="./assets/logo2.png" alt="Infinit Web Apps (8WA) => (formerly known as NaBotX) Logo" width="120">
 </p>
 
-**N8X***(formerly known as NaBotX)* is a VSCode extension designed to boost developer productivity with AI-driven coding assistance. This lightweight and privacy-focused tool helps you write code faster and more accurately, while ensuring you retain complete control over your data.
+**8WA***(formerly known as NaBotX)* is a VSCode extension designed to boost developer productivity with AI-driven coding assistance. This lightweight and privacy-focused tool helps you write code faster and more accurately, while ensuring you retain complete control over your data.
 
 ## Latest Release
-- [N8X-Release-V0.1.99](https://github.com/sh-navid/NabotX/releases/tag/Release-V0.1.99)
-- [N8X-Release-V0.2.74](https://github.com/sh-navid/NabotX/releases/tag/Release-V0.2.74)
+- [8WA-Release-V0.1.99](https://github.com/sh-navid/NabotX/releases/tag/Release-V0.1.99)
+- [8WA-Release-V0.2.74](https://github.com/sh-navid/NabotX/releases/tag/Release-V0.2.74)
 
-## N8X Overview
-![N8X Extension](./showcase/V07.png)
+## 8WA Overview
+![8WA Extension](./showcase/V07.png)
 
 ## Key Features
 
 *   **Intelligent Code Completion:** Get smart suggestions and code completions, making coding smoother and faster.
 *   **Customizable LLM Integration:** Connect to your preferred LLM, whether it's running locally or hosted online, ensuring secure and efficient code processing.
-*   **Full Data Control:** Your code stays where you want it. N8X doesn't interact with external servers unless *you* configure it to.
+*   **Full Data Control:** Your code stays where you want it. 8WA doesn't interact with external servers unless *you* configure it to.
 *   **Broad Language Support:** Supports a wide variety of programming languages.
 *   **Lightweight & Performant:** Experience fast performance.
 
 ## Configuring Your LLM
 
-The first time you launch N8X, you'll be prompted to configure your LLM settings.
+The first time you launch 8WA, you'll be prompted to configure your LLM settings.
 
 ![Configuring LLM Settings](./showcase/C03.png)
 
-You can also manually configure these settings by pressing `Ctrl+Shift+P`, typing "N8X" and selecting "N8X: Open Settings."
+You can also manually configure these settings by pressing `Ctrl+Shift+P`, typing "8WA" and selecting "8WA: Open Settings."
 
-![Accessing N8X Settings](./showcase/C01.png)
+![Accessing 8WA Settings](./showcase/C01.png)
 
 ## Usage Instructions
 
-N8X offers multiple ways to interact:
+8WA offers multiple ways to interact:
 
-*   **Direct Prompting:** Send your prompt directly to the N8X chat window.
+*   **Direct Prompting:** Send your prompt directly to the 8WA chat window.
 *   **Contextual Chat ("Add 2 Chat"):**
     *   Right-click on a file or folder in the Explorer and select "Add File/Folder to chat".
     *   Select text within a file, right-click, and choose "Add to chat".
@@ -76,7 +76,7 @@ Future development plans include:
 
 ## Compilation Instructions
 
-To compile N8X from source:
+To compile 8WA from source:
 
 1. Install `vsce` (Visual Studio Code Extensions) globally using npm: `npm install -g vsce`
 2. Package the extension using the command: `vsce package`
@@ -89,7 +89,7 @@ To compile N8X from source:
 
 
 ## Licensing
-N8X(NaBotX) is released under the Apache License 2.0. See the [LICENSE](./LICENSE) file for complete license information.
+8WA(NaBotX) is released under the Apache License 2.0. See the [LICENSE](./LICENSE) file for complete license information.
 
 ## Font Attribution
 
