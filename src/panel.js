@@ -219,9 +219,15 @@ function addBotMessage(response) {
         .addClass("reject-button")
         .hide();
 
+      const commitButton = $("<button>")
+        .text("COMMIT ALL")
+        .addClass("accept-button")
+        .hide();
+
       const buttonsContainer = $("<div>")
         .addClass("code-decision-buttons")
         .append(acceptButton)
+        .append(commitButton)
         .append(rejectButton);
 
       msgDiv.append(buttonsContainer);
@@ -245,22 +251,20 @@ function addBotMessage(response) {
             : "replaceActiveFile";
 
           setTimeout(() => {
-            vscode.postMessage({ command: "openCodeFile", code });
-
-            setTimeout(() => {
-              vscode.postMessage({ command: replaceCommand, code });
-            }, 1000);
+            vscode.postMessage({ command: replaceCommand, code });
           }, delay);
-          delay += 2000;
+          delay += 1000;
         });
         acceptButton.hide();
         rejectButton.show();
+        commitButton.show();
       });
 
       rejectButton.click(function () {
         vscode.postMessage({ command: "callGitDiscard" });
         acceptButton.show();
         rejectButton.hide();
+        commitButton.hide();
       });
     }
 
