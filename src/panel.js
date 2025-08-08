@@ -219,9 +219,15 @@ function addBotMessage(response) {
         .addClass("reject-button")
         .hide();
 
+      const commitButton = $("<button>")
+        .text("COMMIT ALL")
+        .addClass("accept-button")
+        .hide();
+
       const buttonsContainer = $("<div>")
         .addClass("code-decision-buttons")
         .append(acceptButton)
+        .append(commitButton)
         .append(rejectButton);
 
       msgDiv.append(buttonsContainer);
@@ -251,12 +257,14 @@ function addBotMessage(response) {
         });
         acceptButton.hide();
         rejectButton.show();
+        commitButton.show();
       });
 
       rejectButton.click(function () {
         vscode.postMessage({ command: "callGitDiscard" });
         acceptButton.show();
         rejectButton.hide();
+        commitButton.hide();
       });
     }
 
