@@ -4,7 +4,7 @@
   "description": "This VSCode extension helps developers code more efficiently with AI assistance. Currently, it serves as a simple alternative to Copilot or Cursor.",
   "publisher": "sh-navid",
   "version": "0.2.540",
-  "icon": "assets/logo.png",
+  "icon": "assets/logo2.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/sh-navid/n8x"
