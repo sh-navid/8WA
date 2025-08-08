@@ -245,10 +245,7 @@ function addBotMessage(response) {
             : "replaceActiveFile";
 
           setTimeout(() => {
-            // vscode.postMessage({ command: "openCodeFile", code });
-            //setTimeout(() => {
             vscode.postMessage({ command: replaceCommand, code });
-            //}, 500);
           }, delay);
           delay += 1000;
         });
