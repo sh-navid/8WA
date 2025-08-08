@@ -3,7 +3,7 @@
   "displayName": "Infinit Web Apps (8WA)",
   "description": "AI code assistant",
   "publisher": "sh-navid",
-  "version": "0.2.556",
+  "version": "0.2.558",
   "icon": "assets/8WA.png",
   "repository": {
     "type": "git",
@@ -59,14 +59,14 @@
       "sidebar": [
         {
           "id": "nabotxSidePanel",
-          "title": "Infinit Web Apps (8WA)",
+          "title": "Infinit Web Apps Extension (8WA)",
           "icon": "assets/logo.png"
         }
       ],
       "activitybar": [
         {
           "id": "nabotxActivityBar",
-          "title": "Infinit Web Apps (8WA)",
+          "title": "Infinit Web Apps Extension (8WA)",
           "icon": "assets/logo.png"
         }
       ]
@@ -76,7 +76,7 @@
         {
           "type": "webview",
           "id": "nabotxActivityBarView",
-          "name": "Infinit Web Apps (8WA)",
+          "name": "NaBotX",
           "icon": "assets/8WA.png"
         }
       ],
@@ -84,7 +84,7 @@
         {
           "type": "webview",
           "id": "nabotxSidePanelView",
-          "name": "Infinit Web Apps (8WA)",
+          "name": "NaBotX",
           "icon": "assets/8WA.png"
         }
       ]
