@@ -56,6 +56,9 @@ class NaBotXSidePanelProvider {
         await openCodeFile(message.code);
         await this._replaceActiveFile(message.code);
         break;
+      case "replaceCodeFileSilently":
+        await this._replaceCodeFileSilently(message.code);
+        break;
       case "copyCodeBlock":
         await this._copyCodeBlock(message.code);
         break;
@@ -132,6 +135,25 @@ class NaBotXSidePanelProvider {
     await this._cloneAndModifyActiveFile(code, async (modifiedCode) => {
       await replaceActiveFile(modifiedCode);
     });
+  }
+
+  async _replaceCodeFileSilently(code) {
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) {
+      vscode.window.showErrorMessage("No active editor.");
+      return;
+    }
+
+    const filePath = editor.document.uri.fsPath;
+    try {
+      const modifiedCode = removeCommentStructure(code);
+      fs.writeFileSync(filePath, modifiedCode);
+      console.log(`File replaced silently: ${filePath}`);
+    } catch (err) {
+      vscode.window.showErrorMessage(
+        `Failed to replace file content silently: ${err.message}`
+      );
+    }
   }
 
   async _copyCodeBlock(code) {
