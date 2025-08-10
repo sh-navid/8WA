@@ -138,13 +138,25 @@ class NaBotXSidePanelProvider {
   }
 
   async _replaceCodeFileSilently(code) {
-   const filePathMatch = code.match(/^.*?\[\[(.*?)\]\]/);
+    const filePathMatch = code.match(/^.*?\[\[(.*?)\]\]/);
     if (!filePathMatch || !filePathMatch[1]) {
       return vscode.window.showErrorMessage(
         "File path not found in the code block."
       );
     }
-    const filePath = filePathMatch[1].trim();
+    let filePath = filePathMatch[1].trim();
+
+    // Check if the file path is absolute or relative
+    if (!path.isAbsolute(filePath)) {
+      // If the file path is relative make it absolute relative to workspace.
+      const workspaceFolders = vscode.workspace.workspaceFolders;
+      if (!workspaceFolders || workspaceFolders.length === 0) {
+        return vscode.window.showErrorMessage(
+          "No workspace folder open to resolve relative path."
+        );
+      }
+      filePath = path.join(workspaceFolders[0].uri.fsPath, filePath);
+    }
 
     try {
       const modifiedCode = removeCommentStructure(code);
