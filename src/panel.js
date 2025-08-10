@@ -248,7 +248,7 @@ function addBotMessage(response) {
           const isTerminalCode = code.trim().startsWith("#[[Terminal]]");
           const replaceCommand = isTerminalCode
             ? "copyToTerminal"
-            : "replaceActiveFile";
+            : /* "replaceActiveFile" */"replaceCodeFileSilently";
 
           setTimeout(() => {
             vscode.postMessage({ command: replaceCommand, code });

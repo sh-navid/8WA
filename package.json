@@ -1,9 +1,9 @@
 {
   "name": "8wa",
-  "displayName": "Infinite Web Apps (8WA)",
+  "displayName": "Infinite Work Automation (8WA)",
   "description": "AI code assistant",
   "publisher": "sh-navid",
-  "version": "0.2.587",
+  "version": "0.2.603",
   "icon": "assets/8WA.png",
   "repository": {
     "type": "git",
@@ -59,14 +59,14 @@
       "sidebar": [
         {
           "id": "nabotxSidePanel",
-          "title": "Infinite Web Apps Extension (8WA)",
+          "title": "Infinite Work Automation Extension (8WA)",
           "icon": "assets/8WA.png"
         }
       ],
       "activitybar": [
         {
           "id": "nabotxActivityBar",
-          "title": "Infinite Web Apps Extension (8WA)",
+          "title": "Infinite Work Automation Extension (8WA)",
           "icon": "assets/8WA.png"
         }
       ]

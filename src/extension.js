@@ -56,6 +56,9 @@ class NaBotXSidePanelProvider {
         await openCodeFile(message.code);
         await this._replaceActiveFile(message.code);
         break;
+      case "replaceCodeFileSilently":
+        await this._replaceCodeFileSilently(message.code);
+        break;
       case "copyCodeBlock":
         await this._copyCodeBlock(message.code);
         break;
@@ -132,6 +135,38 @@ class NaBotXSidePanelProvider {
     await this._cloneAndModifyActiveFile(code, async (modifiedCode) => {
       await replaceActiveFile(modifiedCode);
     });
+  }
+
+  async _replaceCodeFileSilently(code) {
+    const filePathMatch = code.match(/^.*?\[\[(.*?)\]\]/);
+    if (!filePathMatch || !filePathMatch[1]) {
+      return vscode.window.showErrorMessage(
+        "File path not found in the code block."
+      );
+    }
+    let filePath = filePathMatch[1].trim();
+
+    // Check if the file path is absolute or relative
+    if (!path.isAbsolute(filePath)) {
+      // If the file path is relative make it absolute relative to workspace.
+      const workspaceFolders = vscode.workspace.workspaceFolders;
+      if (!workspaceFolders || workspaceFolders.length === 0) {
+        return vscode.window.showErrorMessage(
+          "No workspace folder open to resolve relative path."
+        );
+      }
+      filePath = path.join(workspaceFolders[0].uri.fsPath, filePath);
+    }
+
+    try {
+      const modifiedCode = removeCommentStructure(code);
+      fs.writeFileSync(filePath, modifiedCode);
+      console.log(`File replaced silently: ${filePath}`);
+    } catch (err) {
+      vscode.window.showErrorMessage(
+        `Failed to replace file content silently: ${err.message}`
+      );
+    }
   }
 
   async _copyCodeBlock(code) {
