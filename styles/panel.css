@@ -67,7 +67,7 @@ body {
 
 /* Input Wrapper Styles */
 .input-wrapper {
-  position: fixed;
+  position: absolute; /* Changed to absolute */
   bottom: 0.5rem;
   left: 50%;
   z-index: 1000;
@@ -401,11 +401,13 @@ button:hover {
   #tab1,
   #tab2 {
     display: flex !important; /* Ensure they are displayed */
+    height: 100%;
   }
 
   #tab1 {
     width: 30% !important;
     border-left: 1px solid var(--vscode-widget-border);
+    position: relative; /* Add relative positioning */
   }
 
   #tab2 {
