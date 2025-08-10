@@ -138,13 +138,14 @@ class NaBotXSidePanelProvider {
   }
 
   async _replaceCodeFileSilently(code) {
-    const editor = vscode.window.activeTextEditor;
-    if (!editor) {
-      vscode.window.showErrorMessage("No active editor.");
-      return;
+   const filePathMatch = code.match(/^.*?\[\[(.*?)\]\]/);
+    if (!filePathMatch || !filePathMatch[1]) {
+      return vscode.window.showErrorMessage(
+        "File path not found in the code block."
+      );
     }
+    const filePath = filePathMatch[1].trim();
 
-    const filePath = editor.document.uri.fsPath;
     try {
       const modifiedCode = removeCommentStructure(code);
       fs.writeFileSync(filePath, modifiedCode);
