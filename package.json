@@ -1,13 +1,13 @@
 {
-  "name": "8wa",
-  "displayName": "Infinite Work Automation (8WA)",
-  "description": "AI code assistant",
+  "name": "8WA",
+  "displayName": "8WA eXtension",
+  "description": "AI code assistant for infinite workflow automation",
   "publisher": "sh-navid",
-  "version": "0.2.604",
+  "version": "0.2.656",
   "icon": "assets/8WA.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sh-navid/8wa"
+    "url": "https://github.com/sh-navid/8WA"
   },
   "engines": {
     "vscode": "^1.100.0"
@@ -59,14 +59,14 @@
       "sidebar": [
         {
           "id": "nabotxSidePanel",
-          "title": "Infinite Work Automation Extension (8WA)",
+          "title": "8WA Code eXtension",
           "icon": "assets/8WA.png"
         }
       ],
       "activitybar": [
         {
           "id": "nabotxActivityBar",
-          "title": "Infinite Work Automation Extension (8WA)",
+          "title": "8WA Code eXtension",
           "icon": "assets/8WA.png"
         }
       ]

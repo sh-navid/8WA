@@ -67,7 +67,6 @@ body {
 
 /* Input Wrapper Styles */
 .input-wrapper {
-  position: absolute; /* Changed to absolute */
   bottom: 0.5rem;
   left: 50%;
   z-index: 1000;
@@ -82,6 +81,7 @@ body {
   box-shadow: 0 4px 12px var(--vscode-shadow, rgba(0, 0, 0, 0.15));
   width: 97%;
   padding: 0.4rem 0.65rem;
+  position: absolute;
 }
 
 .input-wrapper textarea {
@@ -90,15 +90,15 @@ body {
   color: var(--vscode-input-foreground);
   font-size: 0.8rem;
   padding: 0.75rem 1rem;
-  min-height: 8rem;
-  max-height: 20rem;
-  flex-grow: 1;
+  height:6rem !important;
+  flex:1;
   outline: none;
   resize: vertical;
   scrollbar-width: thin;
   scrollbar-color: var(--vscode-scrollbarSlider-background)
     var(--vscode-input-background);
   margin-top: 1.5rem !important;
+  
 }
 
 .input-wrapper textarea::-webkit-scrollbar {
