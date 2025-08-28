@@ -1,4 +1,5 @@
-# Infinite Work Automation Extension (8WA): Your AI-Powered VSCode Assistant
+# Infinite Work Automation (8WA)
+Your AI-Powered VSCode Assistant eXtension
 
 <p align="center">
   <img src="./assets/8WA.png" alt="Infinite Work Automation Extension (8WA) => (formerly known as NaBotX) Logo" width="120">
