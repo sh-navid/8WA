@@ -81,7 +81,7 @@ body {
   box-shadow: 0 4px 12px var(--vscode-shadow, rgba(0, 0, 0, 0.15));
   width: 97%;
   padding: 0.4rem 0.65rem;
-  position: absolute;
+  position: fixed;
 }
 
 .input-wrapper textarea {
