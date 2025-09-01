@@ -13,26 +13,26 @@ const {
   addDirectoryContentsToChat,
 } = require("./commands/commands");
 const {
-  buildPreferencesStructure,
-  buildProjectStructure,
-  isExcludedFromChat,
-  diffCodeBlock,
   undoCodeBlock,
+  diffCodeBlock,
+  isExcludedFromChat,
+  buildProjectStructure,
+  buildPreferencesStructure,
 } = require("./helpers/extensionHelper");
 const {
-  load,
   uri,
-  checkConfiguration,
+  load,
   handleN8xJson,
   handleGitignore,
+  checkConfiguration,
 } = require("./helpers/fileSystemHelper");
 const { callGitDiscard } = require("./services/gitService");
 
 class NaBotXSidePanelProvider {
   constructor(extensionUri) {
     this._extensionUri = extensionUri;
-    this._view = null;
     this._backupFilePath = null;
+    this._view = null;
   }
 
   async resolveWebviewView(webviewView) {
@@ -60,7 +60,7 @@ class NaBotXSidePanelProvider {
         await this._replaceCodeFileSilently(message.code);
         break;
       case "copyCodeBlock":
-        await this._copyCodeBlock(message.code);
+        await copyCodeBlock(removeCommentStructure(code));
         break;
       case "addToChat":
         await this._addToChat(message.selectedText);
@@ -169,11 +169,6 @@ class NaBotXSidePanelProvider {
     }
   }
 
-  async _copyCodeBlock(code) {
-    code = removeCommentStructure(code);
-    await copyCodeBlock(code);
-  }
-
   async _addToChat(selectedText, relativePath = "") {
     if (!this._view) {
       console.warn("Webview is not yet resolved. Message not sent.");
@@ -210,15 +205,21 @@ class NaBotXSidePanelProvider {
 
   _getHtmlForWebview(webview) {
     let html = load(this, "views", "panel.html");
-    const defaultConfig = { path: "", token: "", model: "", previewUrl: "http://localhost:3000" };
+    const defaultConfig = {
+      path: "",
+      token: "",
+      model: "",
+      previewUrl: "http://localhost:3000",
+    };
     const configuration = vscode.workspace.getConfiguration("nabotx");
     const pathValue = configuration.get("path") || defaultConfig.path;
     const tokenValue = configuration.get("token") || defaultConfig.token;
     const modelValue = configuration.get("model") || defaultConfig.model;
-    const previewUrlValue = configuration.get("previewUrl") || defaultConfig.previewUrl;
-    const general = load(this, "configs", "general.config.json", true);
+    const previewUrlValue =
+      configuration.get("previewUrl") || defaultConfig.previewUrl;
+    const config = load(this, "configs", "config.json", true);
 
-    const scripts = general.scripts
+    const scripts = config.scripts
       .map(
         (x) =>
           `<script src="${
@@ -226,7 +227,7 @@ class NaBotXSidePanelProvider {
           }"></script>`
       )
       .join("");
-    const styles = general.styles
+    const styles = config.styles
       .map(
         (x) =>
           `<link href="${
@@ -236,15 +237,15 @@ class NaBotXSidePanelProvider {
       .join("");
 
     html = html
-      .replaceAll(/\$\{path\}/g, pathValue)
+      .replaceAll(/\$\{rules\}/g, config.rules.assistant)
+      .replaceAll(/\$\{previewUrl\}/g, previewUrlValue)
       .replaceAll(/\$\{token\}/g, tokenValue)
       .replaceAll(/\$\{model\}/g, modelValue)
-      .replaceAll(/\$\{previewUrl\}/g, previewUrlValue)
-      .replaceAll(/\$\{rules\}/g, general.rules.assistant)
       .replaceAll(/\$\{scripts\}/g, scripts)
-      .replaceAll(/\$\{styles\}/g, styles);
+      .replaceAll(/\$\{path\}/g, pathValue)
+      .replaceAll(/\$\{styles\}/g, styles)
 
-    for (const asset of general.assets) {
+    for (const asset of config.assets) {
       html = html.replaceAll(
         new RegExp(`\\$\\{${asset.slice(2)}\\}`, "g"),
         uri(webview, this, "assets", asset.slice(2))
@@ -424,9 +425,9 @@ async function activate(context) {
     vscode.StatusBarAlignment.Right,
     100
   );
+  statusBarItem.command = "nabotx.openPanel";
   statusBarItem.text = "$(rocket) NaBotX";
   statusBarItem.tooltip = "NaBotX";
-  statusBarItem.command = "nabotx.openPanel";
   statusBarItem.show();
   context.subscriptions.push(statusBarItem);
 
