@@ -3,9 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Infinit Web Apps (8WA)</title>
+    <title>NaBotX (N8X)</title>
     ${styles} ${scripts}
-    <style></style>
   </head>
   <body>
     <div class="tab-buttons">
@@ -26,17 +25,21 @@
       <div id="tab1" class="tab-content tab1">
         <div>
           <div id="logoHolder">
-            <img src="${8WA.svg}" alt="NaBotX Logo" width="110rem" />
+            <img
+              src="${logos/N8X.svg}"
+              alt="NaBotX (N8X) Logo"
+              width="110rem"
+            />
             <br />
-            <h3>Start to code with 8WA</h3>
+            <h3>Start to code with NaBotX</h3>
             <span>Type <kbd>/</kbd> to use commands</span>
             <br />
             <br />
             <span>Use <kbd>Ctrl</kbd>+<kbd>Enter</kbd> to send</span>
           </div>
           <div
-            id="chatMessages"
             role="log"
+            id="chatMessages"
             aria-live="polite"
             aria-relevant="additions"
           ></div>
@@ -88,8 +91,8 @@
 
       const token = "${token}";
       const model = "${model}";
-      const path = "${path}";
       const rules = "${rules}";
+      const path = "${path}";
     </script>
   </body>
 </html>

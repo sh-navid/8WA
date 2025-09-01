@@ -1,13 +1,13 @@
 {
-  "name": "8WA",
-  "displayName": "8WA eXtension",
-  "description": "AI code assistant for infinite workflow automation",
+  "name": "N8X",
+  "displayName": "N8X eXtension",
+  "description": "NaBotX is your AI-Powered VSCode Assistant eXtension; A product of Infinite Workflow Automation Extension (8WA).",
   "publisher": "sh-navid",
-  "version": "0.2.658",
-  "icon": "assets/8WA.png",
+  "version": "0.2.674",
+  "icon": "assets/logos/N8X.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sh-navid/8WA"
+    "url": "https://github.com/sh-navid/N8X"
   },
   "engines": {
     "vscode": "^1.100.0"
@@ -23,15 +23,15 @@
     "commands": [
       {
         "command": "nabotx.openSettings",
-        "title": "8WA: Open Settings"
+        "title": "N8X: Open Settings"
       },
       {
         "command": "nabotx.addToChat",
-        "title": "8WA: Add to Chat"
+        "title": "N8X: Add to Chat"
       },
       {
         "command": "nabotx.addToChatExplorer",
-        "title": "8WA: Add File/Folder to chat"
+        "title": "N8X: Add File/Folder to chat"
       }
     ],
     "menus": {
@@ -59,15 +59,15 @@
       "sidebar": [
         {
           "id": "nabotxSidePanel",
-          "title": "8WA Code eXtension",
-          "icon": "assets/8WA.png"
+          "title": "N8X Code eXtension",
+          "icon": "assets/logos/N8X.png"
         }
       ],
       "activitybar": [
         {
           "id": "nabotxActivityBar",
-          "title": "8WA Code eXtension",
-          "icon": "assets/8WA.png"
+          "title": "N8X Code eXtension",
+          "icon": "assets/logos/N8X.png"
         }
       ]
     },
@@ -77,7 +77,7 @@
           "type": "webview",
           "id": "nabotxActivityBarView",
           "name": "NaBotX",
-          "icon": "assets/8WA.png"
+          "icon": "assets/logos/N8X.png"
         }
       ],
       "nabotxSidePanel": [
@@ -85,12 +85,12 @@
           "type": "webview",
           "id": "nabotxSidePanelView",
           "name": "NaBotX",
-          "icon": "assets/8WA.png"
+          "icon": "assets/logos/N8X.png"
         }
       ]
     },
     "configuration": {
-      "title": "8WA Configuration",
+      "title": "N8X Configuration",
       "properties": {
         "nabotx.path": {
           "type": "string",
