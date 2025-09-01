@@ -88,6 +88,12 @@ To compile 8WA from source:
 ## Test
 - `npm run test`
 
+## Commit
+- [Merge] #PullRequestNo FromBranchName
+- [Bug] #IssueNo? IssueTitle|CommitMessage
+- [Feature] #IssueNo? IssueTitle|CommitMessage
+- [Revision] #IssueNo? CommitNo CommitMessage?
+- [Enhancement] #IssueNo? IssueTitle|CommitMessage
 
 ## Licensing
 8WA(NaBotX) is released under the Apache License 2.0. See the [LICENSE](./LICENSE) file for complete license information.
