@@ -1,7 +1,7 @@
+const { removeCommentStructure } = require("./codeHelper");
 const vscode = require("vscode");
 const path = require("path");
 const fs = require("fs");
-const { removeCommentStructure } = require("./codeHelper");
 
 async function buildProjectStructure(webviewView) {
   if (!vscode.workspace.workspaceFolders) {
@@ -18,13 +18,26 @@ async function buildProjectStructure(webviewView) {
 
   try {
     await fs.promises.access(n8xJsonPath, fs.constants.F_OK);
-    const n8xJsonContent = JSON.parse(await fs.promises.readFile(n8xJsonPath, 'utf8'));
-    if (n8xJsonContent.excludeFromChat && Array.isArray(n8xJsonContent.excludeFromChat)) {
+    const n8xJsonContent = JSON.parse(
+      await fs.promises.readFile(n8xJsonPath, "utf8")
+    );
+    if (
+      n8xJsonContent.excludeFromChat &&
+      Array.isArray(n8xJsonContent.excludeFromChat)
+    ) {
       excludeFromChat = n8xJsonContent.excludeFromChat;
     }
-  } catch (e) { }
+  } catch (e) {}
 
-  const ignoredPaths = [".git", "node_modules", "obj", "bin", ".gradle", "gradle", "build"];
+  const ignoredPaths = [
+    ".git",
+    "node_modules",
+    "obj",
+    "bin",
+    ".gradle",
+    "gradle",
+    "build",
+  ];
 
   async function buildDirectoryStructure(
     folderPath,
@@ -71,12 +84,18 @@ async function buildProjectStructure(webviewView) {
       });
 
       const shouldExcludeFromChat = excludeFromChat.some((excludedPath) => {
-        const normalizedExcludedPath = excludedPath.replace(/\\/g, '/').replace(/^\//, '').toLowerCase();
+        const normalizedExcludedPath = excludedPath
+          .replace(/\\/g, "/")
+          .replace(/^\//, "")
+          .toLowerCase();
         if (_isRegex(normalizedExcludedPath)) {
           const regex = new RegExp(normalizedExcludedPath);
           return regex.test(normRelativePath);
         } else {
-          return normRelativePath === normalizedExcludedPath || normRelativePath.startsWith(normalizedExcludedPath + '/');
+          return (
+            normRelativePath === normalizedExcludedPath ||
+            normRelativePath.startsWith(normalizedExcludedPath + "/")
+          );
         }
       });
 
@@ -90,8 +109,8 @@ async function buildProjectStructure(webviewView) {
           ? "└─ "
           : "├─ "
         : isLast
-          ? "└─ "
-          : "├─ ";
+        ? "└─ "
+        : "├─ ";
 
       structure += prefix + pointer + entry.name + "\n";
 
@@ -140,13 +159,16 @@ async function buildPreferencesStructure(webviewView) {
 
   try {
     await fs.promises.access(n8xJsonPath, fs.constants.F_OK);
-    const n8xJsonContent = JSON.parse(await fs.promises.readFile(n8xJsonPath, 'utf8'));
+    const n8xJsonContent = JSON.parse(
+      await fs.promises.readFile(n8xJsonPath, "utf8")
+    );
 
     webviewView.webview.postMessage({
       command: "receiveProjectPreferences",
-      preferences: JSON.stringify(n8xJsonContent.preferences, null, 2) || "No preferences found in n8x.json",
+      preferences:
+        JSON.stringify(n8xJsonContent.preferences, null, 2) ||
+        "No preferences found in n8x.json",
     });
-
   } catch (error) {
     webviewView.webview.postMessage({
       command: "receiveProjectPreferences",
@@ -165,14 +187,21 @@ async function isExcludedFromChat(relativePath) {
 
   try {
     await fs.promises.access(n8xJsonPath, fs.constants.F_OK);
-    const n8xJsonContent = JSON.parse(await fs.promises.readFile(n8xJsonPath, 'utf8'));
+    const n8xJsonContent = JSON.parse(
+      await fs.promises.readFile(n8xJsonPath, "utf8")
+    );
 
-    if (n8xJsonContent.excludeFromChat && Array.isArray(n8xJsonContent.excludeFromChat)) {
+    if (
+      n8xJsonContent.excludeFromChat &&
+      Array.isArray(n8xJsonContent.excludeFromChat)
+    ) {
       const excludeList = n8xJsonContent.excludeFromChat;
-      const normalizedRelativePath = relativePath.replace(/\\/g, '/');
+      const normalizedRelativePath = relativePath.replace(/\\/g, "/");
 
       for (const excludedPath of excludeList) {
-        const normalizedExcludedPath = excludedPath.replace(/\\/g, '/').replace(/^\//, '');
+        const normalizedExcludedPath = excludedPath
+          .replace(/\\/g, "/")
+          .replace(/^\//, "");
 
         if (_isRegex(normalizedExcludedPath)) {
           const regex = new RegExp(normalizedExcludedPath);
@@ -180,11 +209,10 @@ async function isExcludedFromChat(relativePath) {
             return true;
           }
         } else {
-
           if (normalizedRelativePath === normalizedExcludedPath) {
             return true;
           }
-          if (normalizedRelativePath.startsWith(normalizedExcludedPath + '/')) {
+          if (normalizedRelativePath.startsWith(normalizedExcludedPath + "/")) {
             return true;
           }
         }
@@ -229,7 +257,6 @@ async function cloneAndModifyActiveFile(code, modifyFunction, provider) {
     await modifyFunction(modifiedCode);
 
     await document.save();
-
   } catch (error) {
     vscode.window.showErrorMessage(
       `Error cloning/modifying file: ${error.message}`
@@ -240,45 +267,50 @@ async function cloneAndModifyActiveFile(code, modifyFunction, provider) {
 
 async function diffCodeBlock(code, provider) {
   code = removeCommentStructure(code);
-    if (!vscode.window.activeTextEditor) {
-        vscode.window.showErrorMessage("No active text editor found.");
-        return;
-    }
+  if (!vscode.window.activeTextEditor) {
+    vscode.window.showErrorMessage("No active text editor found.");
+    return;
+  }
 
-    const activeEditor = vscode.window.activeTextEditor;
-    const document = activeEditor.document;
-    const originalFilePath = document.uri.fsPath;
-    const fileExtension = path.extname(originalFilePath);
-    const fileName = path.basename(originalFilePath, fileExtension);
-    const cloneFilePath = path.join(
-        path.dirname(originalFilePath),
-        `${fileName}.n8x${fileExtension}`
+  const activeEditor = vscode.window.activeTextEditor;
+  const document = activeEditor.document;
+  const originalFilePath = document.uri.fsPath;
+  const fileExtension = path.extname(originalFilePath);
+  const fileName = path.basename(originalFilePath, fileExtension);
+  const cloneFilePath = path.join(
+    path.dirname(originalFilePath),
+    `${fileName}.n8x${fileExtension}`
+  );
+
+  if (!fs.existsSync(cloneFilePath)) {
+    vscode.window.showErrorMessage(
+      "Clone file not found. Please append or replace file first."
     );
+    return;
+  }
 
-
-    if (!fs.existsSync(cloneFilePath)) {
-        vscode.window.showErrorMessage('Clone file not found. Please append or replace file first.');
-        return;
-    }
+  try {
+    // Open the diff view
+    const originalFileUri = vscode.Uri.file(originalFilePath);
+    const cloneFileUri = vscode.Uri.file(cloneFilePath);
 
     try {
-        // Open the diff view
-        const originalFileUri = vscode.Uri.file(originalFilePath);
-        const cloneFileUri = vscode.Uri.file(cloneFilePath);
-
-        try {
-            await vscode.commands.executeCommand(
-                'vscode.diff',
-                cloneFileUri,
-                originalFileUri,
-                'Diff NaBotX Code'
-            );
-        } catch (error) {
-            vscode.window.showErrorMessage(`Failed to show diff view: ${error.message}`);
-        }
+      await vscode.commands.executeCommand(
+        "vscode.diff",
+        cloneFileUri,
+        originalFileUri,
+        "Diff NaBotX Code"
+      );
     } catch (error) {
-        vscode.window.showErrorMessage(`Failed to show diff view: ${error.message}`);
+      vscode.window.showErrorMessage(
+        `Failed to show diff view: ${error.message}`
+      );
     }
+  } catch (error) {
+    vscode.window.showErrorMessage(
+      `Failed to show diff view: ${error.message}`
+    );
+  }
 }
 
 async function undoCodeBlock(provider) {
@@ -288,7 +320,9 @@ async function undoCodeBlock(provider) {
   }
 
   if (!provider._backupFilePath) {
-    vscode.window.showErrorMessage('No .n8x backup file found for this file. Ensure you have appended or replaced code first.');
+    vscode.window.showErrorMessage(
+      "No .n8x backup file found for this file. Ensure you have appended or replaced code first."
+    );
     return;
   }
 
@@ -296,18 +330,26 @@ async function undoCodeBlock(provider) {
   const document = activeEditor.document;
   const originalFilePath = document.uri.fsPath;
 
-
   try {
-    const backupContent = await fs.promises.readFile(provider._backupFilePath, 'utf8');
+    const backupContent = await fs.promises.readFile(
+      provider._backupFilePath,
+      "utf8"
+    );
 
     await fs.promises.writeFile(originalFilePath, backupContent);
 
-    await vscode.commands.executeCommand("vscode.open", vscode.Uri.file(originalFilePath));
+    await vscode.commands.executeCommand(
+      "vscode.open",
+      vscode.Uri.file(originalFilePath)
+    );
 
-    vscode.window.showInformationMessage('File successfully restored from .n8x backup.');
-
+    vscode.window.showInformationMessage(
+      "File successfully restored from .n8x backup."
+    );
   } catch (error) {
-    vscode.window.showErrorMessage(`Failed to restore file from backup: ${error.message}`);
+    vscode.window.showErrorMessage(
+      `Failed to restore file from backup: ${error.message}`
+    );
   }
 }
 
@@ -317,5 +359,5 @@ module.exports = {
   buildProjectStructure,
   isExcludedFromChat,
   diffCodeBlock,
-  undoCodeBlock
+  undoCodeBlock,
 };

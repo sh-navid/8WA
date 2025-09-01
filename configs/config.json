@@ -45,13 +45,13 @@
   "assets": [
     "~/btn-open-code-file.png",
     "~/btn-replace.png",
+    "~/logos/N8X.svg",
     "~/btn-copy.png",
     "~/btn-diff.png",
     "~/btn-undo.png",
     "~/attach.png",
     "~/clear.png",
     "~/plus.png",
-    "~/send.png",
-    "~/8WA.svg"
+    "~/send.png"
   ]
 }
