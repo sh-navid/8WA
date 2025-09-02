@@ -402,9 +402,6 @@ document.addEventListener("DOMContentLoaded", function () {
       case "/break":
         vscode.postMessage({ command: "buildProjectStructure" });
         setTimeout(() => {
-          vscode.postMessage({ command: "buildPreferencesStructure" });
-        }, 1000);
-        setTimeout(() => {
           text = `Thinking about project structure...`;
           prompt = `Do not output any code; Think about how to make project structure more clean by moving files, methods etc to repositories, services, helpers, components, views. models and such.`;
           proceedToSend("", text, prompt, true);

@@ -53,5 +53,11 @@
     "~/clear.png",
     "~/plus.png",
     "~/send.png"
+  ],
+  "settingsConfigKeys": [
+    "nabotx.previewUrl",
+    "nabotx.model",
+    "nabotx.token",
+    "nabotx.path"
   ]
 }
