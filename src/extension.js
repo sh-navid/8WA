@@ -59,9 +59,6 @@ class PanelProvider {
       case "copyCodeBlock":
         await copyCodeBlock(removeCommentStructure(code));
         break;
-      case "addToChat":
-        // await this._addToChat(message.selectedText); // Removed here
-        break;
       case "buildProjectStructure":
         await buildProjectStructure(webviewView);
         break;
@@ -225,63 +222,17 @@ async function activate(context) {
   ["nabotxSidePanelView", "nabotxActivityBarView"].forEach((viewId) => {
     context.subscriptions.push(
       vscode.window.registerWebviewViewProvider(viewId, provider)
-    )
-  })
+    );
+  });
 
-  context.subscriptions.push(
-    vscode.commands.registerCommand("nabotx.openSettings", () => {
-      vscode.commands.executeCommand("workbench.action.openSettings", "nabotx");
-    })
-  );
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand("nabotx.openPanel", () => {
-      vscode.commands.executeCommand(
-        "workbench.view.extension.nabotxSidePanel"
-      );
-    })
-  );
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "nabotx.addFileToChat",
-      async (resourceUri) => {
-        await chatService.addFileToChat(resourceUri);
-      }
-    )
-  );
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand("nabotx.addToChat", () =>
-      chatService.addToChat()
-    )
-  );
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand("nabotx.buildProjectStructure", async () =>
-      provider._view
-        ? await provider._buildProjectStructure(provider._view)
-        : null
-    )
-  );
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand("nabotx.diffCodeBlock", async () =>
-      provider._diffCodeBlock("")
-    )
-  );
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand("nabotx.undoCodeBlock", async () =>
-      provider._undoCodeBlock()
-    )
-  );
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand("nabotx.callGitDiscard", async () =>
-      provider._callGitDiscard()
-    )
-  );
+  Object.entries({
+    "nabotx.openSettings": () =>
+      vscode.commands.executeCommand("workbench.action.openSettings", "nabotx"),
+    "nabotx.addFileToChat": async (uri) => await chatService.addFileToChat(uri),
+    "nabotx.addToChat": () => chatService.addToChat(),
+  }).forEach(([key, value]) => {
+    context.subscriptions.push(vscode.commands.registerCommand(key, value));
+  });
 
   checkConfiguration();
   vscode.workspace.onDidChangeConfiguration((event) => {
