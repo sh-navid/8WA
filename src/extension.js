@@ -243,7 +243,7 @@ class NaBotXSidePanelProvider {
       .replaceAll(/\$\{model\}/g, modelValue)
       .replaceAll(/\$\{scripts\}/g, scripts)
       .replaceAll(/\$\{path\}/g, pathValue)
-      .replaceAll(/\$\{styles\}/g, styles)
+      .replaceAll(/\$\{styles\}/g, styles);
 
     for (const asset of config.assets) {
       html = html.replaceAll(
@@ -423,12 +423,13 @@ async function activate(context) {
 
   checkConfiguration();
   vscode.workspace.onDidChangeConfiguration((event) => {
-    if (
-      event.affectsConfiguration("nabotx.path") ||
-      event.affectsConfiguration("nabotx.token") ||
-      event.affectsConfiguration("nabotx.model") ||
-      event.affectsConfiguration("nabotx.previewUrl")
-    ) {
+    const settingsConfigKeys = [
+      "nabotx.path",
+      "nabotx.token",
+      "nabotx.model",
+      "nabotx.previewUrl",
+    ];
+    if (settingsConfigKeys.some((key) => event.affectsConfiguration(key))) {
       checkConfiguration();
     }
   });
