@@ -421,16 +421,6 @@ async function activate(context) {
     })
   );
 
-  const statusBarItem = vscode.window.createStatusBarItem(
-    vscode.StatusBarAlignment.Right,
-    100
-  );
-  statusBarItem.command = "nabotx.openPanel";
-  statusBarItem.text = "$(rocket) NaBotX";
-  statusBarItem.tooltip = "NaBotX";
-  statusBarItem.show();
-  context.subscriptions.push(statusBarItem);
-
   checkConfiguration();
   vscode.workspace.onDidChangeConfiguration((event) => {
     if (
