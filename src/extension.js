@@ -222,13 +222,11 @@ async function activate(context) {
   provider = new PanelProvider(context.extensionUri);
   const chatService = new ChatService(provider);
 
-   context.subscriptions.push(
-    vscode.window.registerWebviewViewProvider("nabotxSidePanelView", provider)
-  );
-
-  context.subscriptions.push(
-    vscode.window.registerWebviewViewProvider("nabotxActivityBarView", provider)
-  );
+  ["nabotxSidePanelView", "nabotxActivityBarView"].forEach((viewId) => {
+    context.subscriptions.push(
+      vscode.window.registerWebviewViewProvider(viewId, provider)
+    )
+  })
 
   context.subscriptions.push(
     vscode.commands.registerCommand("nabotx.openSettings", () => {
