@@ -1,4 +1,3 @@
-/*[[src/commands/commandCopyCodeBlock.js]]*/
 const vscode = require('vscode');
 
 async function copyCodeBlock(code) {
