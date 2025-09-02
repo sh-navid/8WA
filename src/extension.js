@@ -253,10 +253,10 @@ class NaBotXSidePanelProvider {
   }
 }
 
-let nabotxSidePanelProvider;
+let provider;
 
 async function activate(context) {
-  nabotxSidePanelProvider = new NaBotXSidePanelProvider(context.extensionUri);
+  provider = new NaBotXSidePanelProvider(context.extensionUri);
 
   context.subscriptions.push(
     vscode.commands.registerCommand("nabotx.openSettings", () => {
@@ -265,17 +265,11 @@ async function activate(context) {
   );
 
   context.subscriptions.push(
-    vscode.window.registerWebviewViewProvider(
-      "nabotxSidePanelView",
-      nabotxSidePanelProvider
-    )
+    vscode.window.registerWebviewViewProvider("nabotxSidePanelView", provider)
   );
 
   context.subscriptions.push(
-    vscode.window.registerWebviewViewProvider(
-      "nabotxActivityBarView",
-      nabotxSidePanelProvider
-    )
+    vscode.window.registerWebviewViewProvider("nabotxActivityBarView", provider)
   );
 
   context.subscriptions.push(
@@ -313,7 +307,7 @@ async function activate(context) {
           }
 
           await addDirectoryContentsToChat(
-            nabotxSidePanelProvider,
+            provider,
             resourceUri.fsPath,
             ignoredPaths
           );
@@ -327,7 +321,7 @@ async function activate(context) {
             return;
           }
 
-          nabotxSidePanelProvider._addToChat(fileContent, relPath);
+          provider._addToChat(fileContent, relPath);
         }
       }
     )
@@ -366,40 +360,33 @@ async function activate(context) {
         return;
       }
 
-      nabotxSidePanelProvider._addToChat(selectedText, relPath);
+      provider._addToChat(selectedText, relPath);
     })
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "nabotx.buildProjectStructure",
-      async () => {
-        if (nabotxSidePanelProvider._view) {
-          await nabotxSidePanelProvider._buildProjectStructure(
-            nabotxSidePanelProvider._view
-          );
-        } else {
-          vscode.window.showErrorMessage("NaBotX panel is not active.");
-        }
-      }
+    vscode.commands.registerCommand("nabotx.buildProjectStructure", async () =>
+      provider._view
+        ? await provider._buildProjectStructure(provider._view)
+        : null
     )
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand("nabotx.diffCodeBlock", async () =>
-      nabotxSidePanelProvider._diffCodeBlock("")
+      provider._diffCodeBlock("")
     )
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand("nabotx.undoCodeBlock", async () =>
-      nabotxSidePanelProvider._undoCodeBlock()
+      provider._undoCodeBlock()
     )
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand("nabotx.callGitDiscard", async () =>
-      nabotxSidePanelProvider._callGitDiscard()
+      provider._callGitDiscard()
     )
   );
 
