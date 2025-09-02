@@ -16,7 +16,6 @@ const {
 const {
   undoCodeBlock,
   diffCodeBlock,
-  isExcludedFromChat,
   buildProjectStructure,
 } = require("./helpers/extensionHelper");
 const {
@@ -177,11 +176,6 @@ class NaBotXSidePanelProvider {
       );
     }
 
-    if (await isExcludedFromChat(relativePath)) {
-      console.log(`File/folder ${relativePath} is excluded from chat.`);
-      return;
-    }
-
     try {
       this._view.webview.postMessage({
         command: "addTextToChat",
@@ -299,13 +293,6 @@ async function activate(context) {
         }
         if (stats.isDirectory()) {
           const ignoredPaths = [".git", "node_modules", "obj", "bin"];
-
-          const relPath = getRelativePath(resourceUri);
-          if (await isExcludedFromChat(relPath)) {
-            console.log(`File/folder ${relPath} is excluded from chat.`);
-            return;
-          }
-
           await addDirectoryContentsToChat(
             provider,
             resourceUri.fsPath,
@@ -315,12 +302,6 @@ async function activate(context) {
           const doc = await vscode.workspace.openTextDocument(resourceUri);
           const fileContent = doc.getText();
           const relPath = getRelativePath(resourceUri);
-
-          if (await isExcludedFromChat(relPath)) {
-            console.log(`File/folder ${relPath} is excluded from chat.`);
-            return;
-          }
-
           provider._addToChat(fileContent, relPath);
         }
       }
@@ -354,12 +335,6 @@ async function activate(context) {
         workspaceFolder + "/",
         ""
       );
-
-      if (await isExcludedFromChat(relPath)) {
-        console.log(`File/folder ${relPath} is excluded from chat.`);
-        return;
-      }
-
       provider._addToChat(selectedText, relPath);
     })
   );

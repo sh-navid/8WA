@@ -145,54 +145,6 @@ async function buildProjectStructure(webviewView) {
   }
 }
 
-async function isExcludedFromChat(relativePath) {
-  if (!vscode.workspace.workspaceFolders) {
-    return false;
-  }
-
-  const workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
-  const n8xJsonPath = path.join(workspaceFolder, "n8x.json");
-
-  try {
-    await fs.promises.access(n8xJsonPath, fs.constants.F_OK);
-    const n8xJsonContent = JSON.parse(
-      await fs.promises.readFile(n8xJsonPath, "utf8")
-    );
-
-    if (
-      n8xJsonContent.excludeFromChat &&
-      Array.isArray(n8xJsonContent.excludeFromChat)
-    ) {
-      const excludeList = n8xJsonContent.excludeFromChat;
-      const normalizedRelativePath = relativePath.replace(/\\/g, "/");
-
-      for (const excludedPath of excludeList) {
-        const normalizedExcludedPath = excludedPath
-          .replace(/\\/g, "/")
-          .replace(/^\//, "");
-
-        if (_isRegex(normalizedExcludedPath)) {
-          const regex = new RegExp(normalizedExcludedPath);
-          if (regex.test(normalizedRelativePath)) {
-            return true;
-          }
-        } else {
-          if (normalizedRelativePath === normalizedExcludedPath) {
-            return true;
-          }
-          if (normalizedRelativePath.startsWith(normalizedExcludedPath + "/")) {
-            return true;
-          }
-        }
-      }
-    }
-  } catch (e) {
-    return false;
-  }
-
-  return false;
-}
-
 function _isRegex(str) {
   try {
     new RegExp(str);
@@ -324,7 +276,6 @@ async function undoCodeBlock(provider) {
 module.exports = {
   cloneAndModifyActiveFile,
   buildProjectStructure,
-  isExcludedFromChat,
   diffCodeBlock,
   undoCodeBlock,
 };
