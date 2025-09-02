@@ -145,38 +145,6 @@ async function buildProjectStructure(webviewView) {
   }
 }
 
-async function buildPreferencesStructure(webviewView) {
-  if (!vscode.workspace.workspaceFolders) {
-    webviewView.webview.postMessage({
-      command: "receiveProjectPreferences",
-      preferences: "No workspace folder open.",
-    });
-    return;
-  }
-
-  const workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
-  const n8xJsonPath = path.join(workspaceFolder, "n8x.json");
-
-  try {
-    await fs.promises.access(n8xJsonPath, fs.constants.F_OK);
-    const n8xJsonContent = JSON.parse(
-      await fs.promises.readFile(n8xJsonPath, "utf8")
-    );
-
-    webviewView.webview.postMessage({
-      command: "receiveProjectPreferences",
-      preferences:
-        JSON.stringify(n8xJsonContent.preferences, null, 2) ||
-        "No preferences found in n8x.json",
-    });
-  } catch (error) {
-    webviewView.webview.postMessage({
-      command: "receiveProjectPreferences",
-      preferences: "n8x.json file not found or invalid.",
-    });
-  }
-}
-
 async function isExcludedFromChat(relativePath) {
   if (!vscode.workspace.workspaceFolders) {
     return false;
@@ -354,7 +322,6 @@ async function undoCodeBlock(provider) {
 }
 
 module.exports = {
-  buildPreferencesStructure,
   cloneAndModifyActiveFile,
   buildProjectStructure,
   isExcludedFromChat,

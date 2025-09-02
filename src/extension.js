@@ -18,7 +18,6 @@ const {
   diffCodeBlock,
   isExcludedFromChat,
   buildProjectStructure,
-  buildPreferencesStructure,
 } = require("./helpers/extensionHelper");
 const {
   uri,
@@ -68,9 +67,6 @@ class NaBotXSidePanelProvider {
         break;
       case "buildProjectStructure":
         await buildProjectStructure(webviewView);
-        break;
-      case "buildPreferencesStructure":
-        await buildPreferencesStructure(webviewView);
         break;
       case "diffCodeBlock":
         await diffCodeBlock(message.code);
@@ -390,36 +386,21 @@ async function activate(context) {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "nabotx.buildPreferencesStructure",
-      async () => {
-        if (nabotxSidePanelProvider._view) {
-          await nabotxSidePanelProvider._buildPreferencesStructure(
-            nabotxSidePanelProvider._view
-          );
-        } else {
-          vscode.window.showErrorMessage("NaBotX panel is not active.");
-        }
-      }
+    vscode.commands.registerCommand("nabotx.diffCodeBlock", async () =>
+      nabotxSidePanelProvider._diffCodeBlock("")
     )
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("nabotx.diffCodeBlock", async () => {
-      nabotxSidePanelProvider._diffCodeBlock("");
-    })
+    vscode.commands.registerCommand("nabotx.undoCodeBlock", async () =>
+      nabotxSidePanelProvider._undoCodeBlock()
+    )
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("nabotx.undoCodeBlock", async () => {
-      nabotxSidePanelProvider._undoCodeBlock();
-    })
-  );
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand("nabotx.callGitDiscard", async () => {
-      nabotxSidePanelProvider._callGitDiscard();
-    })
+    vscode.commands.registerCommand("nabotx.callGitDiscard", async () =>
+      nabotxSidePanelProvider._callGitDiscard()
+    )
   );
 
   checkConfiguration();
