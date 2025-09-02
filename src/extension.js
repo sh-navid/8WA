@@ -1,3 +1,4 @@
+const cnf = require("./../configs/config.json");
 const vscode = require("vscode");
 
 const fs = require("fs");
@@ -423,15 +424,8 @@ async function activate(context) {
 
   checkConfiguration();
   vscode.workspace.onDidChangeConfiguration((event) => {
-    const settingsConfigKeys = [
-      "nabotx.path",
-      "nabotx.token",
-      "nabotx.model",
-      "nabotx.previewUrl",
-    ];
-    if (settingsConfigKeys.some((key) => event.affectsConfiguration(key))) {
+    if (cnf.settingsConfigKeys.some((key) => event.affectsConfiguration(key)))
       checkConfiguration();
-    }
   });
 
   await handleN8xJson();
