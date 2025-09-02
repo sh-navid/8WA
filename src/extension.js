@@ -1,12 +1,10 @@
+const { removeCommentStructure } = require("./helpers/codeHelper");
 const ChatService = require("./services/chatService");
 const cnf = require("./../configs/config.json");
 const vscode = require("vscode");
-
-const fs = require("fs");
 const path = require("path");
+const fs = require("fs");
 
-const { getRelativePath } = require("./helpers/fileHelper");
-const { removeCommentStructure } = require("./helpers/codeHelper");
 const {
   openCodeFile,
   copyCodeBlock,
@@ -224,18 +222,18 @@ async function activate(context) {
   provider = new PanelProvider(context.extensionUri);
   const chatService = new ChatService(provider);
 
-  context.subscriptions.push(
-    vscode.commands.registerCommand("nabotx.openSettings", () => {
-      vscode.commands.executeCommand("workbench.action.openSettings", "nabotx");
-    })
-  );
-
-  context.subscriptions.push(
+   context.subscriptions.push(
     vscode.window.registerWebviewViewProvider("nabotxSidePanelView", provider)
   );
 
   context.subscriptions.push(
     vscode.window.registerWebviewViewProvider("nabotxActivityBarView", provider)
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand("nabotx.openSettings", () => {
+      vscode.commands.executeCommand("workbench.action.openSettings", "nabotx");
+    })
   );
 
   context.subscriptions.push(
