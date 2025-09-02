@@ -3,7 +3,7 @@
   "displayName": "N8X eXtension",
   "description": "NaBotX is your AI-Powered VSCode Assistant eXtension; A product of Infinite Workflow Automation Extension (8WA).",
   "publisher": "sh-navid",
-  "version": "0.2.699",
+  "version": "0.2.702",
   "icon": "assets/logos/N8X.png",
   "repository": {
     "type": "git",
@@ -30,8 +30,8 @@
         "title": "N8X: Add to Chat"
       },
       {
-        "command": "nabotx.addToChatExplorer",
-        "title": "N8X: Add File/Folder to chat"
+        "command": "nabotx.addFileToChat",
+        "title": "N8X: Add File to chat"
       }
     ],
     "menus": {
@@ -50,7 +50,7 @@
       ],
       "explorer/context": [
         {
-          "command": "nabotx.addToChatExplorer",
+          "command": "nabotx.addFileToChat",
           "group": "navigation"
         }
       ]

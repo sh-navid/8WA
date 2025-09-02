@@ -278,7 +278,7 @@ async function activate(context) {
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "nabotx.addToChatExplorer",
+      "nabotx.addFileToChat",
       async (resourceUri) => {
         if (!resourceUri) {
           return vscode.window.showInformationMessage(
