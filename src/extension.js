@@ -4,7 +4,7 @@ const vscode = require("vscode");
 
 const fs = require("fs");
 const path = require("path");
-const { commentPath } = require("./helpers/pathHelper");
+
 const { getRelativePath } = require("./helpers/fileHelper");
 const { removeCommentStructure } = require("./helpers/codeHelper");
 const {
@@ -63,7 +63,7 @@ class PanelProvider {
         await copyCodeBlock(removeCommentStructure(code));
         break;
       case "addToChat":
-        await this._addToChat(message.selectedText);
+        // await this._addToChat(message.selectedText); // Removed here
         break;
       case "buildProjectStructure":
         await buildProjectStructure(webviewView);
@@ -163,35 +163,6 @@ class PanelProvider {
       vscode.window.showErrorMessage(
         `Failed to replace file content silently: ${err.message}`
       );
-    }
-  }
-
-  async _addToChat(selectedText, relativePath = "") {
-    if (!this._view) {
-      console.warn("Webview is not yet resolved. Message not sent.");
-      return;
-    }
-    if (!selectedText && !relativePath) {
-      return vscode.window.showInformationMessage(
-        "No file content or path provided."
-      );
-    }
-
-    try {
-      this._view.webview.postMessage({
-        command: "addTextToChat",
-        path: relativePath,
-        raw: selectedText,
-        text:
-          commentPath(relativePath, "[[" + relativePath + "]]") +
-          "\n" +
-          selectedText,
-      });
-    } catch (err) {
-      vscode.window.showErrorMessage(
-        `Error adding text to chat: ${err.message}`
-      );
-      console.error("Error adding text to chat:", err);
     }
   }
 
@@ -304,7 +275,7 @@ async function activate(context) {
           const doc = await vscode.workspace.openTextDocument(resourceUri);
           const fileContent = doc.getText();
           const relPath = getRelativePath(resourceUri);
-          provider._addToChat(fileContent, relPath);
+          await chatService.addTextToChat(fileContent, relPath); // Changed here
         }
       }
     )
