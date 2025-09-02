@@ -122,6 +122,30 @@ class ChatService {
       }
     }
   }
+  async addFileToChat(resourceUri) {
+    if (!resourceUri) {
+      return vscode.window.showInformationMessage(
+        "No file or folder selected."
+      );
+    }
+    let stats;
+    try {
+      stats = fs.statSync(resourceUri.fsPath);
+    } catch (err) {
+      return vscode.window.showErrorMessage(
+        `Error accessing resource: ${err.message}`
+      );
+    }
+    if (stats.isDirectory()) {
+      const ignoredPaths = [".git", "node_modules", "obj", "bin"];
+      await this.addDirToChat(resourceUri.fsPath, ignoredPaths);
+    } else {
+      const doc = await vscode.workspace.openTextDocument(resourceUri);
+      const fileContent = doc.getText();
+      const relPath = getRelativePath(resourceUri);
+      await this.addTextToChat(fileContent, relPath);
+    }
+  }
 }
 
 module.exports = ChatService;

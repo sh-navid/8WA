@@ -250,31 +250,7 @@ async function activate(context) {
     vscode.commands.registerCommand(
       "nabotx.addFileToChat",
       async (resourceUri) => {
-        if (!resourceUri) {
-          return vscode.window.showInformationMessage(
-            "No file or folder selected."
-          );
-        }
-        let stats;
-        try {
-          stats = fs.statSync(resourceUri.fsPath);
-        } catch (err) {
-          return vscode.window.showErrorMessage(
-            `Error accessing resource: ${err.message}`
-          );
-        }
-        if (stats.isDirectory()) {
-          const ignoredPaths = [".git", "node_modules", "obj", "bin"];
-          await chatService.addDirToChat(
-            resourceUri.fsPath,
-            ignoredPaths
-          );
-        } else {
-          const doc = await vscode.workspace.openTextDocument(resourceUri);
-          const fileContent = doc.getText();
-          const relPath = getRelativePath(resourceUri);
-          await chatService.addTextToChat(fileContent, relPath); // Changed here
-        }
+        await chatService.addFileToChat(resourceUri);
       }
     )
   );
