@@ -12,7 +12,6 @@ const {
   copyCodeBlock,
   sendToTerminal,
   replaceActiveFile,
-  addDirectoryContentsToChat,
 } = require("./commands/commands");
 const {
   undoCodeBlock,
@@ -266,8 +265,7 @@ async function activate(context) {
         }
         if (stats.isDirectory()) {
           const ignoredPaths = [".git", "node_modules", "obj", "bin"];
-          await addDirectoryContentsToChat(
-            provider,
+          await chatService.addDirToChat(
             resourceUri.fsPath,
             ignoredPaths
           );
