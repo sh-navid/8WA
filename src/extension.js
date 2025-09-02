@@ -28,7 +28,7 @@ const {
 } = require("./helpers/fileSystemHelper");
 const { callGitDiscard } = require("./services/gitService");
 
-class NaBotXSidePanelProvider {
+class PanelProvider {
   constructor(extensionUri) {
     this._extensionUri = extensionUri;
     this._backupFilePath = null;
@@ -251,7 +251,7 @@ class NaBotXSidePanelProvider {
 let provider;
 
 async function activate(context) {
-  provider = new NaBotXSidePanelProvider(context.extensionUri);
+  provider = new PanelProvider(context.extensionUri);
   const chatService = new ChatService(provider);
 
   context.subscriptions.push(
