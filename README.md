@@ -1,9 +1,13 @@
 # NaBotX (N8X)
 ***NaBotX*** is your AI-Powered VSCode Assistant eXtension; A product of ***Infinite Workflow Automation Extension (8WA)***.
 
-<p align="center">
-  <img src="./assets/logos/N8X_Invert.png" alt="NabotX (N8X) Logo" width="120">
-</p>
+<div style="text-align: center;">
+  <picture width="100%">
+    <source media="(prefers-color-scheme: dark)" srcset="./assets/logos/N8X.png">
+    <source media="(prefers-color-scheme: light)" srcset="./assets/logos/N8X_Invert.png">
+    <img src="./assets/logos/N8X_Invert.png" alt="NabotX (N8X) Logo" width="160">
+  </picture>
+</div>
 
 NabotX (N8X) is a VSCode extension designed to boost developer productivity with AI-driven coding assistance. This lightweight and privacy-focused tool helps you write code faster and more accurately, while ensuring you retain complete control over your data.
 
