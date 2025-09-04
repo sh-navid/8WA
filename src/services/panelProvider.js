@@ -1,5 +1,6 @@
 const { removeCommentStructure } = require("../helpers/codeHelper");
 const { uri, load } = require("../helpers/fileSystemHelper");
+const config = require("./../../configs/config.json");
 const { callGitDiscard } = require("./gitService");
 const FileService = require("./fileService");
 const vscode = require("vscode");
@@ -69,19 +70,17 @@ class PanelProvider {
 
   _getHtmlForWebview(webview) {
     let html = load(this, "views", "panel.html");
-    const defaultConfig = {
+    const _config = {
       path: "",
       token: "",
       model: "",
       previewUrl: "http://localhost:3000",
     };
-    const configuration = vscode.workspace.getConfiguration("nabotx");
-    const pathValue = configuration.get("path") || defaultConfig.path;
-    const tokenValue = configuration.get("token") || defaultConfig.token;
-    const modelValue = configuration.get("model") || defaultConfig.model;
-    const previewUrlValue =
-      configuration.get("previewUrl") || defaultConfig.previewUrl;
-    const config = load(this, "configs", "config.json", true);
+    const vsConfig = vscode.workspace.getConfiguration("nabotx");
+    const pathValue = vsConfig.get("path") || _config.path;
+    const tokenValue = vsConfig.get("token") || _config.token;
+    const modelValue = vsConfig.get("model") || _config.model;
+    const previewUrlValue = vsConfig.get("previewUrl") || _config.previewUrl;
 
     const scripts = config.scripts
       .map(
