@@ -71,27 +71,23 @@ class PanelProvider {
     const vsConfig = vscode.workspace.getConfiguration("nabotx")
 
     const _config = {
+      styles: config.styles
+        .map((x) => `<link href="${this._uri(webview, x, "styles")}" rel="stylesheet"/>`)
+        .join(""),
+      scripts: config.scripts
+        .map((x) => `<script src="${this._uri(webview, x, "src")}"></script>`)
+        .join(""),
       previewUrl: vsConfig.get("previewUrl") || "http://localhost:3000",
       token: vsConfig.get("token") || "",
       model: vsConfig.get("model") || "",
       path: vsConfig.get("path") || "",
-      rules: config.rules.assistant,
-      scripts: config.scripts
-        .map((x) => `<script src="${this._uri(webview, x, "src")}"></script>`)
-        .join(""),
-      styles: config.styles
-        .map((x) => `<link href="${this._uri(webview, x, "styles")}" rel="stylesheet"/>`)
-        .join(""),
+      rules: config.rules.assistant
     }
 
-    html = html
-      .replaceAll(/\$\{previewUrl\}/g, _config.previewUrl)
-      .replaceAll(/\$\{scripts\}/g, _config.scripts)
-      .replaceAll(/\$\{styles\}/g, _config.styles)
-      .replaceAll(/\$\{rules\}/g, _config.rules)
-      .replaceAll(/\$\{token\}/g, _config.token)
-      .replaceAll(/\$\{model\}/g, _config.model)
-      .replaceAll(/\$\{path\}/g, _config.path)
+    Object.keys(_config).forEach((key) => {
+      const placeholder = new RegExp(`\\$\\{${key}\\}`, "g")
+      html = html.replaceAll(placeholder, _config[key])
+    })
 
     for (const asset of config.assets) {
       html = html.replaceAll(

@@ -3,7 +3,7 @@
   "displayName": "N8X eXtension",
   "description": "NaBotX is your AI-Powered VSCode Assistant eXtension; A product of Infinite Workflow Automation Extension (8WA).",
   "publisher": "sh-navid",
-  "version": "0.2.754",
+  "version": "0.2.778",
   "icon": "assets/logos/N8X.png",
   "repository": {
     "type": "git",
