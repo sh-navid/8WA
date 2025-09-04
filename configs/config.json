@@ -24,7 +24,7 @@
   },
   "styles": [
     "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.css",
-    "~/panel.css"
+    "panel.css"
   ],
   "scripts": [
     "https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js",
@@ -38,21 +38,21 @@
     "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js",
     "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js",
     "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js",
-    "~/panel.js",
-    "~/locals/tabManager.js",
-    "~/locals/commandPanel.js"
+    "locals/commandPanel.js",
+    "locals/tabManager.js",
+    "panel.js"
   ],
   "assets": [
-    "~/btn-open-code-file.png",
-    "~/btn-replace.png",
-    "~/logos/N8X.svg",
-    "~/btn-copy.png",
-    "~/btn-diff.png",
-    "~/btn-undo.png",
-    "~/attach.png",
-    "~/clear.png",
-    "~/plus.png",
-    "~/send.png"
+    "btn-open-code-file.png",
+    "btn-replace.png",
+    "logos/N8X.svg",
+    "btn-copy.png",
+    "btn-diff.png",
+    "btn-undo.png",
+    "attach.png",
+    "clear.png",
+    "plus.png",
+    "send.png"
   ],
   "settingsConfigKeys": [
     "nabotx.previewUrl",
