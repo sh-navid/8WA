@@ -62,46 +62,41 @@ class PanelProvider {
     }
   }
 
+  _uri(webview, address, directory) {
+    return address.startsWith("http") ? address : uri(webview, this, directory, address)
+  }
+
   _getHtmlForWebview(webview) {
     let html = load(this, "views", "panel.html")
     const vsConfig = vscode.workspace.getConfiguration("nabotx")
+
     const _config = {
       previewUrl: vsConfig.get("previewUrl") || "http://localhost:3000",
       token: vsConfig.get("token") || "",
       model: vsConfig.get("model") || "",
       path: vsConfig.get("path") || "",
+      rules: config.rules.assistant,
+      scripts: config.scripts
+        .map((x) => `<script src="${this._uri(webview, x, "src")}"></script>`)
+        .join(""),
+      styles: config.styles
+        .map((x) => `<link href="${this._uri(webview, x, "styles")}" rel="stylesheet"/>`)
+        .join(""),
     }
 
-    const scripts = config.scripts
-      .map(
-        (x) =>
-          `<script src="${
-            x.startsWith("~/") ? uri(webview, this, "src", x.slice(2)) : x
-          }"></script>`
-      )
-      .join("")
-    const styles = config.styles
-      .map(
-        (x) =>
-          `<link href="${
-            x.startsWith("~/") ? uri(webview, this, "styles", x.slice(2)) : x
-          }" rel="stylesheet"/>`
-      )
-      .join("")
-
     html = html
-      .replaceAll(/\$\{rules\}/g, config.rules.assistant)
       .replaceAll(/\$\{previewUrl\}/g, _config.previewUrl)
+      .replaceAll(/\$\{scripts\}/g, _config.scripts)
+      .replaceAll(/\$\{styles\}/g, _config.styles)
+      .replaceAll(/\$\{rules\}/g, _config.rules)
       .replaceAll(/\$\{token\}/g, _config.token)
       .replaceAll(/\$\{model\}/g, _config.model)
       .replaceAll(/\$\{path\}/g, _config.path)
-      .replaceAll(/\$\{scripts\}/g, scripts)
-      .replaceAll(/\$\{styles\}/g, styles)
 
     for (const asset of config.assets) {
       html = html.replaceAll(
-        new RegExp(`\\$\\{${asset.slice(2)}\\}`, "g"),
-        uri(webview, this, "assets", asset.slice(2))
+        new RegExp(`\\$\\{${asset}\\}`, "g"),
+        uri(webview, this, "assets", asset)
       )
     }
 
